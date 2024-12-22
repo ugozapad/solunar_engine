@@ -2,6 +2,7 @@
 #include "engine/ai/pathfinding_manager.h"
 #include "shock_ai_behaviour_tree_user_data_types.h"
 #include "demogame.h"
+#include "shockplayercontroller.h"
 
 namespace solunar
 {
@@ -109,7 +110,7 @@ namespace solunar
 			{
 				// search new path
 
-				const std::vector<Entity*>& players = pWorld->GetEntityManager().GetEntitiesWithComponent<PlayerSpawnComponent>();
+				const std::vector<Entity*>& players = pWorld->GetEntityManager().GetEntitiesWithComponent<ShockPlayerController>();
 
 				auto* pPlayerEntity = players.front();
 

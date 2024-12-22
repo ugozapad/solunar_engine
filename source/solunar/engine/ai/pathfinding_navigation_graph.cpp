@@ -174,6 +174,7 @@ namespace solunar
 	}
 
 	glm::vec3 _kDebugColor(0.0f, 1.0f, 0.25f);
+	glm::vec3 _kDebugColorConnection(1.0f, 0.0f, 0.25f);
 	constexpr float _kMGLengthOfRoot = 0.5f;
 	constexpr float _kMGLengthOfArrow = 0.25f;
 
@@ -207,13 +208,13 @@ namespace solunar
 			glm::vec3 from_me_to_neigbour_dir = (neighbour_node.world_position - node.world_position);
 			from_me_to_neigbour_dir = glm::normalize(from_me_to_neigbour_dir);
 
-			g_debugRender.DrawLine(node.world_position + glm::vec3(0.0f, _kMGLengthOfRoot * 0.5f, 0.0f) + (from_me_to_neigbour_dir * _kMGLengthOfArrow), neighbour_node.world_position + glm::vec3(0.0f, _kMGLengthOfRoot * 0.5f, 0.0f) - (from_me_to_neigbour_dir * _kMGLengthOfArrow), _kDebugColor);
+			g_debugRender.DrawLine(node.world_position + glm::vec3(0.0f, _kMGLengthOfRoot * 0.5f, 0.0f) + (from_me_to_neigbour_dir * _kMGLengthOfArrow), neighbour_node.world_position + glm::vec3(0.0f, _kMGLengthOfRoot * 0.5f, 0.0f) - (from_me_to_neigbour_dir * _kMGLengthOfArrow), _kDebugColorConnection);
 
 			glm::vec3 right = (neighbour_node.world_position - node.world_position);
 			right = glm::cross(right, glm::vec3(0.0, 1.0, 0.0));
 			right = glm::normalize(right);
-			g_debugRender.DrawLine(neighbour_node.world_position + glm::vec3(0.0f, _kMGLengthOfRoot * 0.5f, 0.0f) - (from_me_to_neigbour_dir * _kMGLengthOfArrow), (neighbour_node.world_position + glm::vec3(0.0f, _kMGLengthOfRoot * 0.5f, 0.0f) + (right * _kMGLengthOfArrow)) - (glm::normalize((neighbour_node.world_position - node.world_position)) * 0.6f), _kDebugColor);
-			g_debugRender.DrawLine(neighbour_node.world_position + glm::vec3(0.0f, _kMGLengthOfRoot * 0.5f, 0.0f) - (from_me_to_neigbour_dir * _kMGLengthOfArrow), (neighbour_node.world_position + glm::vec3(0.0f, _kMGLengthOfRoot * 0.5f, 0.0f) + (right * -_kMGLengthOfArrow)) - (glm::normalize((neighbour_node.world_position - node.world_position)) * 0.6f), _kDebugColor);
+			g_debugRender.DrawLine(neighbour_node.world_position + glm::vec3(0.0f, _kMGLengthOfRoot * 0.5f, 0.0f) - (from_me_to_neigbour_dir * _kMGLengthOfArrow), (neighbour_node.world_position + glm::vec3(0.0f, _kMGLengthOfRoot * 0.5f, 0.0f) + (right * _kMGLengthOfArrow)) - (glm::normalize((neighbour_node.world_position - node.world_position)) * 0.6f), _kDebugColorConnection);
+			g_debugRender.DrawLine(neighbour_node.world_position + glm::vec3(0.0f, _kMGLengthOfRoot * 0.5f, 0.0f) - (from_me_to_neigbour_dir * _kMGLengthOfArrow), (neighbour_node.world_position + glm::vec3(0.0f, _kMGLengthOfRoot * 0.5f, 0.0f) + (right * -_kMGLengthOfArrow)) - (glm::normalize((neighbour_node.world_position - node.world_position)) * 0.6f), _kDebugColorConnection);
 		}
 	}
 }

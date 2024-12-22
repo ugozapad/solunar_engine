@@ -649,8 +649,10 @@ ShelterLevelManagerComponent::~ShelterLevelManagerComponent()
 
 void ShelterLevelManagerComponent::OnInit()
 {
+#ifndef _DEBUG
 	// initialize fade
 	FadeRenderer::GetInstance()->SetFade(4.0f, true);
+#endif // !_DEBUG
 }
 
 void ShelterLevelManagerComponent::OnEntitySet(Entity* entity)

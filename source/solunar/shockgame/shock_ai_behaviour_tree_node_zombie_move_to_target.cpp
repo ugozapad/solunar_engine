@@ -39,7 +39,7 @@ namespace solunar
 
 			if (pBody)
 			{
-				pBody->SetLinearVelocity(dir);
+				pBody->SetLinearVelocity(dir * 2.0f);
 			}
 
 
@@ -81,7 +81,7 @@ namespace solunar
 
 			if (pBody)
 			{
-				pBody->SetLinearVelocity(dir);
+				pBody->SetLinearVelocity(dir * 2.0f);
 			}
 
 

@@ -345,9 +345,9 @@ namespace solunar
 		std::memset(m_pNodes, 0, sizeof(m_pNodes));
 #ifdef _DEBUG
 		m_debug_name[0] = '\0';
+		m_shutdown_was_called = true;
 #endif
 		m_allocator.Reset();
-		m_shutdown_was_called = true;
 	}
 
 	template<typename Allocator, typename UserLogicDataType, unsigned char MaxNodesInTree>

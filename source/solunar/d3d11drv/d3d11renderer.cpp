@@ -660,6 +660,8 @@ void D3D11Renderer::TakeScreenshot()
 	m_takeScreenshot = true;
 }
 
+#define SHOT_JPEG
+
 void D3D11Renderer::takeScreenshotInternal()
 {
 	int width = GetView()->m_width;
@@ -708,7 +710,11 @@ void D3D11Renderer::takeScreenshotInternal()
 	char buffer[256];
 	for (int i = 0;; i++)
 	{
+#ifdef SHOT_JPEG
+		snprintf(buffer, sizeof(buffer), "sshot_%i.jpg", i);
+#else
 		snprintf(buffer, sizeof(buffer), "sshot_%i.png", i);
+#endif // SHOT_JPEG
 
 		FileHandle fh = g_fileSystem->Open(buffer);
 		if (!fh)

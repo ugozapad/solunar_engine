@@ -133,12 +133,10 @@ namespace solunar
 				logicComponent->Update(timerInstance->GetDelta());
 		}
 
-#ifdef _DEBUG
 		if (g_aiPathfindingManager)
 		{
 			g_aiPathfindingManager->DebugDraw();
 		}
-#endif
 	}
 
 	void World::Update_PhysicsEntity()
