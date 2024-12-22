@@ -1,93 +1,88 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <World>
-	<!-- Level Geometry
-	<Entity>
-		<Position x="0" y="-0.1" z="0"/>
-		<Rotation x="0" y="180" z="0"/>
-		<Scale x="1" y="1" z="1"/>
-		<MeshComponent>
-			<Model filename="models/common_floor.model"/>
-			<CastShadow value="false"/>
-		</MeshComponent>
-		<RigidBodyComponent>
-			<Static value="true"/>
-		</RigidBodyComponent>
-		<TriangleMeshShapeComponent>
-			<Model filename="models/common_floor.model"/>
-		</TriangleMeshShapeComponent>
-	</Entity>
-	 -->
-	 
-	<Entity>
-		<Position x="0" y="0" z="0"/>
-		<Rotation x="0" y="0" z="0"/>
-		<Scale x="1" y="1" z="1"/>
-		<MeshComponent>
-			<Model filename="models/zapravka.model"/>
-			<CastShadow value="false"/>
-		</MeshComponent>
-		<RigidBodyComponent>
-			<Static value="true"/>
-		</RigidBodyComponent>
-		<TriangleMeshShapeComponent>
-			<Model filename="models/zapravka.model"/>
-		</TriangleMeshShapeComponent>
-	</Entity>
-	
-	<Entity>
-		<Position x="-2.31" y="0" z="-0.36"/>
-		<Rotation x="0" y="0" z="0"/>
-		<Scale x="1" y="1" z="1"/>
-		<MeshComponent>
-			<Model filename="models/prop_trashbag.model"/>
-			<CastShadow value="true"/>
-		</MeshComponent>
-	</Entity>
-	
-	<Entity>
-		<Position x="5.28" y="0" z="-3.25"/>
-		<Rotation x="0" y="0" z="0"/>
-		<Scale x="1" y="1" z="1"/>
-		<MeshComponent>
-			<Model filename="models/prop_wooden_crate.model"/>
-			<CastShadow value="true"/>
-		</MeshComponent>
-	</Entity>
-	<!--
-	<Entity>
-		<Position x="-1.75" y="0" z="-8.88"/>
-		<Rotation x="0" y="0" z="0"/>
-		<Scale x="1" y="1" z="1"/>
-		<AnimatedMeshComponent>
-			<Model filename="models/zombie.glb"/>
-			<CastShadow value="true"/>
-		</AnimatedMeshComponent>
-		<RigidBodyComponent>
-			<Static value="false"/>
-			<Mass value="80"/>
-		</RigidBodyComponent>
-		<BoxShapeComponent>
-			<Position x="0.0" y="0.8" z="0.0"/>
-			<Size x="0.4" y="0.8" z="0.4"/>
-		</BoxShapeComponent>
-		<ShockAIComponent>
-			<AIType value="ShockAIType_Zombie"/>
-		</ShockAIComponent>
-	</Entity>
-	-->
-	
-	<!-- Player Spawner -->
-	<Entity>
-		<Position x="1" y="2" z="1"/>
-		<Rotation x="0" y="0" z="0"/>
-		<Scale x="1" y="1" z="1"/>
-		<PlayerSpawnComponent/>
-		
-		<!-- <EditorCameraComponent/>  FOR EDITOR !!! -->
-		<!-- <ShockPlayerController/> 	-->
-	</Entity>
-	
-	<!-- Test point light 
+    <!-- Level geometry -->
+    <Entity>
+        <Position x="0" y="-0.1" z="0"/>
+        <Rotation x="0" y="180" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <MeshComponent>
+            <Model filename="models/common_floor.model"/>
+            <CastShadow value="false"/>
+        </MeshComponent>
+        <RigidBodyComponent>
+            <Static value="true"/>
+        </RigidBodyComponent>
+        <TriangleMeshShapeComponent>
+            <Model filename="models/common_floor.model"/>
+        </TriangleMeshShapeComponent>
+    </Entity>
+    <Entity>
+        <Position x="0" y="0" z="0"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <MeshComponent>
+            <Model filename="models/zapravka.model"/>
+            <CastShadow value="false"/>
+        </MeshComponent>
+        <RigidBodyComponent>
+            <Static value="true"/>
+        </RigidBodyComponent>
+        <TriangleMeshShapeComponent>
+            <Model filename="models/zapravka.model"/>
+        </TriangleMeshShapeComponent>
+    </Entity>
+    <Entity>
+        <Position x="-2.31" y="0" z="-0.36"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <MeshComponent>
+            <Model filename="models/prop_trashbag.model"/>
+            <CastShadow value="true"/>
+        </MeshComponent>
+    </Entity>
+    <Entity>
+        <Position x="5.28" y="0" z="-3.25"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <MeshComponent>
+            <Model filename="models/prop_wooden_crate.model"/>
+            <CastShadow value="true"/>
+        </MeshComponent>
+    </Entity>
+    <!-- Test Bolvan -->
+    <Entity>
+        <Position x="-0.74" y="0" z="-3.27"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <AnimatedMeshComponent>
+            <Model filename="models/zombie.glb"/>
+            <CastShadow value="true"/>
+        </AnimatedMeshComponent>
+        <RigidBodyComponent>
+            <Static value="false"/>
+            <Mass value="80"/>
+        </RigidBodyComponent>
+        <BoxShapeComponent>
+            <Position x="0.0" y="0.8" z="0.0"/>
+            <Size x="0.4" y="0.8" z="0.4"/>
+        </BoxShapeComponent>
+        <ShockAIComponent>
+            <AIType value="ShockAIType_Zombie"/>
+        </ShockAIComponent>
+        <ShockAIBehaviourTree>
+            <BehaviourTreeType value="Zombie"/>
+        </ShockAIBehaviourTree>
+    </Entity>
+    <!-- Player Spawner -->
+    <Entity>
+        <Position x="1" y="2" z="1"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <PlayerSpawnComponent/>
+        <!-- <EditorCameraComponent/>  FOR EDITOR !!! -->
+        <!-- <ShockPlayerController/> 	-->
+    </Entity>
+    <!-- Test point light 
 	<Entity>
 		<Position x="2" y="1" z="0"/>
 		<Rotation x="0" y="0" z="0"/>
@@ -99,8 +94,7 @@
 			<Radius value="2"/>
 		</PointLightComponent>
 	</Entity>  -->
-	
-	<!-- <Entity>
+    <!-- <Entity>
 		<Position x="0" y="0" z="0"/>
 		<Rotation x="0" y="90" z="0"/>
 		<Scale x="1000" y="1000" z="1000"/>
@@ -108,48 +102,43 @@
 			<Model filename="models/demo_sky.model"/>
 		</MeshComponent>
 	</Entity> -->
-	
-	<!-- GAMEPLAY ENTITIES -->
-	
-	<Entity>
-		<Position x="0.2" y="1.3" z="0"/>
-		<Rotation x="0" y="0" z="0"/>
-		<Scale x="1" y="1" z="1"/>
-		<RigidBodyComponent>
-			<Trigger value="true"/>
-			<Filter value="PhysicsFilter_Usable"/>
-		</RigidBodyComponent>
-		<BoxShapeComponent>
-			<Position x="0" y="0" z="0"/>
-			<Size x="0.05" y="0.2" z="0.45"/>
-		</BoxShapeComponent>
-		<UsableAreaComponent>
-			<Cost value="1400"/>
-			<Script value="give_weapon weapon_shotgun"/>
-		</UsableAreaComponent>		
-		<Entity>
-			<Position x="0.0" y="0" z="0"/>
-			<Rotation x="0" y="0" z="0"/>
-			<Scale x="1" y="1" z="1"/>
-			<AnimatedMeshComponent>
-				<Model filename="models/worldmodel_shotgun.glb"/>
-				<CastShadow value="true"/>
-			</AnimatedMeshComponent>
-		</Entity>
-	</Entity>
-	
-	<!-- Ambient Light -->
-	<Entity>
-		<Position x="0" y="0" z="0"/>
-		<Rotation x="0" y="0" z="0"/>
-		<Scale x="1" y="1" z="1"/>
-		
-		<DirectionalLightComponent>
-			<AmbientColor r="1.0" g="1.0" b="1.0"/>
-		</DirectionalLightComponent>
-	</Entity>
-	
-	<!-- EDITOR LIGHTS -->
+    <!-- GAMEPLAY ENTITIES -->
+    <Entity>
+        <Position x="0.2" y="1.3" z="0"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <RigidBodyComponent>
+            <Trigger value="true"/>
+            <Filter value="PhysicsFilter_Usable"/>
+        </RigidBodyComponent>
+        <BoxShapeComponent>
+            <Position x="0" y="0" z="0"/>
+            <Size x="0.05" y="0.2" z="0.45"/>
+        </BoxShapeComponent>
+        <UsableAreaComponent>
+            <Cost value="1400"/>
+            <Script value="give_weapon weapon_shotgun"/>
+        </UsableAreaComponent>
+        <Entity>
+            <Position x="0.0" y="0" z="0"/>
+            <Rotation x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <AnimatedMeshComponent>
+                <Model filename="models/worldmodel_shotgun.glb"/>
+                <CastShadow value="true"/>
+            </AnimatedMeshComponent>
+        </Entity>
+    </Entity>
+    <!-- Ambient Light -->
+    <Entity>
+        <Position x="0" y="0" z="0"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <DirectionalLightComponent>
+            <AmbientColor r="1.0" g="1.0" b="1.0"/>
+        </DirectionalLightComponent>
+    </Entity>
+    <!-- EDITOR LIGHTS -->
     <Entity className="Entity">
         <Position x="4.8569555" y="1.707011" z="-4.8051057"/>
         <Rotation x="-0" y="0" z="0"/>
@@ -161,8 +150,7 @@
             <Radius value="3"/>
         </PointLightComponent>
     </Entity>
-	
-	<Entity className="Entity">
+    <Entity className="Entity">
         <Position x="-0.0054347813" y="2.2082074" z="-2.2577071"/>
         <Rotation x="-0" y="0" z="0"/>
         <Scale x="1" y="1" z="1"/>
@@ -184,7 +172,6 @@
             <Radius value="6.5"/>
         </PointLightComponent>
     </Entity>
-	
     <Entity className="Entity">
         <Position x="-0.17" y="1.3319253" z="-6.06"/>
         <Rotation x="-0" y="0" z="0"/>
@@ -196,4 +183,341 @@
             <Radius value="4"/>
         </PointLightComponent>
     </Entity>
+    <AI>
+        <AIBackend NavigationType="Manual Graph" AIDataStorageTagName="AIGraphData" MaxNodeCount="32" MaxRegionCount="8" MaxNeighboursPerNode="4" AISolver="Astar"/>
+        <AIGraphData>
+            <Graph NodesCount="53" RegionsCount="2">
+                <Node id="6" region_id="0" abs_id="0" neighbours_count="6" pos_x="4.3159351" pos_y="2.3841858e-07" pos_z="4.6433191">
+                    <NodeNeigbour id="23" region_id="0" abs_id="15"/>
+                    <NodeNeigbour id="22" region_id="0" abs_id="14"/>
+                    <NodeNeigbour id="7" region_id="0" abs_id="1"/>
+                    <NodeNeigbour id="20" region_id="0" abs_id="12"/>
+                    <NodeNeigbour id="10" region_id="0" abs_id="4"/>
+                    <NodeNeigbour id="3" region_id="0" abs_id="27"/>
+                </Node>
+                <Node id="7" region_id="0" abs_id="1" neighbours_count="6" pos_x="2.7687554" pos_y="2.3841858e-07" pos_z="4.5286727">
+                    <NodeNeigbour id="20" region_id="0" abs_id="12"/>
+                    <NodeNeigbour id="6" region_id="0" abs_id="0"/>
+                    <NodeNeigbour id="22" region_id="0" abs_id="14"/>
+                    <NodeNeigbour id="3" region_id="0" abs_id="27"/>
+                    <NodeNeigbour id="8" region_id="0" abs_id="2"/>
+                    <NodeNeigbour id="1" region_id="0" abs_id="25"/>
+                </Node>
+                <Node id="8" region_id="0" abs_id="2" neighbours_count="8" pos_x="0.97885323" pos_y="2.3841858e-07" pos_z="4.3219423">
+                    <NodeNeigbour id="13" region_id="0" abs_id="5"/>
+                    <NodeNeigbour id="7" region_id="0" abs_id="1"/>
+                    <NodeNeigbour id="1" region_id="0" abs_id="25"/>
+                    <NodeNeigbour id="14" region_id="0" abs_id="6"/>
+                    <NodeNeigbour id="17" region_id="0" abs_id="9"/>
+                    <NodeNeigbour id="15" region_id="0" abs_id="7"/>
+                    <NodeNeigbour id="9" region_id="0" abs_id="3"/>
+                    <NodeNeigbour id="20" region_id="0" abs_id="12"/>
+                </Node>
+                <Node id="9" region_id="0" abs_id="3" neighbours_count="7" pos_x="-1.1658216" pos_y="0" pos_z="4.3859167">
+                    <NodeNeigbour id="13" region_id="0" abs_id="5"/>
+                    <NodeNeigbour id="14" region_id="0" abs_id="6"/>
+                    <NodeNeigbour id="8" region_id="0" abs_id="2"/>
+                    <NodeNeigbour id="0" region_id="0" abs_id="24"/>
+                    <NodeNeigbour id="8" region_id="1" abs_id="40"/>
+                    <NodeNeigbour id="9" region_id="1" abs_id="41"/>
+                    <NodeNeigbour id="6" region_id="1" abs_id="38"/>
+                </Node>
+                <Node id="10" region_id="0" abs_id="4" neighbours_count="4" pos_x="5.0050983" pos_y="0" pos_z="5.6309271">
+                    <NodeNeigbour id="6" region_id="0" abs_id="0"/>
+                    <NodeNeigbour id="3" region_id="0" abs_id="27"/>
+                    <NodeNeigbour id="2" region_id="0" abs_id="26"/>
+                    <NodeNeigbour id="23" region_id="0" abs_id="15"/>
+                </Node>
+                <Node id="13" region_id="0" abs_id="5" neighbours_count="4" pos_x="-0.36693653" pos_y="-1.1920929e-07" pos_z="4.9911013">
+                    <NodeNeigbour id="0" region_id="0" abs_id="24"/>
+                    <NodeNeigbour id="8" region_id="0" abs_id="2"/>
+                    <NodeNeigbour id="1" region_id="0" abs_id="25"/>
+                    <NodeNeigbour id="9" region_id="0" abs_id="3"/>
+                </Node>
+                <Node id="14" region_id="0" abs_id="6" neighbours_count="6" pos_x="-1.0601621" pos_y="0" pos_z="3.1778219">
+                    <NodeNeigbour id="9" region_id="0" abs_id="3"/>
+                    <NodeNeigbour id="15" region_id="0" abs_id="7"/>
+                    <NodeNeigbour id="8" region_id="0" abs_id="2"/>
+                    <NodeNeigbour id="8" region_id="1" abs_id="40"/>
+                    <NodeNeigbour id="9" region_id="1" abs_id="41"/>
+                    <NodeNeigbour id="6" region_id="1" abs_id="38"/>
+                </Node>
+                <Node id="15" region_id="0" abs_id="7" neighbours_count="8" pos_x="-0.72939968" pos_y="0" pos_z="1.4057269">
+                    <NodeNeigbour id="16" region_id="0" abs_id="8"/>
+                    <NodeNeigbour id="19" region_id="0" abs_id="11"/>
+                    <NodeNeigbour id="17" region_id="0" abs_id="9"/>
+                    <NodeNeigbour id="14" region_id="0" abs_id="6"/>
+                    <NodeNeigbour id="8" region_id="0" abs_id="2"/>
+                    <NodeNeigbour id="8" region_id="1" abs_id="40"/>
+                    <NodeNeigbour id="9" region_id="1" abs_id="41"/>
+                    <NodeNeigbour id="6" region_id="1" abs_id="38"/>
+                </Node>
+                <Node id="16" region_id="0" abs_id="8" neighbours_count="6" pos_x="-0.47119641" pos_y="0" pos_z="0.037313342">
+                    <NodeNeigbour id="18" region_id="0" abs_id="10"/>
+                    <NodeNeigbour id="15" region_id="0" abs_id="7"/>
+                    <NodeNeigbour id="19" region_id="0" abs_id="11"/>
+                    <NodeNeigbour id="8" region_id="1" abs_id="40"/>
+                    <NodeNeigbour id="9" region_id="1" abs_id="41"/>
+                    <NodeNeigbour id="6" region_id="1" abs_id="38"/>
+                </Node>
+                <Node id="17" region_id="0" abs_id="9" neighbours_count="4" pos_x="0.57816792" pos_y="0" pos_z="2.3544102">
+                    <NodeNeigbour id="15" region_id="0" abs_id="7"/>
+                    <NodeNeigbour id="19" region_id="0" abs_id="11"/>
+                    <NodeNeigbour id="8" region_id="0" abs_id="2"/>
+                    <NodeNeigbour id="20" region_id="0" abs_id="12"/>
+                </Node>
+                <Node id="18" region_id="0" abs_id="10" neighbours_count="4" pos_x="0.96728325" pos_y="0" pos_z="0.014231205">
+                    <NodeNeigbour id="21" region_id="0" abs_id="13"/>
+                    <NodeNeigbour id="27" region_id="0" abs_id="19"/>
+                    <NodeNeigbour id="16" region_id="0" abs_id="8"/>
+                    <NodeNeigbour id="19" region_id="0" abs_id="11"/>
+                </Node>
+                <Node id="19" region_id="0" abs_id="11" neighbours_count="6" pos_x="0.72072268" pos_y="0" pos_z="0.95823884">
+                    <NodeNeigbour id="15" region_id="0" abs_id="7"/>
+                    <NodeNeigbour id="18" region_id="0" abs_id="10"/>
+                    <NodeNeigbour id="16" region_id="0" abs_id="8"/>
+                    <NodeNeigbour id="17" region_id="0" abs_id="9"/>
+                    <NodeNeigbour id="21" region_id="0" abs_id="13"/>
+                    <NodeNeigbour id="20" region_id="0" abs_id="12"/>
+                </Node>
+                <Node id="20" region_id="0" abs_id="12" neighbours_count="8" pos_x="2.0910528" pos_y="0" pos_z="2.3742447">
+                    <NodeNeigbour id="21" region_id="0" abs_id="13"/>
+                    <NodeNeigbour id="19" region_id="0" abs_id="11"/>
+                    <NodeNeigbour id="25" region_id="0" abs_id="17"/>
+                    <NodeNeigbour id="22" region_id="0" abs_id="14"/>
+                    <NodeNeigbour id="7" region_id="0" abs_id="1"/>
+                    <NodeNeigbour id="6" region_id="0" abs_id="0"/>
+                    <NodeNeigbour id="8" region_id="0" abs_id="2"/>
+                    <NodeNeigbour id="17" region_id="0" abs_id="9"/>
+                </Node>
+                <Node id="21" region_id="0" abs_id="13" neighbours_count="6" pos_x="2.9716659" pos_y="-1.1920929e-07" pos_z="0.47235644">
+                    <NodeNeigbour id="4" region_id="1" abs_id="36"/>
+                    <NodeNeigbour id="18" region_id="0" abs_id="10"/>
+                    <NodeNeigbour id="27" region_id="0" abs_id="19"/>
+                    <NodeNeigbour id="19" region_id="0" abs_id="11"/>
+                    <NodeNeigbour id="20" region_id="0" abs_id="12"/>
+                    <NodeNeigbour id="25" region_id="0" abs_id="17"/>
+                </Node>
+                <Node id="22" region_id="0" abs_id="14" neighbours_count="4" pos_x="3.3685515" pos_y="1.1920929e-07" pos_z="2.4928465">
+                    <NodeNeigbour id="23" region_id="0" abs_id="15"/>
+                    <NodeNeigbour id="6" region_id="0" abs_id="0"/>
+                    <NodeNeigbour id="20" region_id="0" abs_id="12"/>
+                    <NodeNeigbour id="7" region_id="0" abs_id="1"/>
+                </Node>
+                <Node id="23" region_id="0" abs_id="15" neighbours_count="6" pos_x="4.9852047" pos_y="-1.1920929e-07" pos_z="3.075278">
+                    <NodeNeigbour id="22" region_id="0" abs_id="14"/>
+                    <NodeNeigbour id="25" region_id="0" abs_id="17"/>
+                    <NodeNeigbour id="24" region_id="0" abs_id="16"/>
+                    <NodeNeigbour id="6" region_id="0" abs_id="0"/>
+                    <NodeNeigbour id="10" region_id="0" abs_id="4"/>
+                    <NodeNeigbour id="2" region_id="0" abs_id="26"/>
+                </Node>
+                <Node id="24" region_id="0" abs_id="16" neighbours_count="5" pos_x="5.4718251" pos_y="0" pos_z="0.8754918">
+                    <NodeNeigbour id="25" region_id="0" abs_id="17"/>
+                    <NodeNeigbour id="3" region_id="1" abs_id="35"/>
+                    <NodeNeigbour id="26" region_id="0" abs_id="18"/>
+                    <NodeNeigbour id="4" region_id="1" abs_id="36"/>
+                    <NodeNeigbour id="23" region_id="0" abs_id="15"/>
+                </Node>
+                <Node id="25" region_id="0" abs_id="17" neighbours_count="5" pos_x="4.3490362" pos_y="1.1920929e-07" pos_z="1.3803635">
+                    <NodeNeigbour id="20" region_id="0" abs_id="12"/>
+                    <NodeNeigbour id="21" region_id="0" abs_id="13"/>
+                    <NodeNeigbour id="24" region_id="0" abs_id="16"/>
+                    <NodeNeigbour id="4" region_id="1" abs_id="36"/>
+                    <NodeNeigbour id="23" region_id="0" abs_id="15"/>
+                </Node>
+                <Node id="26" region_id="0" abs_id="18" neighbours_count="4" pos_x="5.0298452" pos_y="-1.1920929e-07" pos_z="-1.5948155">
+                    <NodeNeigbour id="3" region_id="1" abs_id="35"/>
+                    <NodeNeigbour id="27" region_id="0" abs_id="19"/>
+                    <NodeNeigbour id="4" region_id="1" abs_id="36"/>
+                    <NodeNeigbour id="24" region_id="0" abs_id="16"/>
+                </Node>
+                <Node id="27" region_id="0" abs_id="19" neighbours_count="5" pos_x="3.4224708" pos_y="0" pos_z="-2.1922843">
+                    <NodeNeigbour id="26" region_id="0" abs_id="18"/>
+                    <NodeNeigbour id="0" region_id="1" abs_id="32"/>
+                    <NodeNeigbour id="18" region_id="0" abs_id="10"/>
+                    <NodeNeigbour id="4" region_id="1" abs_id="36"/>
+                    <NodeNeigbour id="21" region_id="0" abs_id="13"/>
+                </Node>
+                <Node id="28" region_id="0" abs_id="20" neighbours_count="3" pos_x="0.13277388" pos_y="1.1920929e-07" pos_z="-3.6570287">
+                    <NodeNeigbour id="29" region_id="0" abs_id="21"/>
+                    <NodeNeigbour id="30" region_id="0" abs_id="22"/>
+                    <NodeNeigbour id="5" region_id="0" abs_id="29"/>
+                </Node>
+                <Node id="29" region_id="0" abs_id="21" neighbours_count="6" pos_x="1.0148273" pos_y="0" pos_z="-5.7186432">
+                    <NodeNeigbour id="28" region_id="0" abs_id="20"/>
+                    <NodeNeigbour id="30" region_id="0" abs_id="22"/>
+                    <NodeNeigbour id="31" region_id="0" abs_id="23"/>
+                    <NodeNeigbour id="5" region_id="0" abs_id="29"/>
+                    <NodeNeigbour id="11" region_id="0" abs_id="30"/>
+                    <NodeNeigbour id="12" region_id="0" abs_id="31"/>
+                </Node>
+                <Node id="30" region_id="0" abs_id="22" neighbours_count="4" pos_x="2.2463768" pos_y="-1.1920929e-07" pos_z="-3.9978986">
+                    <NodeNeigbour id="28" region_id="0" abs_id="20"/>
+                    <NodeNeigbour id="29" region_id="0" abs_id="21"/>
+                    <NodeNeigbour id="31" region_id="0" abs_id="23"/>
+                    <NodeNeigbour id="0" region_id="1" abs_id="32"/>
+                </Node>
+                <Node id="31" region_id="0" abs_id="23" neighbours_count="7" pos_x="3.8347881" pos_y="1.1920929e-07" pos_z="-5.7355204">
+                    <NodeNeigbour id="30" region_id="0" abs_id="22"/>
+                    <NodeNeigbour id="29" region_id="0" abs_id="21"/>
+                    <NodeNeigbour id="1" region_id="1" abs_id="33"/>
+                    <NodeNeigbour id="0" region_id="1" abs_id="32"/>
+                    <NodeNeigbour id="2" region_id="1" abs_id="34"/>
+                    <NodeNeigbour id="12" region_id="0" abs_id="31"/>
+                    <NodeNeigbour id="5" region_id="1" abs_id="37"/>
+                </Node>
+                <Node id="0" region_id="0" abs_id="24" neighbours_count="5" pos_x="-0.75540161" pos_y="1.1920929e-07" pos_z="6.9784422">
+                    <NodeNeigbour id="1" region_id="0" abs_id="25"/>
+                    <NodeNeigbour id="13" region_id="0" abs_id="5"/>
+                    <NodeNeigbour id="4" region_id="0" abs_id="28"/>
+                    <NodeNeigbour id="9" region_id="0" abs_id="3"/>
+                    <NodeNeigbour id="7" region_id="1" abs_id="39"/>
+                </Node>
+                <Node id="1" region_id="0" abs_id="25" neighbours_count="6" pos_x="1.9095926" pos_y="-1.1920929e-07" pos_z="6.0762587">
+                    <NodeNeigbour id="3" region_id="0" abs_id="27"/>
+                    <NodeNeigbour id="0" region_id="0" abs_id="24"/>
+                    <NodeNeigbour id="7" region_id="0" abs_id="1"/>
+                    <NodeNeigbour id="8" region_id="0" abs_id="2"/>
+                    <NodeNeigbour id="13" region_id="0" abs_id="5"/>
+                    <NodeNeigbour id="4" region_id="0" abs_id="28"/>
+                </Node>
+                <Node id="2" region_id="0" abs_id="26" neighbours_count="4" pos_x="6.0699644" pos_y="1.1920929e-07" pos_z="7.0506601">
+                    <NodeNeigbour id="3" region_id="0" abs_id="27"/>
+                    <NodeNeigbour id="10" region_id="0" abs_id="4"/>
+                    <NodeNeigbour id="23" region_id="0" abs_id="15"/>
+                    <NodeNeigbour id="4" region_id="0" abs_id="28"/>
+                </Node>
+                <Node id="3" region_id="0" abs_id="27" neighbours_count="6" pos_x="3.9928255" pos_y="0" pos_z="6.793582">
+                    <NodeNeigbour id="10" region_id="0" abs_id="4"/>
+                    <NodeNeigbour id="7" region_id="0" abs_id="1"/>
+                    <NodeNeigbour id="6" region_id="0" abs_id="0"/>
+                    <NodeNeigbour id="2" region_id="0" abs_id="26"/>
+                    <NodeNeigbour id="1" region_id="0" abs_id="25"/>
+                    <NodeNeigbour id="4" region_id="0" abs_id="28"/>
+                </Node>
+                <Node id="4" region_id="0" abs_id="28" neighbours_count="4" pos_x="1.9848331" pos_y="-1.1920929e-07" pos_z="7.5357161">
+                    <NodeNeigbour id="3" region_id="0" abs_id="27"/>
+                    <NodeNeigbour id="1" region_id="0" abs_id="25"/>
+                    <NodeNeigbour id="0" region_id="0" abs_id="24"/>
+                    <NodeNeigbour id="2" region_id="0" abs_id="26"/>
+                </Node>
+                <Node id="5" region_id="0" abs_id="29" neighbours_count="3" pos_x="-0.46711934" pos_y="-2.3841858e-07" pos_z="-5.2516298">
+                    <NodeNeigbour id="28" region_id="0" abs_id="20"/>
+                    <NodeNeigbour id="29" region_id="0" abs_id="21"/>
+                    <NodeNeigbour id="11" region_id="0" abs_id="30"/>
+                </Node>
+                <Node id="11" region_id="0" abs_id="30" neighbours_count="3" pos_x="0.12430519" pos_y="0" pos_z="-6.3280606">
+                    <NodeNeigbour id="29" region_id="0" abs_id="21"/>
+                    <NodeNeigbour id="5" region_id="0" abs_id="29"/>
+                    <NodeNeigbour id="12" region_id="0" abs_id="31"/>
+                </Node>
+                <Node id="12" region_id="0" abs_id="31" neighbours_count="4" pos_x="2.6665082" pos_y="2.3841858e-07" pos_z="-6.5663853">
+                    <NodeNeigbour id="11" region_id="0" abs_id="30"/>
+                    <NodeNeigbour id="31" region_id="0" abs_id="23"/>
+                    <NodeNeigbour id="5" region_id="1" abs_id="37"/>
+                    <NodeNeigbour id="29" region_id="0" abs_id="21"/>
+                </Node>
+                <Node id="0" region_id="1" abs_id="32" neighbours_count="4" pos_x="4.2609472" pos_y="0" pos_z="-3.6852257">
+                    <NodeNeigbour id="2" region_id="1" abs_id="34"/>
+                    <NodeNeigbour id="30" region_id="0" abs_id="22"/>
+                    <NodeNeigbour id="31" region_id="0" abs_id="23"/>
+                    <NodeNeigbour id="27" region_id="0" abs_id="19"/>
+                </Node>
+                <Node id="1" region_id="1" abs_id="33" neighbours_count="3" pos_x="5.7216024" pos_y="1.1920929e-07" pos_z="-5.932025">
+                    <NodeNeigbour id="31" region_id="0" abs_id="23"/>
+                    <NodeNeigbour id="2" region_id="1" abs_id="34"/>
+                    <NodeNeigbour id="5" region_id="1" abs_id="37"/>
+                </Node>
+                <Node id="2" region_id="1" abs_id="34" neighbours_count="4" pos_x="6.1924353" pos_y="0" pos_z="-3.7617245">
+                    <NodeNeigbour id="1" region_id="1" abs_id="33"/>
+                    <NodeNeigbour id="0" region_id="1" abs_id="32"/>
+                    <NodeNeigbour id="31" region_id="0" abs_id="23"/>
+                    <NodeNeigbour id="3" region_id="1" abs_id="35"/>
+                </Node>
+                <Node id="3" region_id="1" abs_id="35" neighbours_count="3" pos_x="6.3404698" pos_y="-1.1920929e-07" pos_z="-2.3209701">
+                    <NodeNeigbour id="2" region_id="1" abs_id="34"/>
+                    <NodeNeigbour id="26" region_id="0" abs_id="18"/>
+                    <NodeNeigbour id="24" region_id="0" abs_id="16"/>
+                </Node>
+                <Node id="4" region_id="1" abs_id="36" neighbours_count="5" pos_x="4.2121115" pos_y="0" pos_z="-0.45071411">
+                    <NodeNeigbour id="26" region_id="0" abs_id="18"/>
+                    <NodeNeigbour id="21" region_id="0" abs_id="13"/>
+                    <NodeNeigbour id="27" region_id="0" abs_id="19"/>
+                    <NodeNeigbour id="24" region_id="0" abs_id="16"/>
+                    <NodeNeigbour id="25" region_id="0" abs_id="17"/>
+                </Node>
+                <Node id="5" region_id="1" abs_id="37" neighbours_count="3" pos_x="4.994206" pos_y="-2.3841858e-07" pos_z="-6.6128922">
+                    <NodeNeigbour id="31" region_id="0" abs_id="23"/>
+                    <NodeNeigbour id="12" region_id="0" abs_id="31"/>
+                    <NodeNeigbour id="1" region_id="1" abs_id="33"/>
+                </Node>
+                <Node id="6" region_id="1" abs_id="38" neighbours_count="7" pos_x="-2.3746145" pos_y="0" pos_z="5.2981477">
+                    <NodeNeigbour id="10" region_id="1" abs_id="42"/>
+                    <NodeNeigbour id="7" region_id="1" abs_id="39"/>
+                    <NodeNeigbour id="9" region_id="1" abs_id="41"/>
+                    <NodeNeigbour id="16" region_id="0" abs_id="8"/>
+                    <NodeNeigbour id="15" region_id="0" abs_id="7"/>
+                    <NodeNeigbour id="14" region_id="0" abs_id="6"/>
+                    <NodeNeigbour id="9" region_id="0" abs_id="3"/>
+                </Node>
+                <Node id="7" region_id="1" abs_id="39" neighbours_count="3" pos_x="-2.0348318" pos_y="0" pos_z="6.988287">
+                    <NodeNeigbour id="10" region_id="1" abs_id="42"/>
+                    <NodeNeigbour id="6" region_id="1" abs_id="38"/>
+                    <NodeNeigbour id="0" region_id="0" abs_id="24"/>
+                </Node>
+                <Node id="8" region_id="1" abs_id="40" neighbours_count="5" pos_x="-2.0736828" pos_y="2.3841858e-07" pos_z="1.2736402">
+                    <NodeNeigbour id="9" region_id="1" abs_id="41"/>
+                    <NodeNeigbour id="16" region_id="0" abs_id="8"/>
+                    <NodeNeigbour id="15" region_id="0" abs_id="7"/>
+                    <NodeNeigbour id="14" region_id="0" abs_id="6"/>
+                    <NodeNeigbour id="9" region_id="0" abs_id="3"/>
+                </Node>
+                <Node id="9" region_id="1" abs_id="41" neighbours_count="7" pos_x="-2.2304211" pos_y="1.1920929e-07" pos_z="3.4894509">
+                    <NodeNeigbour id="6" region_id="1" abs_id="38"/>
+                    <NodeNeigbour id="10" region_id="1" abs_id="42"/>
+                    <NodeNeigbour id="8" region_id="1" abs_id="40"/>
+                    <NodeNeigbour id="16" region_id="0" abs_id="8"/>
+                    <NodeNeigbour id="15" region_id="0" abs_id="7"/>
+                    <NodeNeigbour id="14" region_id="0" abs_id="6"/>
+                    <NodeNeigbour id="9" region_id="0" abs_id="3"/>
+                </Node>
+                <Node id="10" region_id="1" abs_id="42" neighbours_count="3" pos_x="-1.3845373" pos_y="0" pos_z="5.9415379">
+                    <NodeNeigbour id="7" region_id="1" abs_id="39"/>
+                    <NodeNeigbour id="6" region_id="1" abs_id="38"/>
+                    <NodeNeigbour id="9" region_id="1" abs_id="41"/>
+                </Node>
+                <Node id="11" region_id="1" abs_id="43" neighbours_count="1" pos_x="-12.277188" pos_y="-0.099999428" pos_z="-4.4296598">
+                    <NodeNeigbour id="18" region_id="1" abs_id="47"/>
+                </Node>
+                <Node id="13" region_id="1" abs_id="44" neighbours_count="1" pos_x="-6.5705495" pos_y="-0.099998474" pos_z="-13.107205">
+                    <NodeNeigbour id="12" region_id="1" abs_id="50"/>
+                </Node>
+                <Node id="15" region_id="1" abs_id="45" neighbours_count="1" pos_x="-13.439405" pos_y="-0.10000038" pos_z="1.376442">
+                    <NodeNeigbour id="16" region_id="1" abs_id="49"/>
+                </Node>
+                <Node id="17" region_id="1" abs_id="46" neighbours_count="1" pos_x="-13.933805" pos_y="-0.099998474" pos_z="5.4693851">
+                    <NodeNeigbour id="16" region_id="1" abs_id="49"/>
+                </Node>
+                <Node id="18" region_id="1" abs_id="47" neighbours_count="1" pos_x="-8.4141827" pos_y="-0.099999428" pos_z="-1.8792677">
+                    <NodeNeigbour id="14" region_id="1" abs_id="51"/>
+                </Node>
+                <Node id="20" region_id="1" abs_id="48" neighbours_count="1" pos_x="-9.4407024" pos_y="-0.10000134" pos_z="9.9439268">
+                    <NodeNeigbour id="16" region_id="1" abs_id="49"/>
+                </Node>
+                <Node id="16" region_id="1" abs_id="49" neighbours_count="1" pos_x="-9.5325966" pos_y="-0.099999905" pos_z="3.9727266">
+                    <NodeNeigbour id="19" region_id="1" abs_id="52"/>
+                </Node>
+                <Node id="12" region_id="1" abs_id="50" neighbours_count="1" pos_x="-1.4348511" pos_y="-0.099999666" pos_z="-3.9839036">
+                    <NodeNeigbour id="28" region_id="0" abs_id="20"/>
+                </Node>
+                <Node id="14" region_id="1" abs_id="51" neighbours_count="1" pos_x="-3.5666215" pos_y="-0.10000014" pos_z="1.1985615">
+                    <NodeNeigbour id="8" region_id="1" abs_id="40"/>
+                </Node>
+                <Node id="19" region_id="1" abs_id="52" neighbours_count="1" pos_x="-3.5818977" pos_y="-0.10000038" pos_z="5.0156164">
+                    <NodeNeigbour id="6" region_id="1" abs_id="38"/>
+                </Node>
+            </Graph>
+        </AIGraphData>
+    </AI>
 </World>

@@ -53,7 +53,7 @@ namespace solunar
 
 		// returns to Running
 		void RestoreState();
-
+		const std::string& GetWorldName() const;
 	private:
 		void OnStateSwitch();
 

@@ -55,6 +55,19 @@ void ContentManager::UnmountDevice(const std::string& name)
 	m_devices.erase(name);
 }
 
+const char* ContentManager::GetWorkingPath(const char* pDeviceName)
+{
+	const char* pResult = nullptr;
+
+	ContentDevice* pDevice = findContentDevice(pDeviceName);
+	if (pDevice)
+	{
+		pResult = pDevice->GetWorkingPath();
+	}
+
+	return pResult;
+}
+
 ContentDevice* ContentManager::findContentDevice(const std::string& name)
 {
 	auto it = m_devices.find(name);

@@ -18,9 +18,7 @@ namespace solunar
 		BehaviourTreeActionNodeZombieMoveToTarget(const char* pDebugName);
 		~BehaviourTreeActionNodeZombieMoveToTarget();
 
-		eBehaviourTreeStatus Update(World* pWorld, void* pUserStateData, float dt) override;
-
-	private:
+		eBehaviourTreeStatus Update(World* pWorld, Entity* pOwner, void* pUserStateData, float dt) override;
 	};
 }
 

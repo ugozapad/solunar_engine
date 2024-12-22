@@ -4,6 +4,7 @@
 #include "shockgame/shockplayercontroller.h"
 
 #include "shockgame/demogame.h"
+#include "shockgame/shock_component_ai_behaviourtree.h"
 
 #include "graphics/fontmanager.h"
 #include "graphics/debugrenderer.h"
@@ -60,7 +61,14 @@ void ShockAIComponent::Update(float dt)
 	}
 	else if (m_aiType == ShockAIType_Zombie)
 	{
-		UpdateZombie(dt);
+	//	UpdateZombie(dt);
+
+		ShockAIBehaviourTree* pBT = this->GetEntity()->GetComponent<ShockAIBehaviourTree>();
+
+		if (pBT)
+		{
+			pBT->Update(dt);
+		}
 	}
 }
 
@@ -125,7 +133,7 @@ void ShockAIComponent::UpdateZombie(float dt)
 
 	RigidBodyComponent* rigidBody = (RigidBodyComponent*)GetEntity()->GetComponentByTypeInfo(RigidBodyComponent::GetStaticTypeInfo());
 
-	// to whitelord: uncomment this to move entity !!!!
+	// to wh1t3lord: uncomment this to move entity !!!!
 //	if (rigidBody)
 //		rigidBody->SetLinearVelocity(direction * 2.0f);
 

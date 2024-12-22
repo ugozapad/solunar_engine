@@ -11,7 +11,7 @@
 namespace solunar
 {
 	class IBehaviourTree;
-	enum eShockBehaviourTreeType;
+	enum eShockBehaviourTree;
 }
 
 namespace solunar 
@@ -30,7 +30,7 @@ namespace solunar
 		void SaveXML(tinyxml2::XMLElement& element) override;
 
 	private:
-		eShockBehaviourTreeType m_tree_type;
+		eShockBehaviourTree m_tree_type;
 		IBehaviourTree* m_pTree;
 	};
 }

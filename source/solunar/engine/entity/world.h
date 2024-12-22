@@ -56,6 +56,9 @@ namespace solunar
 		std::vector<Entity*> BoxCast(const glm::vec3& boxPos, const glm::vec3& boxSize);
 
 	private:
+		void LoadAI(tinyxml2::XMLElement& tagWorld);
+
+	private:
 		EntityManager m_entityManager;
 
 		GraphicsWorld* m_graphicsWorld;

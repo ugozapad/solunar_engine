@@ -63,6 +63,7 @@ namespace solunar {
 		void ApplyImpulse(const glm::vec3& impulse);
 
 		void SetLinearVelocity(const glm::vec3& velocity);
+		glm::vec3 GetLinearVelocity();
 
 	private:
 		void CreateBody();

@@ -19,9 +19,14 @@ namespace solunar
 	struct ZombieLogicStateType
 	{
 		bool can_reach_target;
-		bool has_free_point;
+		bool need_to_validate_node;
+		int count_of_path;
+		int current_path_index;
+		int current_target_node_id;
 		// todo: kirrik -> replace to id for accessing entity
 		Entity* pTarget;
+
+		int path[16];
 	};
 
 	// if you don't want to use logic state then

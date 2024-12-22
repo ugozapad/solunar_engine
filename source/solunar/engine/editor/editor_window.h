@@ -22,6 +22,8 @@ namespace solunar
 
 		virtual int GetEditingMode() = 0;
 
+		virtual void Load(tinyxml2::XMLElement& tagWorld) = 0;
+
 		// calls only when editor's editing mode == GetEditingMode()
 		// it supposed that only one window can have one unique editing mode
 		virtual void UpdateEditingMode(InputManager* pInputManager, World* pWorld) = 0;

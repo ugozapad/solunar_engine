@@ -24,6 +24,8 @@
 
 #include "engine/editor/editor_manager.h"
 
+#include "ai/pathfinding_manager.h"
+
 namespace solunar
 {
 	EngineData		g_engineData;
@@ -74,6 +76,8 @@ namespace solunar
 
 		if (g_engineData.m_editor)
 			g_editorManager = mem_new<EditorManager>();
+
+		g_aiPathfindingManager = mem_new<PathfindingManager>();
 	}
 
 	void Engine::Shutdown()
@@ -92,6 +96,14 @@ namespace solunar
 
 			mem_delete(g_editorManager);
 			g_editorManager = nullptr;
+		}
+
+		if (g_aiPathfindingManager)
+		{
+			g_aiPathfindingManager->Shutdown();
+
+			mem_delete(g_aiPathfindingManager);
+			g_aiPathfindingManager = nullptr;
 		}
 		
 		g_console->Shutdown();
@@ -130,6 +142,11 @@ namespace solunar
 
 		World* world = g_typeManager->CreateObject<World>();
 		world->LoadXML(*worldElement);
+
+		if (g_engineData.m_editor)
+		{
+			g_editorManager->SetWorldXML(data, length);
+		}
 
 		ms_world = world;
 
@@ -263,6 +280,11 @@ namespace solunar
 		m_nextState = EngineState::Running;
 	}
 
+	const std::string& EngineStateManager::GetWorldName() const
+	{
+		return this->m_worldName;
+	}
+
 	void EngineStateManager::OnStateSwitch()
 	{
 		static const char* s_stateNames[(int)EngineState::Count] =
@@ -306,7 +328,7 @@ namespace solunar
 			}
 
 			m_nextState = EngineState::Running;
-			m_worldName.clear();
+		//	m_worldName.clear();
 
 			break;
 		case EngineState::CloseApplication:

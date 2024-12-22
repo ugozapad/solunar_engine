@@ -9,16 +9,14 @@ namespace solunar
 
 namespace solunar
 {
+
+	constexpr const char* _kPathfindingSolver_Astar = "Astar";
+	constexpr const char* _kPathfindingSerializationAttribute_AISolver = "AISolver";
+
 	enum eSolverBackend 
 	{
 		kSolver_Astar,
 		kSolver_Unknown=-1
-	};
-
-	enum eNavigationDataRepresentationType
-	{
-		kNavigationData_Graph,
-		kNavigationData_Unknown=-1
 	};
 
 
@@ -35,8 +33,22 @@ namespace solunar
 
 		void Shutdown();
 
+		void ToggleDebugDraw();
+
+		void DebugDraw();
+
+		int GetNearestPoint(const glm::vec3& object_position);
+		const glm::vec3& GetNodePosition(int node_id);
+
+		void BuildPathToTarget(
+			const glm::vec3& object_position,
+			const glm::vec3& target_position,
+			int* pRawBuffer,
+			int number_of_elements
+		);
 
 	private:
+		bool m_enable_debug_draw;
 		IPathfindingNavigationData* m_pNavigationData;
 		IPathfindingSolver* m_pSolver;
 	};

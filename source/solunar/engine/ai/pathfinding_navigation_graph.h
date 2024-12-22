@@ -11,8 +11,51 @@ namespace solunar
 		unsigned char region_id;
 	};
 
+	// at least it is optimized representation that i can provide for now
+	struct PathfindingNavigationStaticGraphNode
+	{
+		unsigned char neighbours_count;
+		int id;
+		int* neighbours;
+		glm::vec3 world_position;
+	};
+
+	// todo: probably better to rename like add prefix _kPathfinding_ instead just _k
+	constexpr const char* _kManualGraphName = "Manual Graph";
+	constexpr const char* _kAutoGridName = "Auto Grid";
+	constexpr const char* _kNavMeshName = "Navigation Mesh";
+
+	//serialization
+	//tags
+	constexpr const char* _kSerializationTag_AI = "AI";
+	constexpr const char* _kSerializationTag_AIBackend = "AIBackend";
+	constexpr const char* _kSerializationTag_AIGraphData = "AIGraphData";
+	constexpr const char* _kSerializationTag_Graph = "Graph";
+	constexpr const char* _kSerializationTag_Node = "Node";
+	constexpr const char* _kSerializationTag_NodeNeigbour = "NodeNeigbour";
+
+
+	//attributes
+	constexpr const char* _kSerializationAttribute_NavigationType = "NavigationType";
+	constexpr const char* _kSerializationAttribute_AIDataStorageTagName = "AIDataStorageTagName";
+	constexpr const char* _kSerializationAttribute_MaxNodeCount = "MaxNodeCount";
+	constexpr const char* _kSerializationAttribute_MaxRegionCount = "MaxRegionCount";
+	constexpr const char* _kSerializationAttribute_MaxNeighboursPerNode = "MaxNeighboursPerNode";
+	constexpr const char* _kSerializationAttribute_AISolver = "AISolver";
+	constexpr const char* _kSerializationAttribute_NodesCount = "NodesCount";
+	constexpr const char* _kSerializationAttribute_RegionsCount = "RegionsCount";
+	constexpr const char* _kSerializationAttribute_id = "id";
+	constexpr const char* _kSerializationAttribute_region_id = "region_id";
+	constexpr const char* _kSerializationAttribute_abs_id = "abs_id";
+	constexpr const char* _kSerializationAttribute_neighbours_count = "neighbours_count";
+	constexpr const char* _kSerializationAttribute_pos_x = "pos_x";
+	constexpr const char* _kSerializationAttribute_pos_y = "pos_y";
+	constexpr const char* _kSerializationAttribute_pos_z = "pos_z";
+
 	// todo: provide implementation for streaming graph from file for HUGE worlds
 	// name it PathfindingNavigationStreamingGraph (if it is needed)
+
+	// todo: provide implementation for binary :((
 
 	/*
 		binary file (after compilation):
@@ -89,15 +132,14 @@ namespace solunar
 				- max neighbours per node count
 				- max region count
 	*/
-	class PathfindingNavigationStaticCachedGraph : IPathfindingNavigationData
+	class PathfindingNavigationStaticGraphBinary : IPathfindingNavigationData
 	{
 	public:
-		PathfindingNavigationStaticCachedGraph(void);
-		~PathfindingNavigationStaticCachedGraph(void);
+		PathfindingNavigationStaticGraphBinary(void);
+		~PathfindingNavigationStaticGraphBinary(void);
 
 		void Init();
-		void Load(const char* pFullPathToFile);
-	
+		eNavigationDataRepresentationType GetType() const override;
 	private:
 		unsigned char m_region_count;
 		unsigned char m_nodes_per_region_count;
@@ -106,6 +148,39 @@ namespace solunar
 		PathfindingNavigationStaticCachedGraphNode* m_pNodes;  
 		unsigned char** m_pNeighbours; // look-up table
 		float* m_pWorldPositionOfNodes;
+	};
+
+	// todo: provide streaming for this too :D
+
+	constexpr int _kPNSG_MaxNeighbourCount = 1024;
+
+	class PathfindingNavigationStaticGraph : public IPathfindingNavigationData
+	{
+	public:
+		PathfindingNavigationStaticGraph();
+		~PathfindingNavigationStaticGraph();
+
+		void Init(tinyxml2::XMLElement& tagAIDataStorage);
+		void Shutdown();
+
+		const std::vector<PathfindingNavigationStaticGraphNode>& GetNodes(void) const;
+		const PathfindingNavigationStaticGraphNode& GetNodeByID(int node_id) const;
+		eNavigationDataRepresentationType GetType() const override;
+
+		void DebugDraw() override;
+
+	private:
+		void DebugDraw(const PathfindingNavigationStaticGraphNode& node);
+		void DebugDrawConnections(const PathfindingNavigationStaticGraphNode& node);
+
+	private:
+		bool m_init;
+		// placement new allocating data
+		int m_allocated_count;
+		unsigned char m_neighbours_allocator[sizeof(int) * _kPNSG_MaxNeighbourCount];
+
+		// look-up table of all nodes
+		std::vector<PathfindingNavigationStaticGraphNode> m_nodes;
 	};
 }
 

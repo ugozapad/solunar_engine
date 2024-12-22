@@ -18,6 +18,7 @@ namespace solunar
 		void SetShow(bool status) override;
 		int GetEditingMode() override;
 		void UpdateEditingMode(InputManager* pInputManager, World* pWorld) override;
+		void Load(tinyxml2::XMLElement& tagWorld) override;
 	private:
 		bool m_show;
 	};

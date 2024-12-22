@@ -1,15 +1,15 @@
-#ifndef SOLUNAR_AI_PATHFINDING_SOLVER_ASTAR_H
-#define SOLUNAR_AI_PATHFINDING_SOLVER_ASTAR_H
+#ifndef SOLUNAR_AI_PATHFINDING_SOLVER_DIJKSTRA_H
+#define SOLUNAR_AI_PATHFINDING_SOLVER_DIJKSTRA_H
 
 #include "pathfinding_solver.h"
 
 namespace solunar
 {
-	class PathfindingSolverAstar : public IPathfindingSolver
+	class PathfindingSolverDijkstra : public IPathfindingSolver
 	{
 	public:
-		PathfindingSolverAstar(void);
-		~PathfindingSolverAstar(void);
+		PathfindingSolverDijkstra(void);
+		~PathfindingSolverDijkstra(void);
 
 		void Init(IPathfindingNavigationData* pDataImpl) override;
 		void Shutdown() override;

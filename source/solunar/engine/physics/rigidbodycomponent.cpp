@@ -286,6 +286,11 @@ namespace solunar {
 		m_rigidBody->setLinearVelocity(glmVectorToBt(velocity));
 	}
 
+	glm::vec3 RigidBodyComponent::GetLinearVelocity()
+	{
+		return btVectorToGlm(m_rigidBody->getLinearVelocity());
+	}
+
 	/////////////////////////////////////////////////////////////////
 
 	IMPLEMENT_OBJECT(RigidBodyProxyComponent, RigidBodyComponent);

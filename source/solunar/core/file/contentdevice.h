@@ -19,6 +19,7 @@ public:
 
 	const std::string& GetPath() { return m_path; }
 
+	const char* GetWorkingPath() const;
 private:
 	std::string m_path;
 	char m_working_path[1024];

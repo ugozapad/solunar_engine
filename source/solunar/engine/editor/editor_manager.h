@@ -19,6 +19,13 @@ namespace solunar
 
 	class EditorManager : public Singleton<EditorManager>
 	{
+		struct EditorCamera
+		{
+			float yaw{};
+			float pitch{};
+			glm::vec3 direction{};
+		};
+
 	public:
 		EditorManager();
 		~EditorManager();
@@ -41,13 +48,17 @@ namespace solunar
 		bool IsObjectSelectionEnabled(void) const;
 		void SetObjectSelectionEnabled(bool value);
 
+		void DisableEditing();
+
 		bool IsSimulate(void) const;
 		void SetSimulate(bool value);
 
 		// shows modal window
 		void OnCloseApplication();
 		bool IsNeedToCloseApplication() const;
-
+		void SetWorldXML(char* data, size_t length_of_file);
+		tinyxml2::XMLDocument& GetWorldXML();
+		void Load(tinyxml2::XMLElement& tagWorld);
 	private:
 		void InitWindows();
 		void UpdateEditingModes();
@@ -71,7 +82,12 @@ namespace solunar
 		World* m_pWorld;
 		IEditorWindow* m_pEditingMode_AINavigationGraph;
 		IEditorWindow* m_pEditingMode_ObjectSelection;
+		char* m_p_allocated_memory;
+		size_t m_length_of_file;
+		EditorCamera m_cam;
 		std::vector<IEditorWindow*> m_windows;
+		tinyxml2::XMLDocument m_world_xml;
+
 	};
 	
 	extern EditorManager* g_editorManager;

@@ -10,6 +10,24 @@ namespace solunar
 {
 	EditorManager* g_editorManager = nullptr;
 
+	float wrapBetween2(float value, float min, float max) {
+		// Algorithm from http://stackoverflow.com/a/5852628/599884
+
+		if (min > max) {
+			// Swap min and max
+			float temp = min;
+			min = max;
+			max = temp;
+		}
+
+		float range = max - min;
+		if (range == 0) {
+			return max;
+		}
+
+		return (float)(value - range * floor((value - min) / range));
+	}
+
 	EditorManager::EditorManager() :
 		m_object_selection_enabled(false),
 		m_ai_navigation_editing_enabled(false),
@@ -17,10 +35,13 @@ namespace solunar
 		m_close_application(false),
 		m_show_modal_close_application_window(false),
 		m_current_editing_mode(EditingMode::kEditingMode_NoSelection),
+		m_pSelectedEntity(nullptr),
 		m_pWorld(nullptr),
 		m_pEditingMode_AINavigationGraph(nullptr),
 		m_pEditingMode_ObjectSelection(nullptr),
-		m_pSelectedEntity(nullptr)
+		m_p_allocated_memory(nullptr),
+		m_length_of_file(0),
+		m_cam{}
 	{
 	}
 
@@ -42,6 +63,7 @@ namespace solunar
 	void EditorManager::PostInit()
 	{
 		this->InitWindows();
+		this->Load(*this->GetWorldXML().FirstChildElement());
 	}
 
 	void EditorManager::InitWindows()
@@ -166,17 +188,19 @@ namespace solunar
 						pCamera->GetCameraComponent()->GetEntity()->SetPosition(pos);
 					}
 
+					constexpr glm::vec3 _kYAxis = glm::vec3(0.0f, 1.0f, 0.0f);
+
 					if (pInputManager->IsPressed(KeyboardKeys::KEY_D))
 					{
 						glm::vec3 pos = pCamera->GetCameraComponent()->GetEntity()->GetPosition();
-						pos.x += 0.02f;
+						pos += glm::normalize(glm::cross(pCamera->GetDirection(), _kYAxis)) * 0.02f;
 						pCamera->GetCameraComponent()->GetEntity()->SetPosition(pos);
 					}
 
 					if (pInputManager->IsPressed(KeyboardKeys::KEY_A))
 					{
 						glm::vec3 pos = pCamera->GetCameraComponent()->GetEntity()->GetPosition();
-						pos.x -= 0.02f;
+						pos -= glm::normalize(glm::cross(pCamera->GetDirection(), _kYAxis)) * 0.02f;
 						pCamera->GetCameraComponent()->GetEntity()->SetPosition(pos);
 					}
 
@@ -185,10 +209,29 @@ namespace solunar
 						g_engineData.m_shouldCaptureMouse = true;
 						g_engineData.m_shouldHideMouse = true;
 
-						glm::vec2 mousePos = pInputManager->GetCursorPos();
+						glm::vec2 delta = pInputManager->GetDeltaCursorPos();
 
-						glm::vec2 deltaMousePos = pInputManager->GetDeltaCursorPos();
-					 	dynamicCast<CameraFirstPersonComponent>(pCamera->GetCameraComponent())->updateFromMousePosition(deltaMousePos);
+						float xoffset = delta.x;
+						float yoffset = delta.y;
+
+						xoffset *= 0.1f;
+						yoffset *= 0.1f;
+
+						m_cam.yaw += xoffset;
+						m_cam.pitch += yoffset;
+
+						m_cam.pitch = glm::clamp(m_cam.pitch, -89.0f, 89.0f);
+						m_cam.yaw = wrapBetween2(m_cam.yaw, -180.0f, 180.0f);
+						m_cam.pitch = wrapBetween2(m_cam.pitch, -180.0f, 180.0f);
+
+						glm::vec3 front;
+						front.x = cos(glm::radians(m_cam.yaw)) * cos(glm::radians(m_cam.pitch));
+						front.y = sin(glm::radians(m_cam.pitch));
+						front.z = sin(glm::radians(m_cam.yaw)) * cos(glm::radians(m_cam.pitch));
+
+						m_cam.direction = glm::normalize(front);
+
+						pCamera->GetCameraComponent()->SetDirection(m_cam.direction);
 					}
 					else
 					{
@@ -269,6 +312,13 @@ namespace solunar
 			}
 		}
 
+
+		if (this->m_p_allocated_memory)
+		{
+			delete[] this->m_p_allocated_memory;
+			this->m_p_allocated_memory = nullptr;
+		}
+
 		m_windows.clear();
 	}
 
@@ -331,6 +381,13 @@ namespace solunar
 
 	void EditorManager::SetObjectSelectionEnabled(bool value) { this->m_object_selection_enabled = value; if (value) this->m_current_editing_mode = EditingMode::kEditingMode_ObjectSelection; }
 
+	void EditorManager::DisableEditing()
+	{
+		this->m_ai_navigation_editing_enabled = false;
+		this->m_object_selection_enabled = false;
+		this->m_current_editing_mode = EditingMode::kEditingMode_NoSelection;
+	}
+
 	bool EditorManager::IsSimulate(void) const
 	{
 		return this->m_game_simulate;
@@ -354,5 +411,43 @@ namespace solunar
 	bool EditorManager::IsNeedToCloseApplication() const
 	{
 		return this->m_close_application;
+	}
+
+	void EditorManager::SetWorldXML(char* data, size_t length_of_file)
+	{
+		if (data)
+		{
+			if (length_of_file)
+			{
+				if (this->m_p_allocated_memory)
+				{
+					delete[] this->m_p_allocated_memory;
+					this->m_p_allocated_memory = nullptr;
+				}
+
+				this->m_p_allocated_memory = new char[length_of_file+1];
+				this->m_p_allocated_memory[length_of_file] = '\0';
+				memcpy(this->m_p_allocated_memory, data, length_of_file);
+
+				auto status = this->m_world_xml.Parse(this->m_p_allocated_memory, length_of_file);
+
+				Assert(status == tinyxml2::XML_SUCCESS);
+			}
+		}
+	}
+	tinyxml2::XMLDocument& EditorManager::GetWorldXML()
+	{
+		return this->m_world_xml;
+	}
+
+	void EditorManager::Load(tinyxml2::XMLElement& tagWorld)
+	{
+		for (IEditorWindow* pWindow : this->m_windows)
+		{
+			if (pWindow)
+			{
+				pWindow->Load(tagWorld);
+			}
+		}
 	}
 }

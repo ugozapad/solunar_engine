@@ -20,6 +20,7 @@ DebugRender::DebugRender()
 	m_matrixBuffer = nullptr;
 	m_shaderProgram = nullptr;
 	m_modelMatrix = glm::identity<glm::mat4>();
+	this->m_lines.reserve(10000);
 }
 
 DebugRender::~DebugRender()

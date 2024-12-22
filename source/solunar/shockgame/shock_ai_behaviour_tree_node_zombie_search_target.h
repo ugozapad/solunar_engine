@@ -12,13 +12,25 @@
 
 namespace solunar
 {
+	struct ZombieLogicStateType;
+
 	class BehaviourTreeActionNodeZombieSearchTarget : public BehaviourTreeNode
 	{
 	public:
 		BehaviourTreeActionNodeZombieSearchTarget(const char* pDebugName);
 		~BehaviourTreeActionNodeZombieSearchTarget();
 
-		eBehaviourTreeStatus Update(World* pWorld, void* pUserStateData, float dt) override;
+		eBehaviourTreeStatus Update(World* pWorld, Entity* pOwner, void* pUserStateData, float dt) override;
+
+	private:
+
+		bool SearchBarricade();
+		bool ValidateMyNavigationPlacement(Entity* pOwner, ZombieLogicStateType* pSharedData);
+
+		bool SearchHumanToAttack(World* pWorld, Entity* pOwner, ZombieLogicStateType* pSharedData);
+
+	private:
+		bool m_validated_ai_navigation;
 	};
 }
 

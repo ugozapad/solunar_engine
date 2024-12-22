@@ -24,6 +24,8 @@ public:
 	void MountDevice(ContentDevice* contentDevice, const std::string& name);
 	void UnmountDevice(const std::string& name);
 
+	const char* GetWorkingPath(const char* pDeviceName);
+
 	// #TODO: remove
 	// Little hack for using legacy code
 	DataStreamPtr OpenStream(const std::string& path);

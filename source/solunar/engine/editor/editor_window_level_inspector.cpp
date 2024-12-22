@@ -295,3 +295,7 @@ void solunar::EditorWindow_LevelInspector::UpdateEditingMode(InputManager* pInpu
 {
 
 }
+
+void solunar::EditorWindow_LevelInspector::Load(tinyxml2::XMLElement& tagWorld)
+{
+}

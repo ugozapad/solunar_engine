@@ -15,21 +15,21 @@ namespace solunar
 		glm::mat4 viewProjection = m_view->m_projection * m_view->m_view;
 		m_frustum.Update(viewProjection);
 	}
-
+	// returns dir
 	glm::vec3 Camera::GetScreenRay(float x, float y)
 	{
 		if (getViewMatrix() != m_view->m_view)
 			UpdateInternal();
 
+		float mouse_x = x / (m_view->m_width * 0.5f) - 1.0f;
+		float mouse_y = y / (m_view->m_height * 0.5f) - 1.0f;
 
-		//glm::mat4 viewProjInverse = glm::inverse( m_view->m_projection  )
+		glm::mat4 ivp = glm::inverse(m_view->m_projection * m_view->m_view);
+		glm::vec4 screen_pos(mouse_x, -mouse_y, 1.0f, 1.0f);
 
-		static glm::mat4 identity4x4 = glm::mat4(1.0f);
+		glm::vec4 world_pos = ivp * screen_pos;
 
-		glm::vec3 win = glm::vec3((float)m_view->m_width, (float)m_view->m_height, 0.0f);
-		glm::vec4 vp = glm::vec4(0.0f, 0.0f, (float)m_view->m_width, (float)m_view->m_height);
-		glm::vec3 p = glm::unProject(win, m_view->m_view, m_view->m_projection, vp);
-		return p;
+		return glm::normalize(glm::vec3(world_pos));
 	}
 
 	void Camera::UpdateInternal()

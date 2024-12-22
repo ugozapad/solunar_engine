@@ -55,5 +55,10 @@ DataStreamPtr ContentDevice::OpenStream(const std::string& filename)
 	return std::make_shared<FileStream>(path);
 }
 
+const char* ContentDevice::GetWorkingPath() const
+{
+	return this->m_working_path;
+}
+
 
 }
