@@ -4,6 +4,32 @@
         <Rotation x="-0" y="0" z="0"/>
         <Scale x="1" y="1" z="1"/>
         <MeshComponent>
+            <Model filename="models/terrain_asphalt.model"/>
+        </MeshComponent>
+        <RigidBodyComponent>
+            <Enable value="false"/>
+            <Mass value="0"/>
+            <Static value="true"/>
+            <Kinematic value="false"/>
+            <Trigger value="false"/>
+        </RigidBodyComponent>
+        <TriangleMeshShapeComponent>
+            <Position x="0" y="0" z="0"/>
+        </TriangleMeshShapeComponent>
+    </Entity>
+    <Entity className="Entity">
+        <Position x="0" y="0" z="0"/>
+        <Rotation x="-0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <MeshComponent>
+            <Model filename="models/terrain_outside.model"/>
+        </MeshComponent>
+    </Entity>
+    <Entity className="Entity">
+        <Position x="0" y="0" z="0"/>
+        <Rotation x="-0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <MeshComponent>
             <Model filename="models/zapravka.model"/>
         </MeshComponent>
         <RigidBodyComponent>
@@ -34,10 +60,41 @@
         </MeshComponent>
     </Entity>
     <Entity className="Entity">
+        <Position x="-6.5599999" y="0" z="-13.06"/>
+        <Rotation x="-0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <AnimatedMeshComponent>
+            <Model filename="models/zombie.glb"/>
+        </AnimatedMeshComponent>
+        <RigidBodyComponent>
+            <Enable value="false"/>
+            <Mass value="80"/>
+            <Static value="false"/>
+            <Kinematic value="false"/>
+            <Trigger value="false"/>
+        </RigidBodyComponent>
+        <BoxShapeComponent>
+            <Position x="0" y="0.80000001" z="0"/>
+            <Size x="0.2" y="0.80000001" z="0.2"/>
+        </BoxShapeComponent>
+        <ShockAIComponent>
+            <AIType value="ShockAIType_Zombie"/>
+        </ShockAIComponent>
+        <ShockAIBehaviourTree/>
+    </Entity>
+    <Entity className="Entity">
         <Position x="1" y="2" z="1"/>
         <Rotation x="-0" y="0" z="0"/>
         <Scale x="1" y="1" z="1"/>
         <PlayerSpawnComponent/>
+    </Entity>
+    <Entity className="Entity">
+        <Position x="0" y="0" z="0"/>
+        <Rotation x="-0" y="1.5707964" z="0"/>
+        <Scale x="1000" y="1000" z="1000"/>
+        <MeshComponent>
+            <Model filename="models/demo_sky.model"/>
+        </MeshComponent>
     </Entity>
     <Entity className="Entity">
         <Position x="0.2" y="1.3" z="0"/>
@@ -55,7 +112,8 @@
             <Size x="0.050000001" y="0.2" z="0.44999999"/>
         </BoxShapeComponent>
         <UsableAreaComponent>
-            <Script value="give_weapon weapon_shotgun"/>
+            <Script value="give_weapon shotgun"/>
+            <Script value="1400"/>
         </UsableAreaComponent>
         <Entity className="Entity">
             <Position x="0" y="0" z="0"/>
@@ -99,21 +157,87 @@
         </PointLightComponent>
     </Entity>
     <Entity className="Entity">
-        <Position x="-1.970808" y="2.1849363" z="2.0110991"/>
+        <Position x="2.1670568" y="1.3319253" z="3.8053551"/>
         <Rotation x="-0" y="0" z="0"/>
         <Scale x="1" y="1" z="1"/>
-        <EditorCameraComponent/>
-        <CameraFirstPersonComponent/>
+        <PointLightComponent>
+            <AmbientColor r="0" g="0" b="0"/>
+            <Color r="1" g="1" b="1"/>
+            <SpecularColor r="0" g="0" b="0"/>
+            <Radius value="8.5"/>
+        </PointLightComponent>
     </Entity>
     <Entity className="Entity">
-        <Position x="2.1670568" y="1.3319253" z="3.8053551"/>
+        <Position x="-0.17" y="1.3319253" z="-6.0599999"/>
+        <Rotation x="-0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <PointLightComponent>
+            <AmbientColor r="0" g="0" b="0"/>
+            <Color r="1" g="1" b="1"/>
+            <SpecularColor r="0" g="0" b="0"/>
+            <Radius value="4"/>
+        </PointLightComponent>
+    </Entity>
+    <Entity className="Entity">
+        <Position x="-14.2" y="3.3319254" z="-3.8900001"/>
+        <Rotation x="-0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <PointLightComponent>
+            <AmbientColor r="0" g="0" b="0"/>
+            <Color r="1" g="1" b="1"/>
+            <SpecularColor r="0" g="0" b="0"/>
+            <Radius value="25"/>
+        </PointLightComponent>
+    </Entity>
+    <Entity className="Entity">
+        <Position x="-13.59" y="3.3319254" z="3.3599999"/>
+        <Rotation x="-0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <PointLightComponent>
+            <AmbientColor r="0" g="0" b="0"/>
+            <Color r="1" g="1" b="1"/>
+            <SpecularColor r="0" g="0" b="0"/>
+            <Radius value="25"/>
+        </PointLightComponent>
+    </Entity>
+    <Entity className="Entity">
+        <Position x="-10.59" y="3.3319254" z="11.5"/>
+        <Rotation x="-0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <PointLightComponent>
+            <AmbientColor r="0" g="0" b="0"/>
+            <Color r="1" g="1" b="1"/>
+            <SpecularColor r="0" g="0" b="0"/>
+            <Radius value="25"/>
+        </PointLightComponent>
+    </Entity>
+    <Entity className="Entity">
+        <Position x="-42.220016" y="67.758469" z="69.371109"/>
         <Rotation x="-0" y="0" z="0"/>
         <Scale x="1" y="1" z="1"/>
         <PointLightComponent>
             <AmbientColor r="1" g="1" b="1"/>
             <Color r="1" g="1" b="1"/>
             <SpecularColor r="1" g="1" b="1"/>
-            <Radius value="12"/>
+            <Radius value="120.4"/>
+        </PointLightComponent>
+    </Entity>
+    <Entity className="Entity">
+        <Position x="6.2646689" y="50.932304" z="-34.608356"/>
+        <Rotation x="-0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <EditorCameraComponent/>
+        <CameraFirstPersonComponent/>
+    </Entity>
+    <Entity className="Entity">
+        <Position x="-51.528057" y="54.629822" z="-30.524672"/>
+        <Rotation x="-0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <PointLightComponent>
+            <AmbientColor r="1" g="1" b="1"/>
+            <Color r="1" g="1" b="1"/>
+            <SpecularColor r="1" g="1" b="1"/>
+            <Radius value="120"/>
         </PointLightComponent>
     </Entity>
 </World>

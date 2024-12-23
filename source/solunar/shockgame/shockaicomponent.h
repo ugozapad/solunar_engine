@@ -14,6 +14,16 @@ enum ShockAIType
 	ShockAIType_Zombie,
 };
 
+enum ShockAIAnimationState
+{
+	ShockAIAnimationState_Idle,
+	ShockAIAnimationState_Walk,
+	ShockAIAnimationState_Attack,
+	ShockAIAnimationState_Die,
+
+	ShockAIAnimationState_Count
+};
+
 struct ShockAIZombieData
 {
 	int m_idleAnimation;
@@ -46,16 +56,33 @@ public:
 
 	void UpdateZombie(float dt);
 	void UpdateZombie_AnimationController(float dt);
+	void UpdateZombie_FSM(float dt);
 
 	void LoadXML(tinyxml2::XMLElement& element) override;
 	void SaveXML(tinyxml2::XMLElement& element) override;
+
+	void Damage(Entity* from, float amount);
+
+	void SetAnimationState(ShockAIAnimationState state);
+
+private:
+	void PlayAIAnimation(int animation, bool looped);
+
+	void UpdateZombie_DumpState();
+
+	bool IsAnimationFinished();
 
 private:
 	ShockAIZombieData m_zombieData;
 	AnimatedMeshComponent* m_animatedComponent;
 	ShockAIType m_aiType;
+	
+	ShockAIAnimationState m_currentState;
+	ShockAIAnimationState m_nextState;
+	float m_health;
 	bool m_fire;
 	bool m_disable;
+	bool m_death;
 };
 
 ShockAIType GetShockAITypeFromString(const std::string& name);

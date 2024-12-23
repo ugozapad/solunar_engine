@@ -27,6 +27,8 @@ namespace solunar {
 
 		int GetAmmo() { return m_ammo; }
 
+		void SetWeaponType(WeaponsType type);
+
 	private:
 		bool m_inited;
 		int m_idleAni;
@@ -36,7 +38,8 @@ namespace solunar {
 		int m_reload_last_one_Ani;
 
 		int m_ammo;
-	
+		int m_clipSize;
+
 		WeaponsType m_type;
 	};
 

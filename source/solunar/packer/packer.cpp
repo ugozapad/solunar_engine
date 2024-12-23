@@ -5,6 +5,7 @@
 #include <vector>
 #include <memory>
 #include <filesystem>
+#include <shlobj_core.h>
 
 #include "lz4.h"
 
@@ -21,6 +22,34 @@ std::string getFileNameWithoutExtension(const std::string& filename)
 
 	return filename;
 }
+
+std::string getFilePath(const std::string& filename)
+{
+	size_t lastindex = filename.find_last_of("/");
+	if (lastindex == std::string::npos) {
+		lastindex = filename.find_last_of("\\");
+	}
+
+	if (lastindex != std::string::npos) {
+
+		return filename.substr(0, lastindex);
+	}
+
+	return std::string();
+}
+
+std::string toWin32Path(const std::string& filename)
+{
+	std::string result = filename;
+
+	for (int i = 0; i < filename.length(); i++) {
+		if (result[i] == '/')
+			result[i] = '\\';
+	}
+
+	return result;
+}
+
 
 class CommandArgs
 {
@@ -272,6 +301,60 @@ void generateFileList()
 	stream.close();
 }
 
+int createDirectoryRecursively(LPCTSTR path)
+{
+	return SHCreateDirectoryEx(NULL, path, NULL);
+}
+
+void unpack() {
+
+	const char* filename = s_args.getOptionParameter("-unpack");
+	if (!filename)
+		return;
+
+	FILE* f = fopen(filename, "rb");
+	if (!f)
+		return;
+
+	char currentDir[256];
+	GetCurrentDirectoryA(256, currentDir);
+
+	PackHeader h;
+	fread(&h, sizeof(h), 1, f);
+
+	PackFileEntry* filetable = (PackFileEntry*)malloc(h.filecount * sizeof(PackFileEntry));
+	fread(filetable, sizeof(PackFileEntry), h.filecount, f);
+
+	for (int i = 0; i < h.filecount - 1; i++) {
+		fseek(f, filetable[i].pointerOffset, SEEK_SET);
+		if (filetable[i].isCompressed) {
+			std::vector<char> rawData;
+			rawData.resize(filetable[i].compressedSize);
+			fread(rawData.data(), rawData.size(), 1, f);
+			
+			std::vector<char> fileData;
+			fileData.resize(filetable[i].size);
+
+			LZ4_decompress_safe(rawData.data(), fileData.data(), filetable[i].compressedSize, filetable[i].size);
+
+			std::string directory = currentDir;
+			directory += "\\";
+			directory += getFilePath(filetable[i].filename);
+			directory = toWin32Path(directory);
+
+			createDirectoryRecursively(directory.c_str());
+
+			DWORD err = GetLastError();
+
+			FILE* fp = fopen(filetable[i].filename, "wb");
+			fwrite(fileData.data(), fileData.size(), 1, fp);
+			fclose(fp);
+		}
+	}
+
+	free(filetable);
+}
+
 int main(int argc, char* argv[])
 {
 	s_args.init(argc, argv);
@@ -287,6 +370,10 @@ int main(int argc, char* argv[])
 	else if (s_args.hasOption("-generateFileList"))
 	{
 		generateFileList();
+	}
+	else if (s_args.hasOption("-unpack"))
+	{
+		unpack();
 	}
 	else
 	{

@@ -22,6 +22,8 @@
 #include "engine/entity/world.h"
 #include "graphics/graphicsworld.h"
 
+#include "d3d11drv/d3d11texture2d.h"
+
 #include <sstream>
 
 namespace solunar
@@ -446,6 +448,13 @@ namespace solunar
 
 		if (m_albedoTexture.lock())
 			m_albedoTexture.lock()->getHWTexture()->SetDebugName(m_albedoTextureFileName.c_str());
+
+		if (!m_skipmips)
+		{
+			D3D11Texture2D* pD3DTexture = dynamic_cast<D3D11Texture2D*>(m_albedoTexture.lock()->getHWTexture());
+			if (pD3DTexture)
+				pD3DTexture->GenerateMips();
+		}
 
 		// REWRITE TO SAMPLER !!!
 #if 0

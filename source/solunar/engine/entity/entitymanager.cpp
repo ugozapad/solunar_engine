@@ -76,6 +76,15 @@ Entity* EntityManager::CreateEntityEx(const TypeInfo* typeInfo)
 	return entity;
 }
 
+Entity* EntityManager::GetEntityByName(const std::string& name)
+{
+	for (auto it : m_entities)
+		if (it->GetName() == name)
+			return it;
+
+	return nullptr;
+}
+
 std::vector<Entity*> EntityManager::GetEntitiesWithComponentTypeInfo(const TypeInfo* typeInfo)
 {
 	std::vector<Entity*> entities;

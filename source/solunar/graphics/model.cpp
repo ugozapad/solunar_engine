@@ -21,7 +21,7 @@
 
 #include "core/file/filesystem.h"
 
-#define DISABLE_ASSIMP
+//#define DISABLE_ASSIMP
 
 #ifndef DISABLE_ASSIMP
 #ifdef _MSC_VER

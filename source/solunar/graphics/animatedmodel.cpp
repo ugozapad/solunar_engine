@@ -389,7 +389,7 @@ void AnimatedModel::Load_GLTF(const std::shared_ptr<DataStream>& stream)
 			animationChannel.m_samplerId = (int)cgltf_animation_sampler_index(&gltf_animation, gltf_animationChannel.sampler);
 		}
 
-		Core::Msg("AnimatedModel: animation %s channels %i", gltf_animation.name, gltf_animation.channels_count);
+		//Core::Msg("AnimatedModel: animation %s channels %i", gltf_animation.name, gltf_animation.channels_count);
 	}
 
 	// loading model skin

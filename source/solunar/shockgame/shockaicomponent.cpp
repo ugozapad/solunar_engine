@@ -6,6 +6,8 @@
 #include "shockgame/demogame.h"
 #include "shockgame/shock_component_ai_behaviourtree.h"
 
+#include "engine/ai/pathfinding_manager.h"
+
 #include "graphics/fontmanager.h"
 #include "graphics/debugrenderer.h"
 
@@ -25,8 +27,12 @@ END_PROPERTY_REGISTER(ShockAIComponent)
 ShockAIComponent::ShockAIComponent() :
 	m_animatedComponent(nullptr),
 	m_aiType(ShockAIType_None),
+	m_health(100.0f),
+	m_currentState(ShockAIAnimationState_Count),
+	m_nextState(ShockAIAnimationState_Idle),
 	m_fire(false),
-	m_disable(false)
+	m_disable(false),
+	m_death(false)
 {
 }
 
@@ -64,11 +70,14 @@ void ShockAIComponent::Update(float dt)
 	//	UpdateZombie(dt);
 
 		ShockAIBehaviourTree* pBT = this->GetEntity()->GetComponent<ShockAIBehaviourTree>();
-
 		if (pBT)
 		{
 			pBT->Update(dt);
 		}
+
+		UpdateZombie_FSM(dt);
+		UpdateZombie_AnimationController(dt);
+		UpdateZombie_DumpState();
 	}
 }
 
@@ -169,13 +178,19 @@ void ShockAIComponent::UpdateZombie_AnimationController(float dt)
 	}
 #endif
 
-	std::shared_ptr<AnimatedModel> animatedModel = m_animatedComponent->LockAnimatedModel();
-	if (animatedModel->IsStoped())
-	{
-		animatedModel->PlayAnimation( m_zombieData.m_idleAnimation );
-	}
+	// rotate camera torwads to player
+	glm::vec3 playerPos = g_Player->GetPosition();
+	playerPos.y = 0.0f;
 
-	animatedModel->Update(dt);
+	glm::vec3 characterPos = GetEntity()->GetPosition();
+	characterPos.y = 0.0f;
+
+	glm::quat rotation = glm::quatLookAt(glm::normalize(playerPos - characterPos), glm::vec3(0.0f, 1.0f, 0.0f));
+	GetEntity()->SetRotation(rotation);
+
+	std::shared_ptr<AnimatedModel> animatedModel = m_animatedComponent->LockAnimatedModel();
+	if (animatedModel)
+		animatedModel->Update(dt);
 
 	// debug stuff
 #if 0
@@ -185,6 +200,31 @@ void ShockAIComponent::UpdateZombie_AnimationController(float dt)
 	sprintf(debugText, "Time: %f", animatedModel->GetCurrentTime());
 	Debug_Draw3DText(debugText, GetEntity()->GetPosition(), glm::vec4(1.f, 1.f, 1.f, 1.f), -25.0f);
 #endif
+}
+
+void ShockAIComponent::UpdateZombie_FSM(float dt)
+{
+	if (m_currentState == m_nextState || m_death)
+		return;
+
+	m_currentState = m_nextState;
+
+	switch (m_currentState)
+	{
+	case ShockAIAnimationState_Idle:
+		PlayAIAnimation(m_zombieData.m_idleAnimation, true);
+		break;
+	case ShockAIAnimationState_Walk:
+		PlayAIAnimation(m_zombieData.m_walkAnimation, true);
+		break;
+	case ShockAIAnimationState_Attack:
+		PlayAIAnimation(m_zombieData.m_attackAnimation, true);
+		break;
+	case ShockAIAnimationState_Die:
+		PlayAIAnimation(m_zombieData.m_dieAnimation, true);
+		m_death = true;
+		break;
+	}
 }
 
 void ShockAIComponent::LoadXML(tinyxml2::XMLElement& element)
@@ -204,6 +244,53 @@ void ShockAIComponent::SaveXML(tinyxml2::XMLElement& element)
 
 	tinyxml2::XMLElement* aitype = element.InsertNewChildElement("AIType");
 	aitype->SetAttribute("value", aitypeString.c_str());
+}
+
+void ShockAIComponent::Damage(Entity* from, float amount)
+{
+	if (m_health <= 0.0f)
+	{
+		m_health = 0.0f;
+		return;
+	}
+
+	m_health -= amount;
+}
+
+void ShockAIComponent::SetAnimationState(ShockAIAnimationState state)
+{
+	m_nextState = state;
+}
+
+void ShockAIComponent::PlayAIAnimation(int animation, bool looped)
+{
+	std::shared_ptr<AnimatedModel> animatedModel = m_animatedComponent->LockAnimatedModel();
+	animatedModel->PlayAnimation(animation, looped);
+}
+
+void ShockAIComponent::UpdateZombie_DumpState()
+{
+	static const char* s_zombieAIStates[ShockAIAnimationState_Count] =
+	{
+		"ShockAIAnimationState_Idle",
+		"ShockAIAnimationState_Walk",
+		"ShockAIAnimationState_Attack",
+		"ShockAIAnimationState_Die",
+	};
+
+	static char debugText[128];
+	sprintf(debugText, "State: %s", s_zombieAIStates[m_currentState]);
+	Debug_Draw3DText(debugText, GetEntity()->GetPosition(), glm::vec4(1.f, 1.f, 1.f, 1.f), -50.0f);
+
+	int nodeId = g_aiPathfindingManager->GetNearestPoint(GetEntity()->GetPosition());
+	sprintf(debugText, "Node: %i", nodeId);
+	Debug_Draw3DText(debugText, GetEntity()->GetPosition(), glm::vec4(1.f, 1.f, 1.f, 1.f), -25.0f);
+}
+
+bool ShockAIComponent::IsAnimationFinished()
+{
+	std::shared_ptr<AnimatedModel> animatedModel = m_animatedComponent->LockAnimatedModel();
+	return animatedModel->IsStoped();
 }
 
 ShockAIType GetShockAITypeFromString(const std::string& name)

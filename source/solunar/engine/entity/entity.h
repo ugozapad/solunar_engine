@@ -28,6 +28,9 @@ public:
 	void SetRootEntity(Entity* node);
 	Entity* GetRootEntity() { return m_rootEntity; }
 
+	void SetName(const std::string& name)	{ m_name = name; }
+	std::string GetName() const				{ return m_name; }
+
 	glm::vec3 GetPosition()	const	{ return m_position; }
 	glm::quat GetRotation()	const	{ return m_rotation; }
 	glm::vec3 GetScale()	const	{ return m_scale; }

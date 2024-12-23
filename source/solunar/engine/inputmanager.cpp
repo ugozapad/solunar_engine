@@ -22,6 +22,10 @@ InputManager::~InputManager()
 void InputManager::Update()
 {
 	m_lastCharactedPressed = 0;
+
+	m_mouseButtons[MouseButtons::MOUSE_BUTTON_LEFT] = false;
+
+	//memset(m_mouseButtons, 0, sizeof(m_mouseButtons));
 }
 
 bool InputManager::IsPressed(uint32_t key)

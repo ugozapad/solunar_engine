@@ -21,6 +21,8 @@ public:
 	Entity* CreateEntity();
 	Entity* CreateEntityEx(const TypeInfo* typeInfo);
 
+	Entity* GetEntityByName(const std::string& name);
+
 	const std::vector<Entity*>& GetEntities() { return m_entities; }
 
 	std::vector<Entity*> GetEntitiesWithComponentTypeInfo(const TypeInfo* typeInfo);

@@ -46,7 +46,8 @@ void PropertyManager::RegisterProperty(const TypeInfo* typeInfo, IProperty* prop
 		m_properies.find(typeInfo->GetStringHash())->second.push_back(propertyInstance);
 	}
 
-	Core::Msg("PropertyManager: registered property %s for type %s", propertyInstance->GetName(), typeInfo->GetClassName());
+	// #TODO DISABLE LOGGING FOR PROPERTY REGISTER
+	//Core::Msg("PropertyManager: registered property %s for type %s", propertyInstance->GetName(), typeInfo->GetClassName());
 }
 
 IProperty* PropertyManager::FindProperty(const TypeInfo* typeInfo, const char* name)

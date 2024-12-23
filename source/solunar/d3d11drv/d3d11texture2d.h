@@ -26,6 +26,8 @@ public:
 	ID3D11Texture2D* GetTexture() { return m_texture; }
 	ID3D11ShaderResourceView* getTextureSRV() { return m_textureSRV; }
 
+	void GenerateMips();
+
 private:
 	TextureDesc m_textureDesc;
 	SurfaceDesc m_surfaceDesc;

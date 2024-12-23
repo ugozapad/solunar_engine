@@ -85,7 +85,12 @@ namespace solunar {
 		if (triggerElement)
 			triggerElement->QueryBoolAttribute("value", &m_isTrigger);
 
+		tinyxml2::XMLElement* kinematicElement = element.FirstChildElement("Kinematic");
+		if (kinematicElement)
+			kinematicElement->QueryBoolAttribute("value", &m_isKinematic);
+
 		bool changeFilterUsableHack = false;
+		bool bolvanHack = false;
 
 		tinyxml2::XMLElement* filterElement = element.FirstChildElement("Filter");
 		if (filterElement)
@@ -97,6 +102,10 @@ namespace solunar {
 				if (strcmp(filterValue, "PhysicsFilter_Usable") == 0)
 				{
 					changeFilterUsableHack = true;
+				}
+				if (strcmp(filterValue, "PhysicsFilter_Bolvan") == 0)
+				{
+					bolvanHack = true;
 				}
 			}
 		}
@@ -112,6 +121,10 @@ namespace solunar {
 		{
 			m_rigidBody->getBroadphaseProxy()->m_collisionFilterGroup = PhysicsFilter_Triggers;
 		}
+
+		// HACKHACKHACK: bolvan body never sleep
+		if (bolvanHack)
+			m_rigidBody->setActivationState(DISABLE_DEACTIVATION);
 	}
 
 	void RigidBodyComponent::SaveXML(tinyxml2::XMLElement& element)
@@ -254,6 +267,10 @@ namespace solunar {
 		// trigger custom color
 		if (m_isTrigger)
 			m_rigidBody->setCustomDebugColor(btVector3(1.0f, 0.5f, 0.0f));
+
+		// HACKHACKHACK: kinematic body never sleep
+		if (m_isKinematic)
+			m_rigidBody->setActivationState(DISABLE_DEACTIVATION);
 	}
 
 	void RigidBodyComponent::DisableCollide()

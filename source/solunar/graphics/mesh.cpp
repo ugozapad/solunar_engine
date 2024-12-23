@@ -84,8 +84,12 @@ namespace solunar {
 
 	void MeshComponent::LoadModel(const std::string& filename)
 	{
-		m_model = g_contentManager->LoadObject<ModelBase>(filename);
 		m_filename = filename;
+
+		if (strstr(m_filename.c_str(), ".model"))
+			m_model = g_contentManager->LoadObject<Model>(m_filename);
+		else
+			m_model = g_contentManager->LoadObject<ModelBase>(m_filename);
 	}
 
 	std::shared_ptr<ModelBase> MeshComponent::LockModel()

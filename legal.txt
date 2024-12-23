@@ -1,31 +1,44 @@
-Game and engine programming, idea and models:
+Game and engine programming, idea and world models:
 Kirill "zvenigorodskya"
 
 AI, editor and engine fixes:
 Pavel "wh1t3lord"
 @wh1t3lord
 
-Additional world models:
-Andrey
-
-Shotgun model and animations:
-
+Models:
+---------------------------------------------------------------------------------------------------
+Pistol Animated
+DJMaesen
+https://sketchfab.com/3d-models/pistol-animated-f4d14fe2e7d94070afe730ab99458714
+---------------------------------------------------------------------------------------------------
 Shotgun Animated
 DJMaesen
 https://sketchfab.com/3d-models/shotgun-animated-963e540358b84ca9b72a5e4d59acd57c
 ---------------------------------------------------------------------------------------------------
-Zombie model:
 
-Cursed Undead Soldier Rig
-DM-913
-https://sketchfab.com/3d-models/cursed-undead-soldier-rig-b2e39de76b834d978adee5716aec814d
----------------------------------------------------------------------------------------------------
+Props models are taken from: Megascan library
 
-Animations for characters are taken from: mixamo.org
-World textures are taken from: textures.com
-HDRI Skybox: ...
+Characters and animations are taken from: mixamo.org
+World textures are taken from: textures.com, ambientcg.com
 
+Music from: E.Y.E: Divine Cybermancy
 
 Sounds from:
 Call of Duty World at War
+S.T.A.L.K.E.R. Lost Alpha
 freesound.org
+
+Software:
+Visual Studio 2022
+CMake
+Blender 4.2
+Audacity
+Paint.NET
+
+Libraries:
+cgltf
+tinyxml2
+bullet
+lz4
+imgui
+fmod

@@ -23,6 +23,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/matrix_decompose.hpp> // Matrix decomposition
 
+#include <glm/gtx/spline.hpp>
+
 #include "engine/editor/editor_manager.h"
 #include "engine/editor/editor_window_level_inspector.h"
 #include "engine/editor/editor_window_entity_editor.h"
@@ -615,6 +617,45 @@ void FadeRenderer::Draw()
 	ImGui::GetBackgroundDrawList()->AddRectFilled(ImVec2(0.0f, 0.0f), io.DisplaySize, color);
 }
 
+TitleRenderer* TitleRenderer::GetInstance()
+{
+	static TitleRenderer s_TitleRenderer;
+	return &s_TitleRenderer;
+}
+
+void TitleRenderer::SetTitle(const std::string& name, float time, bool isOut)
+{
+	m_currentTime = isOut ? time : 0.0f;
+	m_time = time;
+	m_isOut = isOut;
+	m_name = name;
+}
+
+void TitleRenderer::Draw()
+{
+	if (m_isOut)
+	{
+		if (m_currentTime >= 0.0001f)
+			m_currentTime -= Timer::GetInstance()->GetDelta();
+	}
+	else
+	{
+		if (m_currentTime <= m_time)
+			m_currentTime += Timer::GetInstance()->GetDelta();
+	}
+
+	// don't draw on reach time * 2
+	if (m_currentTime >= m_time * 2.0f)
+		return;
+
+	float a = m_currentTime / m_time;
+
+	View* view = CameraProxy::GetInstance()->GetView();
+
+	static IFont* font = g_fontManager->CreateFont("textures/ui/Anton-Regular.ttf", 86.0f);
+	font->DrawText(m_name.c_str(), view->m_width / 2.0f - 220.0f, view->m_height / 2.0f, glm::vec4(1.0f, 0.1f, 0.1f, a));
+}
+
 IMPLEMENT_OBJECT(PlayerSpawnComponent, Component);
 
 PlayerSpawnComponent::PlayerSpawnComponent()
@@ -629,10 +670,28 @@ IMPLEMENT_OBJECT(DoorCoverComponent, LogicComponent);
 
 DoorCoverComponent::DoorCoverComponent()
 {
+	m_time = 0.0f;
 }
 
 DoorCoverComponent::~DoorCoverComponent()
 {
+}
+
+void DoorCoverComponent::Update(float dt)
+{
+	const float endtime = 12.0f;
+
+	float d = m_time / endtime;
+	m_time += dt;
+
+	glm::vec3 sp = glm::lerp(GetEntity()->GetPosition(), m_pointPosition, d*0.002f);  // glm::spline()
+
+	GetEntity()->SetPosition(sp);
+}
+
+void DoorCoverComponent::SetPointPosition(const glm::vec3& position)
+{
+	m_pointPosition = position;
 }
 
 ShelterLevelManagerComponent* g_ShelterLevelManager = nullptr;
@@ -641,6 +700,18 @@ IMPLEMENT_OBJECT(ShelterLevelManagerComponent, LogicComponent);
 
 ShelterLevelManagerComponent::ShelterLevelManagerComponent()
 {
+	m_barricadePoints[0] = nullptr;
+	m_barricadePoints[1] = nullptr;
+	m_barricadePoints[2] = nullptr;
+
+	for (int i = 0; i < kDoorCount; i++)
+	{
+		m_barricades[i][0] = nullptr;
+		m_barricades[i][1] = nullptr;
+		m_barricades[i][2] = nullptr;
+		m_barricades[i][3] = nullptr;
+		m_barricades[i][4] = nullptr;
+	}
 }
 
 ShelterLevelManagerComponent::~ShelterLevelManagerComponent()
@@ -652,11 +723,48 @@ void ShelterLevelManagerComponent::OnInit()
 #ifndef _DEBUG
 	// initialize fade
 	FadeRenderer::GetInstance()->SetFade(4.0f, true);
+
+	// initialize title
+	TitleRenderer::GetInstance()->SetTitle("Survive the 4 waves", 8.0f, true);
 #endif // !_DEBUG
+
+	// find barricade points
+	m_barricadePoints[0] = GetWorld()->GetEntityManager().GetEntityByName("door1_barricade_point");
+	m_barricadePoints[1] = GetWorld()->GetEntityManager().GetEntityByName("door2_barricade_point");
+	m_barricadePoints[2] = GetWorld()->GetEntityManager().GetEntityByName("door3_barricade_point");
+
+	if (!m_barricadePoints[0] || m_barricadePoints[1] || m_barricadePoints[2])
+	{
+		Core::Msg("ERROR: world doesn't consist entities for barricade point. i.g. door1_barricade_point");
+		return;
+	}
+
+	// initialize models
+	for (int i = 0; i < kDoorCount; i++)
+	{
+		Entity* barricadePoint = m_barricadePoints[i];
+
+		for (int j = 0; j < kBarricadeCount; j++)
+		{
+			m_barricades[i][j] = GetWorld()->CreateEntity();
+
+			m_barricades[i][j]->SetPosition(barricadePoint->GetPosition() + (float)j * 8.25f);
+
+			DoorCoverComponent* doorCoverComponent = m_barricades[i][j]->CreateComponent<DoorCoverComponent>();
+			doorCoverComponent->SetPointPosition(barricadePoint->GetPosition());
+
+			MeshComponent* mesh = m_barricades[i][j]->CreateComponent<MeshComponent>();
+			mesh->LoadModel("models/prop_wooden_crate.model");
+		}
+	}
 }
 
 void ShelterLevelManagerComponent::OnEntitySet(Entity* entity)
 {
+	Component::OnEntitySet(entity);
+
+	entity->SetName("unnamed level manager entity");
+
 	g_ShelterLevelManager = this;
 }
 
@@ -667,10 +775,13 @@ void ShelterLevelManagerComponent::OnEntityRemove()
 
 void ShelterLevelManagerComponent::Update(float dt)
 {
-
-
+#ifndef _DEBUG
 	// draw fade
 	FadeRenderer::GetInstance()->Draw();
+
+	// draw title
+	TitleRenderer::GetInstance()->Draw();
+#endif // !_DEBUG
 }
 
 }

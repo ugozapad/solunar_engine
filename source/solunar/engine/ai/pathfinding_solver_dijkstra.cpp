@@ -58,8 +58,8 @@ namespace solunar
 
 					if (dist < min_dist)
 					{
-						sprintf(out, sizeof(out), "dist: %.3f\n", dist);
-						OutputDebugStringA(out);
+						//sprintf(out, sizeof(out), "dist: %.3f\n", dist);
+						//OutputDebugStringA(out);
 						result = node.id;
 						min_dist = dist;
 					}
@@ -175,7 +175,9 @@ namespace solunar
 					}
 					else
 					{
-						Assert(!"your navigation topology is not complete please connect all nodes between each other in order to make goal node reachable");
+						//Assert(!"your navigation topology is not complete please connect all nodes between each other in order to make goal node reachable");
+						Core::Msg("PathfindingSolverDijkstra::BuildPathToTarget: Navigation topology is not complete. Please connect all nodes between each other to make node reachable");
+						
 						// unable to find path to goal
 						break;
 					}

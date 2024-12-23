@@ -96,11 +96,29 @@ public:
 
 	void Draw();
 
-private:
+public:
 	float m_time;
 	float m_currentTime;
 	bool m_isOut;
 };
+
+class TitleRenderer
+{
+public:
+	static TitleRenderer* GetInstance();
+
+public:
+	void SetTitle(const std::string& name, float time, bool isOut);
+
+	void Draw();
+
+private:
+	std::string m_name;
+	float m_time;
+	float m_currentTime;
+	bool m_isOut;
+};
+
 
 class PlayerSpawnComponent : public Component
 {
@@ -119,9 +137,22 @@ public:
 	DoorCoverComponent();
 	~DoorCoverComponent();
 
+//	void OnInit() override;
 
+//	void OnEntitySet(Entity* entity) override;
+//	void OnEntityRemove() override;
 
+	void Update(float dt) override;
+
+	void SetPointPosition(const glm::vec3& position);
+
+private:
+	glm::vec3 m_pointPosition;
+	float m_time;
 };
+
+const int kDoorCount = 3;
+const int kBarricadeCount = 5;
 
 class ShelterLevelManagerComponent : public LogicComponent
 {
@@ -136,6 +167,10 @@ public:
 	void OnEntityRemove() override;
 
 	void Update(float dt) override;
+
+private:
+	Entity* m_barricadePoints[kDoorCount];
+	Entity* m_barricades[kDoorCount][kBarricadeCount];
 };
 
 extern ShelterLevelManagerComponent* g_ShelterLevelManager;

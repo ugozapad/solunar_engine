@@ -58,8 +58,8 @@ namespace solunar
 
 					if (dist < min_dist)
 					{
-						sprintf(out, sizeof(out), "dist: %.3f\n", dist);
-						OutputDebugStringA(out);
+						//sprintf(out, sizeof(out), "dist: %.3f\n", dist);
+						//OutputDebugStringA(out);
 						result = node.id;
 						min_dist = dist;
 					}

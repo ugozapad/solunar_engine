@@ -177,13 +177,18 @@ namespace solunar
 		if (m_isWorldInitialized)
 			Core::Error("World::Initialize: Calling function on already initialized world is unacceptable");
 
+		std::vector<Component*> componentsToInit;
+
 		const std::vector<Entity*>& entities = m_entityManager.GetEntities();
 		for (auto entity : entities)
 		{
 			const std::vector<Component*>& components = entity->GetAllComponents();
 			for (auto component : components)
-				component->OnInit();
+				componentsToInit.push_back(component);
 		}
+
+		for (auto component : componentsToInit)
+			component->OnInit();
 
 		m_isWorldInitialized = true;
 

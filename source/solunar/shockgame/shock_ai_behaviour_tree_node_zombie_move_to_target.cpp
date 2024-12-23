@@ -2,6 +2,7 @@
 #include "shock_ai_behaviour_tree_user_data_types.h"
 #include "engine/ai/pathfinding_manager.h"
 #include "engine/physics/rigidbodycomponent.h"
+#include "shockaicomponent.h"
 
 namespace solunar
 {
@@ -15,7 +16,7 @@ namespace solunar
 
 	eBehaviourTreeStatus BehaviourTreeActionNodeZombieMoveToTarget::Update(World* pWorld, Entity* pOwner, void* pUserStateData, float dt)
 	{
-		constexpr float _kSpeedFactor = 0.5f;
+		constexpr float _kSpeedFactor = 2.5f;
 
 		eBehaviourTreeStatus status = eBehaviourTreeStatus::kFailure;
 
@@ -33,13 +34,16 @@ namespace solunar
 			const glm::vec3& dir = glm::normalize(node_position - entity_position);
 
 			RigidBodyComponent* pBody = pOwner->GetComponent<RigidBodyComponent>();
-
+			ShockAIComponent* pAi = pOwner->GetComponent<ShockAIComponent>();
 
 			Assert(pBody && "implementation supposed to have RB");
 
 			if (pBody)
 			{
-				pBody->SetLinearVelocity(dir * 2.0f);
+				pBody->SetLinearVelocity(dir * _kSpeedFactor);
+
+				if (pAi)
+					pAi->SetAnimationState(ShockAIAnimationState_Walk);
 			}
 
 
@@ -56,6 +60,8 @@ namespace solunar
 				if (pBody)
 				{
 					pBody->SetLinearVelocity(glm::vec3());
+					if (pAi)
+						pAi->SetAnimationState(ShockAIAnimationState_Idle);
 				}
 			}
 		}
@@ -75,13 +81,15 @@ namespace solunar
 			const glm::vec3& dir = glm::normalize(node_position - entity_position);
 
 			RigidBodyComponent* pBody = pOwner->GetComponent<RigidBodyComponent>();
-
+			ShockAIComponent* pAi = pOwner->GetComponent<ShockAIComponent>();
 
 			Assert(pBody && "implementation supposed to have RB");
 
 			if (pBody)
 			{
-				pBody->SetLinearVelocity(dir * 2.0f);
+				pBody->SetLinearVelocity(dir * _kSpeedFactor);
+				if (pAi)
+					pAi->SetAnimationState(ShockAIAnimationState_Walk);
 			}
 
 
@@ -95,6 +103,8 @@ namespace solunar
 				if (pBody)
 				{
 					pBody->SetLinearVelocity(glm::vec3());
+					if (pAi)
+						pAi->SetAnimationState(ShockAIAnimationState_Idle);
 				}
 
 				if (pSharedData->current_path_index == pSharedData->count_of_path)

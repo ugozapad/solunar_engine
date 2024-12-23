@@ -12,6 +12,9 @@
 #include "graphics/ifontmanager.h"
 #include "graphics/debugrenderer.h"
 
+#include "shockgame/shockaicomponent.h"
+#include "shockgame/demogame.h"
+
 #include <imgui.h>
 
 #include "stb_sprintf.h"
@@ -34,7 +37,8 @@ namespace solunar
 	WeaponComponent::WeaponComponent() :
 		m_inited(false),
 		m_ammo(0),
-		m_type(WeaponsType::Shotgun)
+		m_clipSize(0),
+		m_type(WeaponsType::None)
 	{
 	}
 
@@ -159,7 +163,6 @@ namespace solunar
 		ImGui::GetForegroundDrawList()->AddText(ImVec2(500, 500), 0xff0000ff, std::to_string(distance).c_str());
 #endif
 
-		//	m_ammo = 8;
 
 		if (InputManager::GetInstance()->IsMouseButtonPressed(MOUSE_BUTTON_LEFT) &&
 			(isFireAniFinished || currentId != m_fireAni) &&
@@ -201,6 +204,10 @@ namespace solunar
 				if (GetWorld()->RayCast(rq, rayStart, rayEnd))
 				{
 					Entity* entity = rq.m_entity;
+					ShockAIComponent* ai = (ShockAIComponent*)entity->GetComponentByTypeInfo(ShockAIComponent::GetStaticTypeInfo());
+					if (ai)
+						ai->Damage(g_Player, 25.0f);
+					
 					Core::Msg("WeaponComponent::Update(): shot entity 0x%p", entity);
 
 #ifdef ENABLE_TRACE_DEBUG
@@ -256,5 +263,15 @@ namespace solunar
 		stbsp_snprintf(s_Buffer, sizeof(s_Buffer), "Time: %.2f", animatedModel->GetCurrentTime());
 		g_fontManager->DrawSystemFontShadowed(s_Buffer, (float)view->m_width - 300.0f, 140.0f, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 #endif
+	}
+
+	void WeaponComponent::SetWeaponType(WeaponsType type)
+	{
+		m_type = type;
+		
+		if (type == WeaponsType::Pistol)
+			m_clipSize = 32;
+		else if (type == WeaponsType::Shotgun)
+			m_clipSize = 16;
 	}
 }

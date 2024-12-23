@@ -119,4 +119,9 @@ void D3D11Texture2D::SetDebugName(const char* debugName)
 	D3D11_CHECK(m_textureSRV->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(debugName), debugName));
 }
 
+void D3D11Texture2D::GenerateMips()
+{
+	g_d3d11Device->GetDeviceContext()->GenerateMips(m_textureSRV);
+}
+
 }

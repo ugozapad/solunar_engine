@@ -7,6 +7,8 @@
 #include "engine/inputmanager.h"
 #include "engine/console.h"
 
+#include "engine/ai/pathfinding_manager.h"
+
 #include "graphics/imguimanager.h"
 #include "graphics/ifontmanager.h"
 #include "graphics/animatedmodel.h"
@@ -66,6 +68,15 @@ void ShockPlayerHUD::Draw()
 
 	DrawInfo();
 	DrawCrosshair();
+
+	// debug stuff
+
+	int nodeId = g_aiPathfindingManager->GetNearestPoint(g_Player->GetWorldPosition());
+	
+	static char debugText[64];
+	stbsp_snprintf(debugText, sizeof(debugText), "%i", nodeId);
+
+	ms_HealthFont->DrawText(debugText, 500.0f, 500.0f, glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
 }
 
 void ShockPlayerHUD::DrawInfo()
@@ -192,7 +203,7 @@ struct WeaponInfo
 
 static glm::vec3 g_weaponOffset = glm::vec3(0.2f, -0.25f, -0.3f);
 
-Entity* CreateWeapon(Entity* cameraEntity)
+Entity* CreateWeapon(Entity* cameraEntity, WeaponsType type)
 {
 	// create weapon
 	Entity* hackEntity = cameraEntity->CreateChild();
@@ -206,7 +217,8 @@ Entity* CreateWeapon(Entity* cameraEntity)
 	AnimatedMeshComponent* weaponMesh = weaponEntity->CreateComponent<AnimatedMeshComponent>();
 	weaponMesh->LoadModel("models/viewmodel_shotgun.glb");
 
-	weaponEntity->CreateComponent<WeaponComponent>();
+	WeaponComponent* weaponComponent = weaponEntity->CreateComponent<WeaponComponent>();
+	weaponComponent->SetWeaponType(type);
 
 	//std::weak_ptr<AnimatedModel> weaponModel = dynamicCastWeakPtr<AnimatedModel, ModelBase>(m_weaponMesh->getModel());
 	//int rootNodeIndex = weaponModel.lock()->getNodeByName("Root Node");
@@ -453,6 +465,14 @@ void ShockPlayerController::Update(float dt)
 	// update player movement
 	UpdateMovement(dt);
 	
+	///////////////////////////////////////////////////////////////////////
+	// TO PHYSICS 
+	m_rigidBody->Update(dt);
+
+	btTransform trans = m_rigidBody->GetGhostObject()->getWorldTransform();
+	GetEntity()->SetPosition(btVectorToGlm(trans.getOrigin()));
+	///////////////////////////////////////////////////////////////////////
+	
 	// Update game logic of player controller
 	UpdateLogic(dt);
 
@@ -593,11 +613,6 @@ void ShockPlayerController::UpdateMovement(float dt)
 		 
 		 m_rigidBody->GetCharacterController()->jump(glmVectorToBt(upVector * jumpPower));
 	}
-	
-	m_rigidBody->Update(dt);
-	
-	btTransform trans = m_rigidBody->GetGhostObject()->getWorldTransform();
-	GetEntity()->SetPosition(btVectorToGlm(trans.getOrigin()));
 }
 
 void ShockPlayerController::UpdateLogic(float dt)
@@ -651,11 +666,21 @@ void ShockPlayerController::UpdateLogic(float dt)
 						{
 							Core::Msg("UsableAreaComponent(Entity 0x%p): command %s %s already have weapon!", usableArea->GetEntity(), command.c_str(), argument.c_str());
 						}
-						else
+						else if (argument == "shotgun")
 						{
-							m_weaponEntity = CreateWeapon(m_cameraEntity);
+							m_weaponEntity = CreateWeapon(m_cameraEntity, WeaponsType::Shotgun);
 							m_activeWeaponEntity = m_weaponEntity;
 							Core::Msg("UsableAreaComponent(Entity 0x%p): command %s %s ok", usableArea->GetEntity(), command.c_str(), argument.c_str());
+						}
+						else if (argument == "pistol")
+						{
+							m_weaponEntity = CreateWeapon(m_cameraEntity, WeaponsType::Pistol);
+							m_activeWeaponEntity = m_weaponEntity;
+							Core::Msg("UsableAreaComponent(Entity 0x%p): command %s %s ok", usableArea->GetEntity(), command.c_str(), argument.c_str());
+						}
+						else
+						{
+							Core::Msg("UsableAreaComponent(Entity 0x%p): command give_weapon have unknowed argument %s!", usableArea->GetEntity(), argument.c_str());
 						}
 					}
 				}
