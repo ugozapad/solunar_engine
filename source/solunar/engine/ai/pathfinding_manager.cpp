@@ -43,7 +43,6 @@ namespace solunar
 	}
 	void PathfindingManager::DebugDraw()
 	{
-		m_enable_debug_draw = true;
 		if (this->m_enable_debug_draw)
 		{
 			if (this->m_pNavigationData)

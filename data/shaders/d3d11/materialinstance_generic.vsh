@@ -61,10 +61,11 @@ VSOutput VSMain(VSInput input)
 #ifdef SKINNED
 	// normal
 	output.normal = normalize(mul(float4(input.normal, 0.0f), skinMatrix));
-	output.normal = mul(float4(output.normal, 0.0f), g_modelMatrix);
+	output.normal = mul(float4(output.normal, 0.0f), g_inverseModelMatrix);
 #else
 	// normal
-	output.normal = normalize(mul(float4(input.normal, 0.0f), g_modelMatrix));
+	//output.normal = normalize(mul(float4(input.normal, 0.0f), g_inverseModelMatrix));
+	output.normal = normalize(mul(input.normal, (float3x3)g_inverseModelMatrix));
 #endif
 
 	// Light space position

@@ -33,6 +33,16 @@ void EntityManager::Destroy()
 
 void EntityManager::Update()
 {
+	for (int i = 0; i < m_entitiesToDestroy.size(); i++) {
+		auto it = std::find(m_entities.begin(), m_entities.end(), m_entitiesToDestroy[i]);
+		if (it != m_entities.end()) {
+			m_entities.erase(it);
+			mem_delete(m_entitiesToDestroy[i]);
+		}
+	}
+	
+	m_entitiesToDestroy.clear();
+
 	if (!m_deferredMode)
 		return;
 
@@ -74,6 +84,11 @@ Entity* EntityManager::CreateEntityEx(const TypeInfo* typeInfo)
 		m_entities.push_back(entity);
 
 	return entity;
+}
+
+void EntityManager::RemoveEntity(Entity* entity)
+{
+	m_entitiesToDestroy.push_back(entity);
 }
 
 Entity* EntityManager::GetEntityByName(const std::string& name)

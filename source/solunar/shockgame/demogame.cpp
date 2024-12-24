@@ -30,6 +30,7 @@
 #include "engine/editor/editor_window_entity_editor.h"
 #include "engine/editor/editor_window_ai_navigation_builder.h"
 #include <shockplayercontroller.h>
+#include <shock_component_ai_round_system.h>
 
 namespace solunar
 {
@@ -146,6 +147,9 @@ void GameManager::OnWorldLoad(const std::string& worldName, World* pLoadedWorld)
 		{
 			// level manager
 			g_ShelterLevelManager = pLoadedWorld->CreateEntity()->CreateComponent<ShelterLevelManagerComponent>();
+
+			// ai manager
+			g_ShockAIRoundSystem = pLoadedWorld->CreateEntity()->CreateComponent<ShockAIRoundSystem>();
 
 			// player creation
 
@@ -782,6 +786,58 @@ void ShelterLevelManagerComponent::Update(float dt)
 	// draw title
 	TitleRenderer::GetInstance()->Draw();
 #endif // !_DEBUG
+
+	EntityCollectorManager::GetInstance()->Update();
+}
+
+EntityCollectorManager* EntityCollectorManager::GetInstance()
+{
+	static EntityCollectorManager s_EntityCollectorManager;
+	return &s_EntityCollectorManager;
+}
+
+EntityCollectorManager::EntityCollectorManager()
+{
+}
+
+EntityCollectorManager::~EntityCollectorManager()
+{
+}
+
+void EntityCollectorManager::AddEntityTimed(Entity* entity, float time)
+{
+	EntityDeleteInfo info;
+	info.m_entity = entity;
+	info.m_time = time;
+	info.m_currentTime = 0.0f;
+	m_stuff.push_back(info);
+}
+
+void EntityCollectorManager::Update()
+{
+	float dt = Timer::GetInstance()->GetDelta();
+
+	std::vector<Entity*> toclean;
+
+	for (int i = 0; i < m_stuff.size(); i++) {
+		m_stuff[i].m_currentTime += dt;
+		if (m_stuff[i].m_currentTime > m_stuff[i].m_time)
+			toclean.push_back(m_stuff[i].m_entity);
+	}
+
+	for (int i = 0; i < toclean.size(); i++) {
+		Engine::ms_world->GetEntityManager().RemoveEntity(toclean[i]);
+	}
+
+	std::remove_if(m_stuff.begin(), m_stuff.end(), [=](const EntityDeleteInfo& shit)
+		{
+			std::vector<Entity*> toclean2 = toclean;
+			for (int i = 0; i < toclean2.size(); i++) {
+				return !!(toclean2[i] == shit.m_entity);
+			}
+			return false;
+		}
+	);
 }
 
 }

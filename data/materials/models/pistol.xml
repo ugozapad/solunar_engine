@@ -1,0 +1,10 @@
+<Material>
+    <Shader>diffuse</Shader>
+    <AlbedoTexture filename="textures/models/pistolColor.png"/>
+    <NormalTexture filename="textures/models/pistolNormal.png"/>
+    <SpecularTexture filename=""/>
+    <RenderState>
+        <DepthWrite value="true"/>
+        <SelfIllumination value="false"/>
+    </RenderState>
+</Material>

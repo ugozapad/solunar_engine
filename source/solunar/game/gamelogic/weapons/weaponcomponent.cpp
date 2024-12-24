@@ -162,7 +162,7 @@ namespace solunar
 					Entity* entity = rq.m_entity;
 					ShockAIComponent* ai = (ShockAIComponent*)entity->GetComponentByTypeInfo(ShockAIComponent::GetStaticTypeInfo());
 					if (ai)
-						ai->Damage(g_Player, 25.0f);
+						ai->Damage(g_Player, 30.0f);
 
 					Core::Msg("WeaponComponent::Update(): shot entity 0x%p", entity);
 

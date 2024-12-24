@@ -51,6 +51,7 @@ public:
 	void Draw();
 
 	void AddHUDMessageQueue(const char* text);
+	void AddInfoMessageQueue_Timed(const char* text, float time);
 
 private:
 	void DrawInfo();
@@ -58,7 +59,17 @@ private:
 	void DrawHUDMessages();
 
 private:
-	std::queue<std::string> m_messagesQueue;
+	struct HUDInfoMessage
+	{
+		std::string m_text;
+		float m_time;
+		bool m_centred;
+	};
+	
+	HUDInfoMessage m_hudmessage;
+
+	std::queue<HUDInfoMessage> m_messagesQueue;
+	float m_messagesQueueTime = 0.0f;
 };
 
 ShockPlayerHUD ShockPlayerHUD::ms_ShockPlayerHUD;
@@ -75,20 +86,33 @@ void ShockPlayerHUD::Draw()
 
 	DrawInfo();
 	DrawCrosshair();
+	DrawHUDMessages();
 
 	// debug stuff
-
+#if 0
 	int nodeId = g_aiPathfindingManager->GetNearestPoint(g_Player->GetWorldPosition());
 	
 	static char debugText[64];
 	stbsp_snprintf(debugText, sizeof(debugText), "%i", nodeId);
 
 	ms_HealthFont->DrawText(debugText, 500.0f, 500.0f, glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+#endif+
 }
 
 void ShockPlayerHUD::AddHUDMessageQueue(const char* text)
 {
-	m_messagesQueue.push(text);
+	//m_messagesQueue.push(text);
+}
+
+void ShockPlayerHUD::AddInfoMessageQueue_Timed(const char* text, float time)
+{
+	HUDInfoMessage info;
+	info.m_text = text;
+	info.m_time = time;
+	info.m_centred = true;
+	m_hudmessage = info;
+
+	m_messagesQueueTime = 0.0f;
 }
 
 void ShockPlayerHUD::DrawInfo()
@@ -205,8 +229,36 @@ void ShockPlayerHUD::DrawCrosshair()
 
 void ShockPlayerHUD::DrawHUDMessages()
 {
+#if 0
+	if (!m_messagesQueue.empty())
+		m_messagesQueueTime += Timer::GetInstance()->GetDelta();
 
 	View* view = CameraProxy::GetInstance()->GetView();
+
+	float time = 4.0f;
+
+	if (!m_messagesQueue.empty() && time < m_messagesQueueTime) {
+		m_messagesQueue.pop();
+		m_messagesQueueTime = 0.0f;
+	}
+	
+	std::queue<HUDInfoMessage> messagesQueue = m_messagesQueue;
+
+	for (; !messagesQueue.empty(); ) {
+		auto it = messagesQueue.front();
+		float alpha = 1.0f;// m_messagesQueueTime / it.m_time;
+		ms_AmmoFont->DrawText(it.m_text.c_str(), view->m_width / 2.0f, view->m_height / 2.0f, glm::vec4(0.0f, 0.1f, 1.0f, alpha));
+		messagesQueue.pop();
+	}
+#else
+	View* view = CameraProxy::GetInstance()->GetView();
+	m_messagesQueueTime += Timer::GetInstance()->GetDelta();
+	if (m_hudmessage.m_time >= m_messagesQueueTime) {
+		float alpha = m_hudmessage.m_time / (m_messagesQueueTime / 2.5f);
+		ms_AmmoFont->DrawText(m_hudmessage.m_text.c_str(), view->m_width / 2.0f, view->m_height / 2.0f, glm::vec4(0.0f, 0.1f, 1.0f, alpha));
+	}
+#endif
+
 
 //	ms_AmmoFont->DrawText(s_Buffer, 25.0f, view->m_height - 20.0f, glm::vec4(1.0f, 0.2f, 0.0f, 1.0f));
 
@@ -287,7 +339,7 @@ float V_CalcBob()
 	// bob is proportional to simulated velocity in the xy plane
 	// (don't count Z, or jumping messes it up)
 	//VectorCopy(pparams->simvel, vel);
-	vel = g_weaponVelocity * 2.5f;
+	vel = g_weaponVelocity;
 	vel[1] = 0;
 
 	bob = sqrt(vel[0] * vel[0] + vel[2] * vel[2]);//* cl_bob;
@@ -310,6 +362,7 @@ ShockPlayerController::ShockPlayerController() :
 	memset(&m_playerStats, 0, sizeof(m_playerStats));
 	m_playerStats.m_health = 100.0f;
 	m_playerStats.m_endurance = 25.0f;
+	m_playerStats.m_money = 500;
 	m_weaponSwayAngles = glm::vec3(0.0f);
 }
 
@@ -640,7 +693,7 @@ void ShockPlayerController::UpdateMovement(float dt)
 	if (inputManager->IsPressed(KeyboardKeys::KEY_SPACE) && m_onTheGround)
 	{
 		 const glm::vec3 upVector = glm::vec3(0.0f, 1.0f, 0.0f);
-		 const float jumpPower = 6.0f;
+		 const float jumpPower = 3.0f;
 	
 		 glm::vec3 cameraDirection = m_camera->GetDirection(); // camera->GetDirection();
 		 cameraDirection.y = 0.0f;
@@ -692,6 +745,11 @@ void ShockPlayerController::UpdateLogic(float dt)
 
 					if (command == "give_weapon")
 					{
+						if (usableArea->GetCost() > m_playerStats.m_money) {
+							ShockPlayerHUD::GetInstance()->AddInfoMessageQueue_Timed("Not enough money", 3.0f);
+							return;
+						}
+
 						if (argument.empty())
 						{
 							Core::Msg("UsableAreaComponent(Entity 0x%p): command give_weapon doesn't have any argument!", usableArea->GetEntity());

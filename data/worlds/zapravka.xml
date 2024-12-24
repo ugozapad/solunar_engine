@@ -26,6 +26,19 @@
             <CastShadow value="false"/>
         </MeshComponent>
     </Entity>
+	<!-- Player obstacle -->
+	<Entity>
+        <Position x="0" y="0" z="0"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <RigidBodyComponent>
+            <Static value="true"/>
+			<Filter value="PhysicsFilter_Obstacle"/>
+        </RigidBodyComponent>
+        <TriangleMeshShapeComponent>
+            <Model filename="models/zapravka_player_obst.model"/>
+        </TriangleMeshShapeComponent>
+    </Entity>
 	<!-- Zapravka model -->
     <Entity>
         <Position x="0" y="0" z="0"/>
@@ -51,8 +64,9 @@
             <CastShadow value="true"/>
         </MeshComponent>
     </Entity>
+	<!-- pistol crate -->
     <Entity>
-        <Position x="5.28" y="0" z="-3.25"/>
+        <Position x="-0.36" y="1.0" z="-2.37"/>
         <Rotation x="0" y="0" z="0"/>
         <Scale x="1" y="1" z="1"/>
         <MeshComponent>
@@ -60,7 +74,7 @@
             <CastShadow value="true"/>
         </MeshComponent>
     </Entity>
-    <!-- Test Bolvan -->
+    <!-- Test Bolvan
     <Entity>
         <Position x="-6.56" y="0" z="-13.06"/>
         <Rotation x="0" y="0" z="0"/>
@@ -84,7 +98,7 @@
         <ShockAIBehaviourTree>
             <BehaviourTreeType value="Zombie"/>
         </ShockAIBehaviourTree>
-    </Entity>
+    </Entity>  -->
     <!-- Player Spawner -->
     <Entity>
         <Position x="1" y="2" z="1"/>
@@ -104,8 +118,36 @@
 		</MeshComponent>
 	</Entity> 
     <!-- GAMEPLAY ENTITIES -->
+    <!-- PISTOL PICKUP -->
     <Entity>
-        <Position x="0.2" y="1.3" z="0"/>
+        <Position x="-0.36" y="1.5" z="-2.37"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <RigidBodyComponent>
+            <Trigger value="true"/>
+            <Filter value="PhysicsFilter_Usable"/>
+        </RigidBodyComponent>
+        <BoxShapeComponent>
+            <Position x="0" y="0" z="0"/>
+            <Size x="0.05" y="0.2" z="0.45"/>
+        </BoxShapeComponent>
+        <UsableAreaComponent>
+            <Cost value="450"/>
+            <Script value="give_weapon pistol"/>
+        </UsableAreaComponent>
+        <Entity>
+            <Position x="0.0" y="0" z="0"/>
+            <Rotation x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <AnimatedMeshComponent>
+                <Model filename="models/worldmodel_pistol.glb"/>
+                <CastShadow value="true"/>
+            </AnimatedMeshComponent>
+        </Entity>
+    </Entity>
+	<!-- SHOTGUN PICKUP -->
+    <Entity>
+        <Position x="0.0" y="1.5" z="0.0"/>
         <Rotation x="0" y="0" z="0"/>
         <Scale x="1" y="1" z="1"/>
         <RigidBodyComponent>
@@ -118,7 +160,7 @@
         </BoxShapeComponent>
         <UsableAreaComponent>
             <Cost value="1400"/>
-            <Script value="give_weapon pistol"/>
+            <Script value="give_weapon shotgun"/>
         </UsableAreaComponent>
         <Entity>
             <Position x="0.0" y="0" z="0"/>
@@ -130,6 +172,22 @@
             </AnimatedMeshComponent>
         </Entity>
     </Entity>
+	<!-- SPAWNERS -->
+	<Entity name="zombie_spawn_1">
+	    <Position x="-6.41" y="3.77" z="-13.07"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+	</Entity>
+	<Entity name="zombie_spawn_2">
+	    <Position x="-12.27" y="3.77" z="-4.4"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+	</Entity>
+	<Entity name="zombie_spawn_3">
+	    <Position x="-9.47" y="3.39" z="-10.07"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+	</Entity>
     <!-- Ambient Light -->
     <Entity>
         <Position x="0" y="0" z="0"/>
@@ -148,7 +206,7 @@
             <AmbientColor r="0" g="0" b="0"/>
             <Color r="1" g="1" b="1"/>
             <SpecularColor r="0" g="0" b="0"/>
-            <Radius value="3"/>
+            <Radius value="4"/>
         </PointLightComponent>
     </Entity>
     <Entity className="Entity">
@@ -163,14 +221,14 @@
         </PointLightComponent>
     </Entity>
     <Entity className="Entity">
-        <Position x="2.1670568" y="1.3319253" z="3.8053551"/>
+        <Position x="2.1670568" y="3.0" z="3.8053551"/>
         <Rotation x="-0" y="0" z="0"/>
         <Scale x="1" y="1" z="1"/>
         <PointLightComponent>
             <AmbientColor r="0" g="0" b="0"/>
-            <Color r="1" g="1" b="1"/>
+            <Color r="1.5" g="1.5" b="1.5"/>
             <SpecularColor r="0" g="0" b="0"/>
-            <Radius value="8.5"/>
+            <Radius value="20"/>
         </PointLightComponent>
     </Entity>
     <Entity className="Entity">
@@ -181,7 +239,7 @@
             <AmbientColor r="0" g="0" b="0"/>
             <Color r="1" g="1" b="1"/>
             <SpecularColor r="0" g="0" b="0"/>
-            <Radius value="4"/>
+            <Radius value="5"/>
         </PointLightComponent>
     </Entity>
 	<!-- Outside fake ambient lights -->

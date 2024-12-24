@@ -90,6 +90,9 @@ void CameraFirstPersonComponent::updateFromMousePosition(const glm::vec2& mouseP
 	float xoffset = mousePos.x;
 	float yoffset = mousePos.y;
 
+	if (InputManager::GetInstance()->m_mouseInvert)
+		yoffset = -yoffset;
+
 	xoffset *= (InputManager::GetInstance()->m_mouseSensitivy / 10.0f);
 	yoffset *= (InputManager::GetInstance()->m_mouseSensitivy / 10.0f);
 

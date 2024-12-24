@@ -69,6 +69,9 @@ void ShockAIComponent::Update(float dt)
 	{
 	//	UpdateZombie(dt);
 
+		if (!m_animatedComponent)
+			OnInit();
+
 		ShockAIBehaviourTree* pBT = this->GetEntity()->GetComponent<ShockAIBehaviourTree>();
 		if (pBT && pBT->IsActive())
 		{
@@ -250,7 +253,9 @@ void ShockAIComponent::SaveXML(tinyxml2::XMLElement& element)
 
 void ShockAIComponent::Damage(Entity* from, float amount)
 {
-	if (m_health <= 0.0f)
+	m_health -= amount;
+
+	if (m_health < 0.0f)
 	{
 		m_health = 0.0f;
 		UpdateZombie_OnDeath();
@@ -261,8 +266,6 @@ void ShockAIComponent::Damage(Entity* from, float amount)
 
 		return;
 	}
-
-	m_health -= amount;
 }
 
 void ShockAIComponent::SetAnimationState(ShockAIAnimationState state)
@@ -272,6 +275,9 @@ void ShockAIComponent::SetAnimationState(ShockAIAnimationState state)
 
 void ShockAIComponent::PlayAIAnimation(int animation, bool looped)
 {
+	if (!m_animatedComponent)
+		return;
+
 	std::shared_ptr<AnimatedModel> animatedModel = m_animatedComponent->LockAnimatedModel();
 	animatedModel->PlayAnimation(animation, looped);
 }
@@ -293,6 +299,9 @@ void ShockAIComponent::UpdateZombie_DumpState()
 	int nodeId = g_aiPathfindingManager->GetNearestPoint(GetEntity()->GetPosition());
 	sprintf(debugText, "Node: %i", nodeId);
 	Debug_Draw3DText(debugText, GetEntity()->GetPosition(), glm::vec4(1.f, 1.f, 1.f, 1.f), -25.0f);
+
+	sprintf(debugText, "Health: %.0f", m_health);
+	Debug_Draw3DText(debugText, GetEntity()->GetPosition(), glm::vec4(1.f, 1.f, 1.f, 1.f), 0.0f);
 }
 
 void ShockAIComponent::UpdateZombie_OnDeath()
@@ -304,6 +313,9 @@ void ShockAIComponent::UpdateZombie_OnDeath()
 
 	// limit body orient
 	GetEntity()->GetComponent<RigidBodyComponent>()->DisableBodyOrientUpdate();
+
+	// add to delete
+	EntityCollectorManager::GetInstance()->AddEntityTimed(GetEntity(), 5.0f);
 }
 
 bool ShockAIComponent::IsAnimationFinished()

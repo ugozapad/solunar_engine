@@ -5,6 +5,8 @@
 
 #include "engine/camera.h"
 
+#include "shockgame/shockgameui.h"
+
 namespace solunar
 {
 
@@ -174,6 +176,32 @@ private:
 };
 
 extern ShelterLevelManagerComponent* g_ShelterLevelManager;
+
+extern DemoGameMainMenuComponent* g_demoGameMainMenu;
+
+class EntityCollectorManager
+{
+public:
+	static EntityCollectorManager* GetInstance();
+
+public:
+	EntityCollectorManager();
+	~EntityCollectorManager();
+
+	void AddEntityTimed(Entity* entity, float time);
+
+	void Update();
+
+private:
+	struct EntityDeleteInfo
+	{
+		float m_time;
+		float m_currentTime;
+		Entity* m_entity;
+	};
+
+	std::vector<EntityDeleteInfo> m_stuff;
+};
 
 }
 

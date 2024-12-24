@@ -15,6 +15,8 @@ namespace solunar {
 		PhysicsFilter_Player = 1 << 7,
 		PhysicsFilter_Triggers = 1 << 8,
 		PhysicsFilter_Usable = 1 << 9,
+		PhysicsFilter_NPC = 1 << 9,
+		PhysicsFilter_Obstacle = 1 << 9,
 	};
 
 	const int kPhysicsFilter_AllAux = PhysicsFilter_Player | PhysicsFilter_Triggers | PhysicsFilter_Usable;

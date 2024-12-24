@@ -135,7 +135,7 @@ namespace solunar
 
 		if (g_aiPathfindingManager)
 		{
-			//g_aiPathfindingManager->DebugDraw();
+			g_aiPathfindingManager->DebugDraw();
 		}
 	}
 
@@ -205,7 +205,7 @@ namespace solunar
 		btDynamicsWorld::ClosestRayResultCallback rayCallback(glmVectorToBt(rayStart), glmVectorToBt(rayEnd));
 		
 		if (collisionFilter == -1)
-			rayCallback.m_collisionFilterMask = kCollisionFilterAllMask;
+			rayCallback.m_collisionFilterMask = kCollisionFilterAllMask | PhysicsFilter_NPC;
 		else
 			rayCallback.m_collisionFilterMask = collisionFilter;
 

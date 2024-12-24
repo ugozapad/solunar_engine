@@ -93,6 +93,7 @@ namespace solunar {
 
 		bool changeFilterUsableHack = false;
 		bool bolvanHack = false;
+		bool obstacleHack = false;
 
 		tinyxml2::XMLElement* filterElement = element.FirstChildElement("Filter");
 		if (filterElement)
@@ -108,6 +109,10 @@ namespace solunar {
 				if (strcmp(filterValue, "PhysicsFilter_Bolvan") == 0)
 				{
 					bolvanHack = true;
+				}
+				if (strcmp(filterValue, "PhysicsFilter_Obstacle") == 0)
+				{
+					obstacleHack = true;
 				}
 			}
 		}
@@ -126,7 +131,19 @@ namespace solunar {
 
 		// HACKHACKHACK: bolvan body never sleep
 		if (bolvanHack)
+		{
 			m_rigidBody->setActivationState(DISABLE_DEACTIVATION);
+
+			m_rigidBody->getBroadphaseProxy()->m_collisionFilterGroup = PhysicsFilter_NPC;
+			m_rigidBody->getBroadphaseProxy()->m_collisionFilterMask = kCollisionFilterAllMask;
+		}
+			
+		if (obstacleHack)
+		{
+			m_rigidBody->getBroadphaseProxy()->m_collisionFilterGroup = PhysicsFilter_Obstacle;
+			m_rigidBody->getBroadphaseProxy()->m_collisionFilterMask = PhysicsFilter_Obstacle | PhysicsFilter_Player;
+			m_rigidBody->setCustomDebugColor(btVector3(173/255, 216/255, 230/255));
+		}
 	}
 
 	void RigidBodyComponent::SaveXML(tinyxml2::XMLElement& element)
@@ -401,8 +418,8 @@ namespace solunar {
 
 		GetPhysicsWorld()->GetWorld()->addCollisionObject(
 			m_ghostObject,
-			btBroadphaseProxy::CharacterFilter,
-			kCollisionFilterAllMask | PhysicsFilter_Player
+			PhysicsFilter_Player,
+			kCollisionFilterAllMask | PhysicsFilter_Obstacle
 		);
 
 		GetPhysicsWorld()->GetWorld()->addAction(m_characterController);

@@ -534,6 +534,114 @@ void AnimatedModel::Load_GLTF(const std::shared_ptr<DataStream>& stream)
 }
 
 template<typename POD>
+void Deserialize(const std::shared_ptr<DataStream>& os, std::vector<POD>& v)
+{
+	// this only works on built in data types (PODs)
+	static_assert(std::is_trivial<POD>::value && std::is_standard_layout<POD>::value,
+		"Can only serialize POD types with this function");
+
+	uint32_t size = 0;
+	os->Read((void*)&size, sizeof(size));
+
+	v.resize(size);
+	os->Read((void*)v.data(), v.size() * sizeof(POD));
+}
+
+
+void Deserialize(const std::shared_ptr<DataStream>& os, std::string& v)
+{
+	uint32_t size;
+	os->Read((void*)&size, sizeof(size));
+	v.resize(size + 1);
+	os->Read((void*)v.data(), v.size() * sizeof(std::string::value_type));
+	v[size + 1] = '\0';
+}
+
+void AnimatedModel::Load_Model(const std::shared_ptr<DataStream>& dataStream)
+{
+	ModelFileHeader header;
+	dataStream->Read(&header);
+
+	// animations
+	uint32_t animationsCount;
+	dataStream->Read(&animationsCount);
+
+	// skins
+	uint32_t skinsCount;
+	dataStream->Read(&skinsCount);
+
+	// node count
+	uint32_t nodeCount;
+	dataStream->Read(&nodeCount);
+
+#if 0
+	for (int i = 0; i < animationsCount; i++)
+	{
+		Animation animation;
+		Deserialize(dataStream, animation.m_name);
+
+		uint16_t samplersCount;
+		dataStream->Read(&samplersCount);
+
+		for (const auto& sampler : animation.m_samplers)
+		{
+			uint8_t interpolationType = sampler.m_interpolationType;
+			dataStream->Write(&interpolationType);
+			Serialize(dataStream, sampler.m_inputs);
+			Serialize(dataStream, sampler.m_outputs);
+		}
+
+		for (const auto& channels : animation.m_channels)
+		{
+			uint8_t pathType = channels.m_pathType;
+			dataStream->Write(&pathType);
+			dataStream->Write(&channels.m_nodeId);
+			dataStream->Write(&channels.m_samplerId);
+		}
+
+		dataStream->Write(&animation.m_startTime);
+		dataStream->Write(&animation.m_endTime);
+	}
+
+	for (const auto& skin : m_skins)
+	{
+		Serialize(dataStream, skin.m_name);
+		Serialize(dataStream, skin.m_joints);
+		Serialize(dataStream, skin.m_inverseBindMatrices);
+		dataStream->Write(&skin.m_skeletonRootId);
+	}
+
+	for (const auto& node : m_nodes)
+	{
+		Serialize(dataStream, node.m_name);
+		dataStream->Write(&node.m_translation);
+		dataStream->Write(&node.m_rotation);
+		dataStream->Write(&node.m_scale);
+		dataStream->Write(&node.m_matrix);
+		Serialize(dataStream, node.m_children);
+		dataStream->Write(&node.m_parentId);
+		dataStream->Write(&node.m_skinId);
+	}
+
+	for (const auto& submesh : m_subMeshes)
+	{
+		ModelFileSubmeshData submeshData;
+		memset(&submeshData, 0, sizeof(submeshData));
+		strcpy(submeshData.materialInfo, submesh->m_materialName.c_str());
+		submeshData.verticesCount = submesh->m_verticesCount;
+		submeshData.indicesCount = submesh->m_indicesCount;
+		dataStream->Write(&submeshData);
+
+		AnimatedVertex* pVertices = (AnimatedVertex*)submesh->m_vertices.data();
+		dataStream->Write(pVertices, submeshData.verticesCount * sizeof(Vertex));
+
+		unsigned int* pIndices = (unsigned int*)submesh->m_indices.data();
+		dataStream->Write(pIndices, submeshData.indicesCount * sizeof(uint32_t));
+	}
+#endif
+}
+
+template<typename POD>
 void Serialize(const std::shared_ptr<DataStream>& os, std::vector<POD> const& v)
 {
 	// this only works on built in data types (PODs)

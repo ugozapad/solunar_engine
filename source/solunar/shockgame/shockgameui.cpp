@@ -342,12 +342,21 @@ void DemoGameMainMenuComponent::OnWorldSet(World* world)
 
 	Assert(g_engineData.m_editor == false && "you can't use this in editor mode!");
 	g_mainMenuBackground = g_contentManager->LoadObject<TextureMap>("textures/ui/ui_menu_background.png");
-
-	//MusicManager::GetInstance()->play("sounds/music/temp_mainmenu.mp3", true);
 }
+
+extern Entity* g_Player;
 
 void DemoGameMainMenuComponent::Update(float dt)
 {
+	if (!IsActive())
+		return;
+
+	if (!g_Player && !MusicManager::GetInstance()->IsPlaying())
+		MusicManager::GetInstance()->Play("sounds/music/temp_mainmenu.mp3", true);
+
+	if (g_mainMenuBackground.expired())
+		g_mainMenuBackground = g_contentManager->LoadObject<TextureMap>("textures/ui/ui_menu_background.png");
+
 	// begin menu window
 
 	ImGuiIO& io = ImGui::GetIO();

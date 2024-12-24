@@ -187,14 +187,27 @@ namespace solunar {
 
 	void Precache()
 	{
-
 		// PRECACHE TEXTURE MAPS
 		g_contentManager->Load("textures/common/dev_64.tga", TextureMap::GetStaticTypeInfo());
 		g_contentManager->Load("textures/models/armColor.png", TextureMap::GetStaticTypeInfo());
 		g_contentManager->Load("textures/models/boomstickColor.png", TextureMap::GetStaticTypeInfo());
 
+		// PRECACHE WORLD TEXTURE MAPS
+		g_contentManager->Load("textures/terrain/terrain_asphalt.png", TextureMap::GetStaticTypeInfo());
+		g_contentManager->Load("textures/terrain/terrain_asphalt_mix_upper.png", TextureMap::GetStaticTypeInfo());
+		g_contentManager->Load("textures/terrain/terrain_asphalt_mix_upper_left.png", TextureMap::GetStaticTypeInfo());
+		g_contentManager->Load("textures/terrain/terrain_asphalt_mix_upper_right.png", TextureMap::GetStaticTypeInfo());
+		g_contentManager->Load("textures/terrain/weeds_02.png", TextureMap::GetStaticTypeInfo());
+		g_contentManager->Load("textures/concrete/concrete_plaster_6.png", TextureMap::GetStaticTypeInfo());
+
+		// PRECACHE MODEL TEXTURE MAPS
+		g_contentManager->Load("textures/models/Ch10_1001_Diffuse.png", TextureMap::GetStaticTypeInfo());
+		g_contentManager->Load("textures/models/Ch10_1002_Diffuse.png", TextureMap::GetStaticTypeInfo());
+
 		// PRECACHE MODELS
+		g_contentManager->Load("models/viewmodel_pistol.glb", AnimatedModel::GetStaticTypeInfo());
 		g_contentManager->Load("models/viewmodel_shotgun.glb", AnimatedModel::GetStaticTypeInfo());
+		g_contentManager->Load("models/zombie.glb", AnimatedModel::GetStaticTypeInfo());
 	}
 
 	void Command_Quit()
