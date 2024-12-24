@@ -1,6 +1,6 @@
 #include "enginepch.h"
 #include "engine/entity/cameracomponent.h"
-
+#include "engine/inputmanager.h"
 namespace solunar
 {
 
@@ -90,8 +90,8 @@ void CameraFirstPersonComponent::updateFromMousePosition(const glm::vec2& mouseP
 	float xoffset = mousePos.x;
 	float yoffset = mousePos.y;
 
-	xoffset *= 0.1f;
-	yoffset *= 0.1f;
+	xoffset *= (InputManager::GetInstance()->m_mouseSensitivy / 10.0f);
+	yoffset *= (InputManager::GetInstance()->m_mouseSensitivy / 10.0f);
 
 	m_yaw += xoffset;
 	m_pitch += yoffset;

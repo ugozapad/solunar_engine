@@ -135,7 +135,7 @@ namespace solunar
 
 		if (g_aiPathfindingManager)
 		{
-			g_aiPathfindingManager->DebugDraw();
+			//g_aiPathfindingManager->DebugDraw();
 		}
 	}
 
@@ -147,6 +147,9 @@ namespace solunar
 		const std::vector<RigidBodyComponent*>& physicsEntities = m_physicsWorld->GetRigidBodies();
 		for (auto it : physicsEntities)
 		{
+			if (!it->IsActive())
+				continue;
+
 			it->UpdateEntityTranslationDirty();
 			it->UpdateBodyTranslationDirty();
 		}

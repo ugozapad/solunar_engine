@@ -175,6 +175,10 @@ namespace solunar
 		// Get last pressed character.
 		const char GetLastCharacter() const { return m_lastCharactedPressed; }
 
+	public:
+		float m_mouseSensitivy = 1.0f;
+		bool m_mouseInvert = false;
+
 	protected:
 		bool m_keys[KEY_COUNT];
 		bool m_mouseButtons[MOUSE_BUTTON_COUNT];

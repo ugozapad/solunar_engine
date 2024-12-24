@@ -33,6 +33,7 @@ public:
 private:
 	std::vector<Entity*> m_entities;
 	std::vector<Entity*> m_deferredEntities;
+	std::vector<Entity*> m_entitiesToDestroy;
 	bool m_deferredMode;
 };
 

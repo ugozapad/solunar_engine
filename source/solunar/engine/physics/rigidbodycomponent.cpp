@@ -34,6 +34,8 @@ namespace solunar {
 		m_isKinematic = false;
 		m_isTrigger = false;
 		m_inWorld = false;
+
+		m_disableBodyOrientUpdate = false;
 	}
 
 	RigidBodyComponent::~RigidBodyComponent()
@@ -153,10 +155,14 @@ namespace solunar {
 		GetEntity()->SetPosition(btVectorToGlm(trans.getOrigin()));
 
 		// calculate rotation
-		btQuaternion quaternion;
-		trans.getBasis().getRotation(quaternion);
-		GetEntity()->SetRotation(glm::quat(quaternion.getW(), quaternion.getX(), quaternion.getY(), quaternion.getZ()));
 
+		if (!m_disableBodyOrientUpdate)
+		{
+			btQuaternion quaternion;
+			trans.getBasis().getRotation(quaternion);
+			GetEntity()->SetRotation(glm::quat(quaternion.getW(), quaternion.getX(), quaternion.getY(), quaternion.getZ()));
+		}
+		
 		// calculate rotation based on euler angles
 		//float roll, pitch, yaw;
 		//trans.getRotation().getEulerZYX(yaw, pitch, roll);
@@ -271,6 +277,16 @@ namespace solunar {
 		// HACKHACKHACK: kinematic body never sleep
 		if (m_isKinematic)
 			m_rigidBody->setActivationState(DISABLE_DEACTIVATION);
+	}
+
+	void RigidBodyComponent::DisableBodyOrientUpdate()
+	{
+		m_disableBodyOrientUpdate = true;
+	}
+
+	void RigidBodyComponent::DisableBody()
+	{
+		m_rigidBody->setActivationState(DISABLE_SIMULATION);
 	}
 
 	void RigidBodyComponent::DisableCollide()

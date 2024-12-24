@@ -82,6 +82,9 @@ float4 PSMain(VSOutput input) : SV_Target
 	float3 N = input.normal;
 #ifdef NORMALMAP
 	N = CalculateNormal(N, input.texcoord);
+	
+	//return float4(N.x, N.y, N.z, 1.0f);
+	
 #endif
 	float3 L = -g_DirLight_direction.xyz;
 	float3 V = normalize(g_viewPos.xyz - input.worldPos.xyz);
@@ -100,7 +103,7 @@ float4 PSMain(VSOutput input) : SV_Target
 		PointLight pointLight = g_pointLights[i];
 		
 		float3 PL = normalize(pointLight.position.xyz - input.worldPos.xyz);
-		float3 R = reflect(-PL, input.normal);
+		float3 R = reflect(-PL, N);
 		
 		// we store point light radius in r component
 		float radius = pointLight.lightData.r;
@@ -116,7 +119,7 @@ float4 PSMain(VSOutput input) : SV_Target
 		float3 distance = length(pointLight.position.xyz - input.worldPos.xyz);
 		float falloff = pow(saturate(1.0f - pow(distance / radius, 4.0f)), 2.0f) / ( pow(distance, 2.0f) + 1.0f) ;
 		
-		ligthing += pointLightPhong(pointLight.color.rgb, pointLight.specular.rgb, 2.0, PL, input.normal, R) * falloff;
+		ligthing += pointLightPhong(pointLight.color.rgb, pointLight.specular.rgb, 2.0, PL, N, R) * falloff;
 	}
 	
 #if 0

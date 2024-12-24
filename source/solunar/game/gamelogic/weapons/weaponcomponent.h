@@ -22,10 +22,16 @@ namespace solunar {
 		static void RegisterObject();
 
 		virtual void Update(float dt);
+
+	private:
 		virtual void Update_Pistol(float dt);
 		virtual void Update_Shotgun(float dt);
 
+		virtual void Update_DEBUG(float dt);
+
+	public:
 		int GetAmmo() { return m_ammo; }
+		int GetClipSize() { return m_clipSize; }
 
 		void SetWeaponType(WeaponsType type);
 
@@ -34,6 +40,7 @@ namespace solunar {
 		int m_idleAni;
 		int m_fireAni;
 		int m_prior_to_reload_Ani;
+		int m_reload_Ani;
 		int m_reload_one_Ani;
 		int m_reload_last_one_Ani;
 

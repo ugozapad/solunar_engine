@@ -40,6 +40,8 @@ public:
 
 	const ShockPlayerStats& GetPlayerStats() { return m_playerStats; }
 
+	void AddMoney(int amount);
+
 private:
 	void ActivateCamera();
 	void InitializeCamera();

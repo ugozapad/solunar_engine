@@ -21,6 +21,8 @@ namespace solunar
 
 		bool IsPlaying();
 
+		FMOD::ChannelGroup* GetMusicChannel() { return m_musicChannel; }
+
 	private:
 		FMOD::ChannelGroup* m_musicChannel;
 		AudioSource* m_musicSource;

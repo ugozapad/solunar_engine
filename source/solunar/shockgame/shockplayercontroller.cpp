@@ -20,6 +20,7 @@
 
 #include <numeric>
 #include <limits>
+#include <queue>
 
 #include "stb_sprintf.h"
 
@@ -49,9 +50,15 @@ public:
 public:
 	void Draw();
 
+	void AddHUDMessageQueue(const char* text);
+
 private:
 	void DrawInfo();
 	void DrawCrosshair();
+	void DrawHUDMessages();
+
+private:
+	std::queue<std::string> m_messagesQueue;
 };
 
 ShockPlayerHUD ShockPlayerHUD::ms_ShockPlayerHUD;
@@ -77,6 +84,11 @@ void ShockPlayerHUD::Draw()
 	stbsp_snprintf(debugText, sizeof(debugText), "%i", nodeId);
 
 	ms_HealthFont->DrawText(debugText, 500.0f, 500.0f, glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+}
+
+void ShockPlayerHUD::AddHUDMessageQueue(const char* text)
+{
+	m_messagesQueue.push(text);
 }
 
 void ShockPlayerHUD::DrawInfo()
@@ -113,7 +125,7 @@ void ShockPlayerHUD::DrawInfo()
 		return;
 
 	static char s_Buffer[256];
-	stbsp_snprintf(s_Buffer, sizeof(s_Buffer), "Ammo: %i", weaponComponent->GetAmmo());
+	stbsp_snprintf(s_Buffer, sizeof(s_Buffer), "Ammo: %i/%i", weaponComponent->GetAmmo(), weaponComponent->GetClipSize());
 	ms_AmmoFont->DrawText(s_Buffer, 25.0f, view->m_height - 20.0f, glm::vec4(1.0f, 0.2f, 0.0f, 1.0f));
 }
 
@@ -191,6 +203,15 @@ void ShockPlayerHUD::DrawCrosshair()
 	}
 }
 
+void ShockPlayerHUD::DrawHUDMessages()
+{
+
+	View* view = CameraProxy::GetInstance()->GetView();
+
+//	ms_AmmoFont->DrawText(s_Buffer, 25.0f, view->m_height - 20.0f, glm::vec4(1.0f, 0.2f, 0.0f, 1.0f));
+
+}
+
 struct WeaponInfo
 {
 	WeaponsType type;
@@ -215,7 +236,11 @@ Entity* CreateWeapon(Entity* cameraEntity, WeaponsType type)
 
 	// load model
 	AnimatedMeshComponent* weaponMesh = weaponEntity->CreateComponent<AnimatedMeshComponent>();
-	weaponMesh->LoadModel("models/viewmodel_shotgun.glb");
+
+	if (type == WeaponsType::Pistol)
+		weaponMesh->LoadModel("models/viewmodel_pistol.glb");
+	if (type == WeaponsType::Shotgun)
+		weaponMesh->LoadModel("models/viewmodel_shotgun.glb");
 
 	WeaponComponent* weaponComponent = weaponEntity->CreateComponent<WeaponComponent>();
 	weaponComponent->SetWeaponType(type);
@@ -262,7 +287,7 @@ float V_CalcBob()
 	// bob is proportional to simulated velocity in the xy plane
 	// (don't count Z, or jumping messes it up)
 	//VectorCopy(pparams->simvel, vel);
-	vel = g_weaponVelocity * 4.0f;
+	vel = g_weaponVelocity * 2.5f;
 	vel[1] = 0;
 
 	bob = sqrt(vel[0] * vel[0] + vel[2] * vel[2]);//* cl_bob;
@@ -318,6 +343,15 @@ void ShockPlayerController::OnEntityRemove()
 	// m_rigidBody = nullptr;
 
 	PlayerControllerComponent::OnEntityRemove();
+}
+
+void ShockPlayerController::AddMoney(int amount)
+{
+	m_playerStats.m_money += amount;
+
+	static char s_strHUDMessage[64];
+	stbsp_snprintf(s_strHUDMessage, sizeof(s_strHUDMessage), "+ %i$", amount);
+	ShockPlayerHUD::GetInstance()->AddHUDMessageQueue(s_strHUDMessage);
 }
 
 void ShockPlayerController::ActivateCamera()

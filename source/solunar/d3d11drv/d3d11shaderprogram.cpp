@@ -103,8 +103,14 @@ ID3DBlob* CreateShaderFromText(const char* text, ShaderType shaderType, const ch
 
 	shaderMacro.push_back(D3D_SHADER_MACRO{ NULL, NULL });
 
+#ifndef FINAL_BUILD
 	HRESULT hr = D3DCompile(text, strlen(text), "UNKNOWED", defines ? shaderMacro.data() : NULL,
 		&g_d3d11Include, entryPoint, shaderTarget, D3DCOMPILE_DEBUG, 0, &shaderBlob, &errorTextBlob);
+#else
+	HRESULT hr = D3DCompile(text, strlen(text), "UNKNOWED", defines ? shaderMacro.data() : NULL,
+		&g_d3d11Include, entryPoint, shaderTarget, D3DCOMPILE_OPTIMIZATION_LEVEL3, 0, &shaderBlob, &errorTextBlob);
+#endif // !FINAL_BUILD
+	
 	if (FAILED(hr))
 	{
 		std::string errorText = "Failed to compile shader!";

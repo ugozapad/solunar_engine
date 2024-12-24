@@ -456,6 +456,15 @@ namespace solunar
 				pD3DTexture->GenerateMips();
 		}
 
+
+		// normal map loading
+#if 0
+		if (!m_normalTextureName.empty())
+		{
+			m_normalTexture = g_contentManager->LoadObject<TextureMap>(m_normalTextureName);
+			m_normalTexture.lock()->getHWTexture()->SetDebugName(m_normalTextureName.c_str());
+		}
+#endif
 		// REWRITE TO SAMPLER !!!
 #if 0
 		// if we dont skip mip mapping in the albedo texture when generate them

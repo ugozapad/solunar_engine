@@ -38,6 +38,7 @@ namespace solunar
 		glm::mat4 m_viewMatrix;
 		glm::mat4 m_projectionMatrix;
 		glm::mat4 m_modelViewProjection;
+		glm::mat4 m_inverseModelMatrix;
 		glm::mat4 m_LightView;
 		glm::mat4 m_LightViewProjection;
 		glm::mat4 m_inverseViewProjection;

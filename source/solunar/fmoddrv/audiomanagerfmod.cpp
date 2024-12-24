@@ -123,8 +123,8 @@ namespace solunar
 
 	void AudioManagerFMOD::Update()
 	{
-		//m_fmodSystem->update();
-
+		m_sfxChannelGroup->setVolume(g_sfxChannelVolume);
+		m_singletonStorer.m_musicManager.GetMusicChannel()->setVolume(g_musicChannelVolume);
 	}
 
 	AudioSource* AudioManagerFMOD::CreateSource(const std::string& filename)

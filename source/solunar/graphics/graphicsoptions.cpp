@@ -1,6 +1,7 @@
 #include "graphicspch.h"
 #include "graphics/graphicsoptions.h"
-
+#include "engine/inputmanager.h"
+#include "engine/audio/audiomanager.h"
 #include "core/utils/iniFile.h"
 
 namespace solunar
@@ -24,6 +25,13 @@ namespace solunar
 		m_anisotropicQuality = settingsFile.GetValueI("GraphicsSettings", "AnisotropicQuality");
 		m_shadowsQuality = settingsFile.GetValueI("GraphicsSettings", "ShadowsQuality");
 
+		g_sfxChannelVolume = settingsFile.GetValueF("Sound", "SFXVolume", g_sfxChannelVolume);
+		g_musicChannelVolume = settingsFile.GetValueF("Sound", "MusicValue", g_musicChannelVolume);
+
+		InputManager* pIM = InputManager::GetInstance();
+		pIM->m_mouseInvert = settingsFile.GetValueB("Input", "MouseInvert", pIM->m_mouseInvert);
+		pIM->m_mouseSensitivy = settingsFile.GetValueF("Input", "MouseSensitivy", pIM->m_mouseSensitivy);
+
 		return true;
 	}
 
@@ -44,6 +52,13 @@ namespace solunar
 
 		settingsFile.SetValueI("GraphicsSettings", "AnisotropicQuality", m_anisotropicQuality);
 		settingsFile.SetValueI("GraphicsSettings", "ShadowsQuality", m_shadowsQuality);
+
+		settingsFile.SetValueF("Sound", "SFXVolume", g_sfxChannelVolume);
+		settingsFile.SetValueF("Sound", "MusicValue", g_musicChannelVolume);
+
+		InputManager* pIM = InputManager::GetInstance();
+		settingsFile.SetValueB("Input", "MouseInvert", pIM->m_mouseInvert);
+		settingsFile.SetValueF("Input", "MouseSensitivy", pIM->m_mouseSensitivy);
 
 		settingsFile.WriteFile();
 	}

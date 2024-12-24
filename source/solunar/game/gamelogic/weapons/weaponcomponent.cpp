@@ -70,10 +70,117 @@ namespace solunar
 
 		if (m_type == WeaponsType::Shotgun)
 			Update_Shotgun(dt);
+
+		Update_DEBUG(dt);
 	}
 
 	void WeaponComponent::Update_Pistol(float dt)
 	{
+		static AudioSource* s_fireSound = nullptr;
+		static AudioSource* s_reloadSound = nullptr;
+
+#ifdef ENABLE_TRACE_DEBUG
+		using namespace tracedbg;
+#endif
+		AnimatedMeshComponent* mesh = GetEntity()->GetComponent<AnimatedMeshComponent>();
+		std::shared_ptr<ModelBase> modelBase = mesh->LockModel();
+		AnimatedModel* animatedModel = dynamicCast<AnimatedModel>(modelBase.get());
+		if (!m_inited) {
+			s_fireSound = AudioManager::GetInstance()->CreateSource("sounds/sfx/weapons/shotgun_fire.wav");
+			s_reloadSound = AudioManager::GetInstance()->CreateSource("sounds/sfx/weapons/shotgun_reload.wav");
+
+			m_idleAni = animatedModel->GetAnimationByName("idle");
+			m_fireAni = animatedModel->GetAnimationByName("fire");
+			m_reload_Ani = animatedModel->GetAnimationByName("reload");
+
+			animatedModel->PlayAnimation(m_idleAni, true);
+			m_inited = true;
+		}
+
+		Camera* camera = CameraProxy::GetInstance();
+
+		int currentId = animatedModel->GetCurrentAnimationId();
+		bool isFireAniFinished = currentId == m_fireAni && animatedModel->IsStoped();
+		bool isReloadAniFinished = currentId == m_reload_Ani && animatedModel->IsStoped();
+		static bool reload = false;
+
+		const int kMaxAmmo = 12;
+
+		if (InputManager::GetInstance()->IsPressed(KEY_R) && (isFireAniFinished || currentId == m_idleAni) && m_ammo < kMaxAmmo)
+		{
+			animatedModel->PlayAnimation(m_reload_Ani, false);
+		}
+
+		if (isReloadAniFinished)
+		{
+			m_clipSize -= kMaxAmmo;
+			m_ammo = kMaxAmmo;
+			animatedModel->PlayAnimation(m_idleAni, true);
+		}
+
+		float distance = glm::distance(camera->GetPosition(), GetLookingEntityPos(camera->GetPosition() + camera->GetDirection(),
+			camera->GetPosition() + camera->GetDirection() * 1000.0f));
+#if 0
+		ImGui::GetForegroundDrawList()->AddText(ImVec2(500, 500), 0xff0000ff, std::to_string(distance).c_str());
+#endif
+
+
+		if (InputManager::GetInstance()->IsMouseButtonPressed(MOUSE_BUTTON_LEFT) &&
+			(isFireAniFinished || currentId != m_fireAni) &&
+			m_ammo > 0) {
+			animatedModel->PlayAnimation(m_fireAni, false);
+
+			if (s_fireSound->IsPlaying())
+				s_fireSound->Stop();
+
+			s_fireSound->Play();
+
+			--m_ammo;
+
+				float ra = rand() % 10;
+				ra = ra / 100;
+
+				glm::vec3 r;
+				r.x = ra * distance;
+
+				ra = rand() % 10;
+				ra = ra / 100;
+				r.y = ra * distance;
+
+				ra = rand() % 10;
+				ra = ra / 100;
+				r.z = ra * distance;
+
+				glm::vec3 rayStart = camera->GetPosition() + r + camera->GetDirection();
+				glm::vec3 rayEnd = camera->GetPosition() + r + camera->GetDirection() * 1000.0f;
+
+				//g_debugLines.push_back(std::make_pair(rayStart, rayEnd));
+
+				RayCastResult rq = {};
+				if (GetWorld()->RayCast(rq, rayStart, rayEnd))
+				{
+					Entity* entity = rq.m_entity;
+					ShockAIComponent* ai = (ShockAIComponent*)entity->GetComponentByTypeInfo(ShockAIComponent::GetStaticTypeInfo());
+					if (ai)
+						ai->Damage(g_Player, 25.0f);
+
+					Core::Msg("WeaponComponent::Update(): shot entity 0x%p", entity);
+
+#ifdef ENABLE_TRACE_DEBUG
+					if (g_debugTrace)
+					{
+						g_debugLines.push_back(std::make_pair(rayStart, rq.m_hitPosition));
+						g_debugHits.push_back(rq.m_hitPosition);
+					}
+#endif // ENABLE_TRACE_DEBUG
+			}
+		}
+
+		if (isFireAniFinished) {
+			animatedModel->PlayAnimation(m_idleAni, true);
+		}
+
+		animatedModel->Update(dt);
 	}
 
 	void WeaponComponent::Update_Shotgun(float dt)
@@ -105,8 +212,6 @@ namespace solunar
 			animatedModel->PlayAnimation(m_idleAni, true);
 			m_inited = true;
 		}
-
-		tracedbg::g_debugTime += dt;
 
 		Camera* camera = CameraProxy::GetInstance();
 
@@ -221,7 +326,20 @@ namespace solunar
 			}
 		}
 
+		if (isFireAniFinished) {
+			animatedModel->PlayAnimation(m_idleAni, true);
+		}
+
+		animatedModel->Update(dt);
+	}
+
+	void WeaponComponent::Update_DEBUG(float dt)
+	{
 #ifdef ENABLE_TRACE_DEBUG
+		using namespace tracedbg;
+
+		tracedbg::g_debugTime += dt;
+
 		if (g_debugTrace)
 		{
 			for (auto& it : g_debugLines)
@@ -244,14 +362,8 @@ namespace solunar
 
 				g_debugTime = 0.0f;
 			}
-		}
+	}
 #endif
-
-		if (isFireAniFinished) {
-			animatedModel->PlayAnimation(m_idleAni, true);
-		}
-
-		animatedModel->Update(dt);
 
 #if 0
 		stbsp_snprintf(s_Buffer, sizeof(s_Buffer), "--- Viewmodel ---");

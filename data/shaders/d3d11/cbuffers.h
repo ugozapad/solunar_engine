@@ -14,6 +14,7 @@ cbuffer GlobalData : register(b0)
 	float4x4 g_viewMatrix;
 	float4x4 g_projectionMatrix;
 	float4x4 g_modelViewProjection;
+	float4x4 g_inverseModelMatrix;
 	float4x4 g_LightView;
 	float4x4 g_LightViewProjection;
 	float4x4 g_inverseViewProjection;

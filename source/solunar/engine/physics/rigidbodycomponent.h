@@ -54,6 +54,10 @@ namespace solunar {
 		//void getWorldTransform(btTransform& worldTrans) const override;
 		//void setWorldTransform(const btTransform& worldTrans) override;
 
+		void DisableBodyOrientUpdate();
+
+		void DisableBody();
+
 		void DisableCollide();
 		void EnableCollide();
 
@@ -83,6 +87,9 @@ namespace solunar {
 		bool m_isKinematic;
 		bool m_isTrigger;
 		bool m_inWorld;
+		
+		// engine properties
+		bool m_disableBodyOrientUpdate;
 	};
 
 	//! Hack due support btCharacterController in the physics system.

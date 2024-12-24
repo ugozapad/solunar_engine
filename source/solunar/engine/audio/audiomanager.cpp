@@ -3,6 +3,9 @@
 
 namespace solunar
 {
+	float g_sfxChannelVolume = 1.0f;
+	float g_musicChannelVolume = 1.0f;
+
 	AudioManager* AudioManager::ms_pInstance = nullptr;
 
 	AudioManager::AudioManager()

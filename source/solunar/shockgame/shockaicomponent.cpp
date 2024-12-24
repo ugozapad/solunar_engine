@@ -70,7 +70,7 @@ void ShockAIComponent::Update(float dt)
 	//	UpdateZombie(dt);
 
 		ShockAIBehaviourTree* pBT = this->GetEntity()->GetComponent<ShockAIBehaviourTree>();
-		if (pBT)
+		if (pBT && pBT->IsActive())
 		{
 			pBT->Update(dt);
 		}
@@ -186,7 +186,9 @@ void ShockAIComponent::UpdateZombie_AnimationController(float dt)
 	characterPos.y = 0.0f;
 
 	glm::quat rotation = glm::quatLookAt(glm::normalize(playerPos - characterPos), glm::vec3(0.0f, 1.0f, 0.0f));
-	GetEntity()->SetRotation(rotation);
+	
+	if (!m_death)
+		GetEntity()->SetRotation(rotation);
 
 	std::shared_ptr<AnimatedModel> animatedModel = m_animatedComponent->LockAnimatedModel();
 	if (animatedModel)
@@ -221,7 +223,7 @@ void ShockAIComponent::UpdateZombie_FSM(float dt)
 		PlayAIAnimation(m_zombieData.m_attackAnimation, true);
 		break;
 	case ShockAIAnimationState_Die:
-		PlayAIAnimation(m_zombieData.m_dieAnimation, true);
+		PlayAIAnimation(m_zombieData.m_dieAnimation, false);
 		m_death = true;
 		break;
 	}
@@ -251,6 +253,12 @@ void ShockAIComponent::Damage(Entity* from, float amount)
 	if (m_health <= 0.0f)
 	{
 		m_health = 0.0f;
+		UpdateZombie_OnDeath();
+
+		ShockPlayerController* PC = from->GetComponent<ShockPlayerController>();
+		if (PC)
+			PC->AddMoney(50);
+
 		return;
 	}
 
@@ -285,6 +293,17 @@ void ShockAIComponent::UpdateZombie_DumpState()
 	int nodeId = g_aiPathfindingManager->GetNearestPoint(GetEntity()->GetPosition());
 	sprintf(debugText, "Node: %i", nodeId);
 	Debug_Draw3DText(debugText, GetEntity()->GetPosition(), glm::vec4(1.f, 1.f, 1.f, 1.f), -25.0f);
+}
+
+void ShockAIComponent::UpdateZombie_OnDeath()
+{
+	m_nextState = ShockAIAnimationState_Die;
+	
+	// disable BT update
+	GetEntity()->GetComponent<ShockAIBehaviourTree>()->SetActive(false);
+
+	// limit body orient
+	GetEntity()->GetComponent<RigidBodyComponent>()->DisableBodyOrientUpdate();
 }
 
 bool ShockAIComponent::IsAnimationFinished()

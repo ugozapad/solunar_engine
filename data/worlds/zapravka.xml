@@ -25,23 +25,8 @@
             <Model filename="models/terrain_outside.model"/>
             <CastShadow value="false"/>
         </MeshComponent>
-    </Entity> 
-	<!-- Level geometry
-    <Entity>
-        <Position x="0" y="-0.1" z="0"/>
-        <Rotation x="0" y="180" z="0"/>
-        <Scale x="1" y="1" z="1"/>
-        <MeshComponent>
-            <Model filename="models/common_floor.model"/>
-            <CastShadow value="false"/>
-        </MeshComponent>
-        <RigidBodyComponent>
-            <Static value="true"/>
-        </RigidBodyComponent>
-        <TriangleMeshShapeComponent>
-            <Model filename="models/common_floor.model"/>
-        </TriangleMeshShapeComponent>
-    </Entity> -->
+    </Entity>
+	<!-- Zapravka model -->
     <Entity>
         <Position x="0" y="0" z="0"/>
         <Rotation x="0" y="0" z="0"/>
@@ -133,7 +118,7 @@
         </BoxShapeComponent>
         <UsableAreaComponent>
             <Cost value="1400"/>
-            <Script value="give_weapon shotgun"/>
+            <Script value="give_weapon pistol"/>
         </UsableAreaComponent>
         <Entity>
             <Position x="0.0" y="0" z="0"/>

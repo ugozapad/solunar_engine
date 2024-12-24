@@ -120,10 +120,12 @@ namespace solunar
 		globalData->m_viewMatrix = renderContext.view;
 		globalData->m_projectionMatrix = renderContext.proj;
 
-		glm::mat4 modelViewProjection = glm::mat4(1.0f);
-		modelViewProjection = renderContext.proj * renderContext.view * renderContext.model;
+		glm::mat4 modelViewProjection		= glm::mat4(1.0f);
+		modelViewProjection					= renderContext.proj * renderContext.view * renderContext.model;
 
-		globalData->m_modelViewProjection = modelViewProjection;
+		globalData->m_modelViewProjection	= modelViewProjection;
+
+		globalData->m_inverseModelMatrix	= glm::transpose(glm::inverse(glm::mat3(renderContext.model)));
 
 		globalData->m_LightView				= ShadowsRenderer::GetInstance()->GetLightViewMatrix();
 		globalData->m_LightViewProjection	= ShadowsRenderer::GetInstance()->GetLightViewProjection();

@@ -27,6 +27,9 @@ namespace solunar
 		virtual void SetListenerPosition(const glm::vec3& position);
 
 	};
+
+	extern float g_sfxChannelVolume;
+	extern float g_musicChannelVolume;
 }
 
 #endif // !AUDIOMANAGER_H

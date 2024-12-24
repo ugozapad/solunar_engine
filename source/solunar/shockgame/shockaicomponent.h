@@ -69,6 +69,7 @@ private:
 	void PlayAIAnimation(int animation, bool looped);
 
 	void UpdateZombie_DumpState();
+	void UpdateZombie_OnDeath();
 
 	bool IsAnimationFinished();
 

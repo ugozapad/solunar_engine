@@ -6,6 +6,9 @@
 #include "engine/engine.h"
 #include "engine/camera.h"
 
+#include "engine/inputmanager.h"
+
+#include "engine/audio/audiomanager.h"
 #include "engine/audio/musicmanager.h"
 
 #include "graphics/texturemap.h"
@@ -295,14 +298,17 @@ void showSettingsMenu()
 			ImGui::SliderInt("Shadows Quality", &g_graphicsOptions.m_shadowsQuality, 0, 4);
 			ImGui::EndTabItem();
 		}
+		if (ImGui::BeginTabItem("Sound"))
+		{
+			ImGui::SliderFloat("SFX Volume", &g_sfxChannelVolume, 0.0f, 1.0f);
+			ImGui::SliderFloat("Music Volume", &g_musicChannelVolume, 0.0f, 1.0f);
+			ImGui::EndTabItem();
+		}
 		if (ImGui::BeginTabItem("Input"))
 		{
-			static float s_mouseSensitivy = 1.0f;
-			ImGui::SliderFloat("Mouse Sensitivity", &s_mouseSensitivy, 0.1f, 10.0f);
-
-			static bool s_mouseInvert = false;
-			ImGui::Checkbox("Mouse Invert", &s_mouseInvert);
-
+			InputManager* pIM = InputManager::GetInstance();
+			ImGui::SliderFloat("Mouse Sensitivity", &pIM->m_mouseSensitivy, 0.1f, 10.0f);
+			ImGui::Checkbox("Mouse Invert", &pIM->m_mouseInvert);
 			ImGui::EndTabItem();
 		}
 		ImGui::EndTabBar();
