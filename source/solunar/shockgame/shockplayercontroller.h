@@ -43,6 +43,8 @@ public:
 
 	void AddMoney(int amount);
 
+	void PrintMessage(const char* msg);
+
 private:
 	void ActivateCamera();
 	void InitializeCamera();

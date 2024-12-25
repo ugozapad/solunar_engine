@@ -2,15 +2,17 @@
 #include "shockgame/demogame.h"
 
 #include "core/timer.h"
+#include "core/file/contentmanager.h"
 
 #include "engine/engine.h"
 #include "engine/inputmanager.h"
 #include "engine/camera.h"
+#include "engine/audio/musicmanager.h"
 
 #include "graphics/ifontmanager.h"
 #include "graphics/debugrenderer.h"
 #include "graphics/renderer.h"
-
+#include "graphics/texturemap.h"
 #include "graphics/light.h"
 #include "graphics/mesh.h"
 
@@ -34,6 +36,8 @@
 
 namespace solunar
 {
+
+DemoGameMainMenuComponent* g_demoGameMainMenu = nullptr;
 
 IMPLEMENT_OBJECT(UsableAreaComponent, LogicComponent);
 
@@ -113,6 +117,36 @@ void Debug_Draw3DText(const char* text, const glm::vec3& position, const glm::ve
 	g_fontManager->DrawSystemFontShadowed(text, proj.x, proj.y, color);
 }
 
+static std::weak_ptr<TextureMap> g_indicatorTexture;
+
+void DrawRoundIndicator(int round)
+{
+	static bool s_Initialized = false;
+	if (!s_Initialized)
+	{
+		g_indicatorTexture = g_contentManager->LoadObject<TextureMap>("textures/ui/ui_round_indicator.png");
+		s_Initialized = true;
+	}
+
+	if (g_indicatorTexture.expired())
+		return;
+
+	View* pV = CameraProxy::GetInstance()->GetView();
+
+	float fW = pV->m_width - 256.f;
+	float fH = pV->m_height - 100.f;
+
+	for (int i = 0; i < round ; i++) {
+		float kS = 25.0f;
+		ImGui::GetBackgroundDrawList()->AddImage(
+			(ImTextureID)g_indicatorTexture.lock()->getHWTexture(),
+			ImVec2(fW - kS, fH - kS),
+			ImVec2(fW + kS, fH + kS));
+	
+		fW += kS;
+	}
+}
+
 static GameManager s_GameManager;
 GameManager* g_GameManager = &s_GameManager;
 
@@ -145,11 +179,19 @@ void GameManager::OnWorldLoad(const std::string& worldName, World* pLoadedWorld)
 		}
 		else
 		{
+			if (g_worldName == "worlds/entry_game.xml")
+				return;
+
 			// level manager
 			g_ShelterLevelManager = pLoadedWorld->CreateEntity()->CreateComponent<ShelterLevelManagerComponent>();
 
 			// ai manager
 			g_ShockAIRoundSystem = pLoadedWorld->CreateEntity()->CreateComponent<ShockAIRoundSystem>();
+
+			// menu
+			g_demoGameMainMenu = pLoadedWorld->CreateEntity()->CreateComponent<DemoGameMainMenuComponent>();
+			g_demoGameMainMenu->SetActive(false);
+			g_demoGameMainMenu->m_inGame = true;
 
 			// player creation
 
@@ -724,13 +766,19 @@ ShelterLevelManagerComponent::~ShelterLevelManagerComponent()
 
 void ShelterLevelManagerComponent::OnInit()
 {
+	if (g_worldName == "worlds/entry_game.xml")
+		return;
+
 #ifndef _DEBUG
 	// initialize fade
+
 	FadeRenderer::GetInstance()->SetFade(4.0f, true);
 
 	// initialize title
 	TitleRenderer::GetInstance()->SetTitle("Survive the 4 waves", 8.0f, true);
 #endif // !_DEBUG
+
+	MusicManager::GetInstance()->Play("sounds/music/ambient.mp3", true);
 
 	// find barricade points
 	m_barricadePoints[0] = GetWorld()->GetEntityManager().GetEntityByName("door1_barricade_point");

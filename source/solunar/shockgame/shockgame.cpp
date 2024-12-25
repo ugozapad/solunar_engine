@@ -227,6 +227,11 @@ void Command_MakeMeRich()
 	g_Player->GetComponent<ShockPlayerController>()->AddMoney(9999999999);
 }
 
+void Command_DebugAI()
+{
+	g_debugAI = !g_debugAI;
+}
+
 // More beautiful way to register classes
 void registerGameClasses()
 {
@@ -278,6 +283,7 @@ void registerGameCommands()
 {
 	ConsoleCommandManager* cmdmgr = ConsoleCommandManager::GetInstance();
 	cmdmgr->RegisterCommand("debugtrace", &Command_DebugTrace);
+	cmdmgr->RegisterCommand("debugai", &Command_DebugAI);
 	cmdmgr->RegisterCommand("imrich", &Command_MakeMeRich);
 }
 

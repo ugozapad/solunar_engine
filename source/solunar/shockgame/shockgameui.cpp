@@ -18,6 +18,7 @@
 #include "main/main.h"
 
 #include <dxgi.h>
+#include <demogame.h>
 #pragma comment(lib, "dxgi.lib")
 
 namespace solunar
@@ -291,6 +292,7 @@ void showSettingsMenu()
 				s_showApplyWindow = true;
 			}
 		}
+#if 0
 		if (ImGui::BeginTabItem("Graphics"))
 		{
 			ImGui::SliderInt("Texture Quality", &g_graphicsOptions.m_texturesMipMapLevel, 0, 4);
@@ -298,6 +300,7 @@ void showSettingsMenu()
 			ImGui::SliderInt("Shadows Quality", &g_graphicsOptions.m_shadowsQuality, 0, 4);
 			ImGui::EndTabItem();
 		}
+#endif
 		if (ImGui::BeginTabItem("Sound"))
 		{
 			ImGui::SliderFloat("SFX Volume", &g_sfxChannelVolume, 0.0f, 1.0f);
@@ -334,6 +337,7 @@ DemoGameMainMenuComponent::DemoGameMainMenuComponent()
 
 DemoGameMainMenuComponent::~DemoGameMainMenuComponent()
 {
+	g_demoGameMainMenu = nullptr;
 }
 
 void DemoGameMainMenuComponent::OnWorldSet(World* world)
@@ -376,14 +380,31 @@ void DemoGameMainMenuComponent::Update(float dt)
 	ImGui::SetNextWindowPos(ImVec2(posX, posY));
 	ImGui::SetNextWindowSize(ImVec2(camera->GetView()->m_width / 2, camera->GetView()->m_height / 2));
 
+
 	ImGui::Begin("Main Menu", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoBackground);
 
 	const ImVec2 kButtonSize = ImVec2(128.0f, 32.0f);
 
-	if (ImGui::Button("New Game", kButtonSize))
+	if (m_inGame)
 	{
-		MusicManager::GetInstance()->Stop();
-		EngineStateManager::GetInstance()->LoadWorld("worlds/zapravka.xml");
+		if (ImGui::Button("Return to game", kButtonSize))
+		{
+			Engine::ms_pause = false;
+			SetActive(false);
+
+			g_engineData.m_shouldCaptureMouse = true;
+			g_engineData.m_shouldHideMouse = true;
+			InputManager::GetInstance()->SetCursorHiding(true);
+			InputManager::GetInstance()->SetCursorCapture(true);
+		}
+	}
+	else
+	{
+		if (ImGui::Button("New Game", kButtonSize))
+		{
+			MusicManager::GetInstance()->Stop();
+			EngineStateManager::GetInstance()->LoadWorld("worlds/zapravka.xml");
+		}
 	}
 
 	if (ImGui::Button("Settings", kButtonSize))

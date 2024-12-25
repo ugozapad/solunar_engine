@@ -109,7 +109,7 @@ namespace solunar
 
 		const int kMaxAmmo = 12;
 
-		if (InputManager::GetInstance()->IsPressed(KEY_R) && (isFireAniFinished || currentId == m_idleAni) && m_ammo < kMaxAmmo)
+		if (InputManager::GetInstance()->IsPressed(KEY_R) && (isFireAniFinished || currentId == m_idleAni) && m_ammo < kMaxAmmo && ((kMaxAmmo-m_ammo)<=m_clipSize))
 		{
 			animatedModel->PlayAnimation(m_reload_Ani, false);
 			s_reloadSound->Play();
@@ -142,17 +142,17 @@ namespace solunar
 			--m_ammo;
 
 				float ra = rand() % 10;
-				ra = ra / 100;
+				ra = ra / 1000;
 
 				glm::vec3 r;
 				r.x = ra * distance;
 
 				ra = rand() % 10;
-				ra = ra / 100;
+				ra = ra / 1000;
 				r.y = ra * distance;
 
 				ra = rand() % 10;
-				ra = ra / 100;
+				ra = ra / 1000;
 				r.z = ra * distance;
 
 				glm::vec3 rayStart = camera->GetPosition() + r + camera->GetDirection();
@@ -228,7 +228,7 @@ namespace solunar
 
 		const int kMaxAmmo = 12;
 
-		if (InputManager::GetInstance()->IsPressed(KEY_R) && (isFireAniFinished || currentId == m_idleAni) && m_ammo < kMaxAmmo)
+		if (InputManager::GetInstance()->IsPressed(KEY_R) && (isFireAniFinished || currentId == m_idleAni) && m_ammo < kMaxAmmo && ((kMaxAmmo - m_ammo) <= m_clipSize))
 		{
 			animatedModel->PlayAnimation(m_prior_to_reload_Ani, false);
 			reload = true;
@@ -259,6 +259,7 @@ namespace solunar
 			if (isReloadAniFinished)
 			{
 				m_ammo += 1;
+				m_clipSize -= 1;
 				animatedModel->PlayAnimation(m_reload_one_Ani, false);
 				if (!s_reloadSound->IsPlaying())
 					s_reloadSound->Play();
@@ -386,8 +387,8 @@ namespace solunar
 		m_type = type;
 		
 		if (type == WeaponsType::Pistol)
-			m_clipSize = 32;
+			m_clipSize = 99;
 		else if (type == WeaponsType::Shotgun)
-			m_clipSize = 16;
+			m_clipSize = 99;
 	}
 }

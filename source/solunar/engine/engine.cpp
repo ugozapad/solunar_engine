@@ -29,7 +29,8 @@
 namespace solunar
 {
 	EngineData		g_engineData;
-	World* Engine::ms_world = nullptr;
+	World*			Engine::ms_world = nullptr;
+	bool			Engine::ms_pause = false;
 	std::string		g_worldName;
 
 	// There is more nice looking object registration
@@ -111,6 +112,8 @@ namespace solunar
 
 	void Engine::LoadWorld(const std::string& filename)
 	{
+		CameraProxy::GetInstance()->SetCameraComponent(nullptr);
+
 		g_worldName = filename;
 
 		Core::Msg("Engine: Loading world %s", filename.c_str());
@@ -159,6 +162,8 @@ namespace solunar
 
 	void Engine::LoadEmptyWorld()
 	{
+		CameraProxy::GetInstance()->SetCameraComponent(nullptr);
+
 		Core::Msg("Engine: Creating empty world");
 
 		World* world = g_typeManager->CreateObject<World>();
@@ -202,16 +207,22 @@ namespace solunar
 				simulating = g_editorManager->IsSimulate();
 			}
 
+			simulating = !Engine::ms_pause;
+
 			if (!world->IsWorldInitialized())
 				world->Initialize();
 
 			world->Update_PreEntityUpdate();
+
 			if (simulating)
 			{
 				world->Update_PhysicsEntity();
 				world->Update_LogicEntity();
 			}
 		}
+
+		if (g_demoGameMainMenu)
+			g_demoGameMainMenu->Update(Timer::GetInstance()->GetDelta());
 
 		if (g_engineData.m_editor)
 		{

@@ -30,6 +30,9 @@ public:
 	void OnWorldSet(World* world) override;
 
 	void Update(float dt) override;
+
+public:
+	bool m_inGame = false;
 };
 
 }

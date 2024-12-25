@@ -1,7 +1,8 @@
 #include "shockgamepch.h"
 #include "shock_component_ai_round_system.h"
 #include "engine/physics/rigidbodycomponent.h"
-
+#include <demogame.h>
+#include "engine/engine.h"
 namespace solunar
 {
 	static tinyxml2::XMLDocument s_zombieDocument;
@@ -27,7 +28,7 @@ namespace solunar
 	ShockAIRoundSystem* g_ShockAIRoundSystem = nullptr;
 
 	ShockAIRoundSystem::ShockAIRoundSystem() : 
-		m_current_round(0), 
+		m_current_round(1), 
 		m_max_rounds(4), 
 		m_zombies_to_kill(12),
 		m_numZombieSpawnedInCurrentRound(0),
@@ -58,13 +59,31 @@ namespace solunar
 	{
 		m_timer += dt;
 
-		const float kZombieSpawnDelay = 12.0f;
+		if (m_current_round > m_max_rounds)
+		{
+			const float endTime = 4.0f;
+			if (m_timer>endTime) {
+				EngineStateManager::GetInstance()->LoadWorld("worlds/entry_game.xml");
+			}
+		}
 
-		if (m_timer > kZombieSpawnDelay && m_numZombieSpawnedInCurrentRound <= m_zombies_to_kill)
+		if (m_current_round > m_max_rounds)
+			return;
+
+		const float kZombieSpawnDelay = 5.0f;
+
+		float roundZombieSpawnDelay = kZombieSpawnDelay;
+		if (m_timer > roundZombieSpawnDelay && m_numZombieSpawnedInCurrentRound <= m_zombies_to_kill)
 		{
 			SpawnZombie();
 			m_timer = 0.0f;
 		}
+
+		if (m_numZombieSpawnedInCurrentRound >= m_zombies_to_kill)
+			NextRound();
+
+
+		DrawRoundIndicator(m_current_round);
 	}
 
 	void ShockAIRoundSystem::LoadXML(tinyxml2::XMLElement& element)
@@ -83,6 +102,13 @@ namespace solunar
 	{
 		m_numZombieSpawnedInCurrentRound = 0;
 		m_current_round++;
+		m_timer = 0.0f;
+
+		if (m_current_round > m_max_rounds) {
+			CompleteGame();
+		} else {
+			TitleRenderer::GetInstance()->SetTitle("Round " + std::to_string(m_current_round), 4.0f, true);
+		}
 	}
 
 	void ShockAIRoundSystem::FinishRound()
@@ -91,7 +117,9 @@ namespace solunar
 
 	void ShockAIRoundSystem::CompleteGame()
 	{
+		TitleRenderer::GetInstance()->SetTitle("You win!", 4.0f, true);
 	}
+
 	void ShockAIRoundSystem::CompleteLevel()
 	{
 	}

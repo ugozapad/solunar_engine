@@ -14,6 +14,8 @@
 namespace solunar
 {
 
+bool g_debugAI = false;
+
 IMPLEMENT_OBJECT(ShockAIComponent, LogicComponent);
 
 BEGIN_PROPERTY_REGISTER(ShockAIComponent)
@@ -267,7 +269,7 @@ void ShockAIComponent::Damage(Entity* from, float amount)
 
 		ShockPlayerController* PC = from->GetComponent<ShockPlayerController>();
 		if (PC)
-			PC->AddMoney(50);
+			PC->AddMoney(100);
 
 		return;
 	}
@@ -294,6 +296,9 @@ void ShockAIComponent::PlayAIAnimation(int animation, bool looped)
 
 void ShockAIComponent::UpdateZombie_DumpState()
 {
+	if (!g_debugAI)
+		return;
+
 	static const char* s_zombieAIStates[ShockAIAnimationState_Count] =
 	{
 		"ShockAIAnimationState_Idle",

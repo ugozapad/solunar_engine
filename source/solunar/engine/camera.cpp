@@ -67,7 +67,7 @@ namespace solunar
 
 	void CameraProxy::SetCameraComponent(CameraComponent* cameraComp)
 	{
-		Assert(cameraComp);
+		//Assert(cameraComp);
 		m_cameraComponent = cameraComp;
 	}
 

@@ -203,6 +203,8 @@ private:
 	std::vector<EntityDeleteInfo> m_stuff;
 };
 
+void DrawRoundIndicator(int round);
+
 }
 
 

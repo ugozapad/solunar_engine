@@ -410,6 +410,10 @@ void ShockPlayerController::AddMoney(int amount)
 	ShockPlayerHUD::GetInstance()->AddHUDMessageQueue(s_strHUDMessage);
 }
 
+void ShockPlayerController::PrintMessage(const char* msg)
+{
+}
+
 void ShockPlayerController::ActivateCamera()
 {
 	CameraProxy::GetInstance()->SetCameraComponent(m_camera);
@@ -485,16 +489,16 @@ void ShockPlayerController::Update(float dt)
 	// }
 
 		// #TODO: REMOVE FROM THIS
-	if (InputManager::GetInstance()->IsPressedWithReset(KeyboardKeys::KEY_F2))
-	{
-		ActivateCamera();
-	}
+	//if (InputManager::GetInstance()->IsPressedWithReset(KeyboardKeys::KEY_F2))
+	//{
+	//	ActivateCamera();
+	//}
 
-	if (InputManager::GetInstance()->IsPressedWithReset(KeyboardKeys::KEY_F3))
-	{
-		CameraProxy::GetInstance()->SetCameraComponent(g_freeCamera);
-		g_freeCameraEntity->SetPosition(GetEntity()->GetWorldPosition());
-	}
+	//if (InputManager::GetInstance()->IsPressedWithReset(KeyboardKeys::KEY_F3))
+	//{
+	//	CameraProxy::GetInstance()->SetCameraComponent(g_freeCamera);
+	//	g_freeCameraEntity->SetPosition(GetEntity()->GetWorldPosition());
+	//}
 
 	if (CameraProxy::GetInstance()->GetCameraComponent() == g_freeCamera && !g_console->IsToggled())
 	{
@@ -734,6 +738,28 @@ void ShockPlayerController::UpdateLogic(float dt)
 		return;
 	}
 
+	if (InputManager::GetInstance()->IsPressed(KEY_1))
+		SwitchWeapon(WeaponsType::Pistol);
+
+
+	if (InputManager::GetInstance()->IsPressed(KEY_2))
+		SwitchWeapon(WeaponsType::Shotgun);
+
+	if (InputManager::GetInstance()->IsPressed(KEY_ESCAPE)) {
+		g_demoGameMainMenu->SetActive(true);
+		Engine::ms_pause = true;
+
+		g_engineData.m_shouldCaptureMouse = false;
+		g_engineData.m_shouldHideMouse = false;
+
+		// todo: typo ne ok, because if you handle input by g_engineData thus
+		// you have to debug your state and disable/enable because InputManager
+		// it is not right to manually call it here if you comment last two lines of code
+		// the cursor will hide and only alt/tab will reveive it and it is not okay :(
+		InputManager::GetInstance()->SetCursorHiding(false);
+		InputManager::GetInstance()->SetCursorCapture(false);
+	}
+
 	Camera* camera = CameraProxy::GetInstance();
 
 	glm::vec3 rayBegin = camera->GetPosition() + camera->GetDirection();
@@ -919,6 +945,9 @@ void ShockPlayerController::DebugUpdate(float dt)
 
 void ShockPlayerController::SwitchWeapon(WeaponsType type)
 {
+	if (!m_weaponEntity[0] || !m_weaponEntity[1])
+		return;
+
 	if (type == WeaponsType::Shotgun) {
 		m_weaponEntity[0]->GetComponent<AnimatedMeshComponent>()->SetActive(false);
 		m_weaponEntity[0]->GetComponent<WeaponComponent>()->SetActive(false);

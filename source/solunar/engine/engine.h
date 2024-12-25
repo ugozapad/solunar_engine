@@ -11,6 +11,7 @@ namespace solunar
 	{
 	public:
 		static World* ms_world;
+		static bool ms_pause;
 
 	public:
 		static void Init();
@@ -71,6 +72,7 @@ namespace solunar
 	};
 
 	extern EngineData g_engineData;
+	extern std::string g_worldName;
 }
 
 #endif // !ENGINE_H

@@ -93,6 +93,8 @@ private:
 ShockAIType GetShockAITypeFromString(const std::string& name);
 std::string ShockAITypeToString(ShockAIType type);
 
+extern bool g_debugAI;
+
 }
 
 #endif // !SHOCKAICOMPONENT_H
