@@ -78,7 +78,7 @@ namespace solunar
 
 	void DrawLoadscreen()
 	{
-		std::weak_ptr<TextureMap> loadscreen = g_contentManager->LoadObject<TextureMap>("textures/loadscreen.jpg");
+		std::weak_ptr<TextureMap> loadscreen = g_contentManager->LoadObject<TextureMap>("textures/ui/ui_loading_screen.png");
 
 		View* view = CameraProxy::GetInstance()->GetView();
 

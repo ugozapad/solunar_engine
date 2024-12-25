@@ -61,9 +61,13 @@ public:
 	void LoadXML(tinyxml2::XMLElement& element) override;
 	void SaveXML(tinyxml2::XMLElement& element) override;
 
+	void Attack(Entity* to, float amount);
 	void Damage(Entity* from, float amount);
 
 	void SetAnimationState(ShockAIAnimationState state);
+
+	bool GetAniEndOfCurrentState();
+	bool IsDeath() { return m_death; }
 
 private:
 	void PlayAIAnimation(int animation, bool looped);

@@ -65,6 +65,9 @@ namespace solunar
 
 	void WeaponComponent::Update(float dt)
 	{
+		if (!IsActive())
+			return;
+
 		if (m_type == WeaponsType::Pistol)
 			Update_Pistol(dt);
 
@@ -86,8 +89,8 @@ namespace solunar
 		std::shared_ptr<ModelBase> modelBase = mesh->LockModel();
 		AnimatedModel* animatedModel = dynamicCast<AnimatedModel>(modelBase.get());
 		if (!m_inited) {
-			s_fireSound = AudioManager::GetInstance()->CreateSource("sounds/sfx/weapons/shotgun_fire.wav");
-			s_reloadSound = AudioManager::GetInstance()->CreateSource("sounds/sfx/weapons/shotgun_reload.wav");
+			s_fireSound = AudioManager::GetInstance()->CreateSource("sounds/sfx/weapons/pistol_fire.wav");
+			s_reloadSound = AudioManager::GetInstance()->CreateSource("sounds/sfx/weapons/pistol_reload.wav");
 
 			m_idleAni = animatedModel->GetAnimationByName("idle");
 			m_fireAni = animatedModel->GetAnimationByName("fire");
@@ -109,6 +112,7 @@ namespace solunar
 		if (InputManager::GetInstance()->IsPressed(KEY_R) && (isFireAniFinished || currentId == m_idleAni) && m_ammo < kMaxAmmo)
 		{
 			animatedModel->PlayAnimation(m_reload_Ani, false);
+			s_reloadSound->Play();
 		}
 
 		if (isReloadAniFinished)

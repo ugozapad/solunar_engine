@@ -353,9 +353,7 @@ float V_CalcBob()
 ShockPlayerController::ShockPlayerController() :
 	m_cameraEntity(nullptr),
 	m_camera(nullptr),
-	m_weaponEntity(nullptr),
 	m_activeWeaponEntity(nullptr),
-	m_weaponMesh(nullptr),
 	m_rigidBody(nullptr),
 	m_flyCam(true)
 {
@@ -364,6 +362,11 @@ ShockPlayerController::ShockPlayerController() :
 	m_playerStats.m_endurance = 25.0f;
 	m_playerStats.m_money = 500;
 	m_weaponSwayAngles = glm::vec3(0.0f);
+
+	m_weaponEntity[0] = nullptr;
+	m_weaponEntity[1] = nullptr;
+	
+	m_dead = false;
 }
 
 ShockPlayerController::~ShockPlayerController()
@@ -543,7 +546,16 @@ void ShockPlayerController::Update(float dt)
 	{
 		char healthText[64];
 		stbsp_snprintf(healthText, sizeof(healthText), "WE ARE DEAD :((((");
-		g_fontManager->DrawSystemFont(healthText, 500, 500, glm::vec4(0.0f, 0.5f, 1.0f, 1.0f));
+		ShockPlayerHUD::ms_HealthFont->DrawText(healthText, 500, 500, glm::vec4(0.0f, 0.5f, 1.0f, 1.0f));
+		stbsp_snprintf(healthText, sizeof(healthText), "Press F8 to restart");
+		ShockPlayerHUD::ms_HealthFont->DrawText(healthText, 500, 525, glm::vec4(0.0f, 0.5f, 1.0f, 1.0f));
+
+		m_cameraEntity->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+
+		m_activeWeaponEntity->GetComponent<WeaponComponent>()->SetActive(false);
+		m_activeWeaponEntity->GetComponent<AnimatedMeshComponent>()->SetActive(false);
+
+		m_dead = true;
 	}
 
 	// update camera look
@@ -589,9 +601,9 @@ void ShockPlayerController::UpdateCamera(float dt)
 
 	glm::quat rot = glm::eulerAngleYX(glm::radians(-m_camera->m_yaw), glm::radians(m_camera->m_pitch));
 
-	if (m_weaponEntity)
+	if (m_activeWeaponEntity)
 	{
-		g_currentWeaponPos = m_weaponEntity->GetWorldPosition();
+		g_currentWeaponPos = m_activeWeaponEntity->GetWorldPosition();
 
 		//g_weaponVelocity = (g_currentWeaponPos - g_prevWeaponPos) / dt;
 		//g_weaponVelocity = glm::normalize(g_weaponVelocity);
@@ -613,10 +625,10 @@ void ShockPlayerController::UpdateCamera(float dt)
 		weaponPosition.z += bob;
 		//sprintf(buf, "pos %f %f %f", weaponPosition.x, weaponPosition.y, weaponPosition.z);
 		//ImGui::GetForegroundDrawList()->AddText(ImVec2(200.f, 250.f), 0xff0000ff, buf);
-		m_weaponEntity->SetPosition(weaponPosition);
+		m_activeWeaponEntity->SetPosition(weaponPosition);
 
 		//m_weaponEntity->setRotation(glm::slerp(rot, m_weaponEntity->getRotation(), 55.0f * dt));
-		m_weaponEntity->SetRotation(rot);
+		m_activeWeaponEntity->SetRotation(rot);
 
 		g_prevWeaponPos = g_currentWeaponPos;
 	}
@@ -645,6 +657,11 @@ void ShockPlayerController::UpdateCamera(float dt)
 
 void ShockPlayerController::UpdateMovement(float dt)
 {
+	if (m_dead) {
+		m_rigidBody->SetDirection(glm::vec3(0.0f));
+		return;
+	}
+
 	if (g_console->IsToggled())
 	{
 		m_rigidBody->SetDirection(glm::vec3(0.0f));
@@ -713,6 +730,10 @@ void ShockPlayerController::UpdateLogic(float dt)
 		return;
 	}
 
+	if (m_dead) {
+		return;
+	}
+
 	Camera* camera = CameraProxy::GetInstance();
 
 	glm::vec3 rayBegin = camera->GetPosition() + camera->GetDirection();
@@ -754,20 +775,38 @@ void ShockPlayerController::UpdateLogic(float dt)
 						{
 							Core::Msg("UsableAreaComponent(Entity 0x%p): command give_weapon doesn't have any argument!", usableArea->GetEntity());
 						}
-						else if (m_weaponEntity)
-						{
-							Core::Msg("UsableAreaComponent(Entity 0x%p): command %s %s already have weapon!", usableArea->GetEntity(), command.c_str(), argument.c_str());
-						}
 						else if (argument == "shotgun")
 						{
-							m_weaponEntity = CreateWeapon(m_cameraEntity, WeaponsType::Shotgun);
-							m_activeWeaponEntity = m_weaponEntity;
+							if (m_weaponEntity[1])
+							{
+								Core::Msg("UsableAreaComponent(Entity 0x%p): command %s %s already have weapon!", usableArea->GetEntity(), command.c_str(), argument.c_str());
+								return;
+							}
+
+							m_weaponEntity[1] = CreateWeapon(m_cameraEntity, WeaponsType::Shotgun);
+
+							if (m_weaponEntity[0])
+								SwitchWeapon(WeaponsType::Shotgun);
+							else
+								m_activeWeaponEntity = m_weaponEntity[1];
+							
 							Core::Msg("UsableAreaComponent(Entity 0x%p): command %s %s ok", usableArea->GetEntity(), command.c_str(), argument.c_str());
 						}
 						else if (argument == "pistol")
 						{
-							m_weaponEntity = CreateWeapon(m_cameraEntity, WeaponsType::Pistol);
-							m_activeWeaponEntity = m_weaponEntity;
+							if (m_weaponEntity[0])
+							{
+								Core::Msg("UsableAreaComponent(Entity 0x%p): command %s %s already have weapon!", usableArea->GetEntity(), command.c_str(), argument.c_str());
+								return;
+							}
+
+							m_weaponEntity[0] = CreateWeapon(m_cameraEntity, WeaponsType::Pistol);
+
+							if (m_weaponEntity[1])
+								SwitchWeapon(WeaponsType::Pistol);
+							else
+								m_activeWeaponEntity = m_weaponEntity[0];
+
 							Core::Msg("UsableAreaComponent(Entity 0x%p): command %s %s ok", usableArea->GetEntity(), command.c_str(), argument.c_str());
 						}
 						else
@@ -876,6 +915,26 @@ void ShockPlayerController::DebugUpdate(float dt)
 	bool onGround = m_rigidBody->GetCharacterController()->onGround();
 	stbsp_snprintf(buf, sizeof(buf), "onGround: %s", onGround ? "true" : "false");
 	g_fontManager->DrawSystemFontShadowed(buf, 0, 380, glm::vec4(1.0f));
+}
+
+void ShockPlayerController::SwitchWeapon(WeaponsType type)
+{
+	if (type == WeaponsType::Shotgun) {
+		m_weaponEntity[0]->GetComponent<AnimatedMeshComponent>()->SetActive(false);
+		m_weaponEntity[0]->GetComponent<WeaponComponent>()->SetActive(false);
+
+		m_activeWeaponEntity = m_weaponEntity[1];
+		m_activeWeaponEntity->GetComponent<AnimatedMeshComponent>()->SetActive(true);
+		m_activeWeaponEntity->GetComponent<WeaponComponent>()->SetActive(true);
+	}
+	else if (type == WeaponsType::Pistol) {
+		m_weaponEntity[1]->GetComponent<AnimatedMeshComponent>()->SetActive(false);
+		m_weaponEntity[1]->GetComponent<WeaponComponent>()->SetActive(false);
+
+		m_activeWeaponEntity = m_weaponEntity[0];
+		m_activeWeaponEntity->GetComponent<AnimatedMeshComponent>()->SetActive(true);
+		m_activeWeaponEntity->GetComponent<WeaponComponent>()->SetActive(true);
+	}
 }
 
 void shockGamePlayerDebug(bool* open)

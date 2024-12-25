@@ -563,6 +563,9 @@ void D3D11Renderer::RenderAnimatedMesh(GraphicsWorld* graphicsWorld, View* view,
 {
 	// OPTICK_EVENT("D3D11Renderer::RenderAnimatedMesh");
 
+	if (!mesh->IsActive())
+		return;
+
 	std::shared_ptr<ModelBase> model = mesh->LockModel();
 	if (!model)
 		return;

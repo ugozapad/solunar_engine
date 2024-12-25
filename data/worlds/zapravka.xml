@@ -147,7 +147,7 @@
     </Entity>
 	<!-- SHOTGUN PICKUP -->
     <Entity>
-        <Position x="0.0" y="1.5" z="0.0"/>
+        <Position x="-3.0" y="1.5" z="2.57"/>
         <Rotation x="0" y="0" z="0"/>
         <Scale x="1" y="1" z="1"/>
         <RigidBodyComponent>
@@ -218,6 +218,17 @@
             <Color r="1" g="1" b="1"/>
             <SpecularColor r="1" g="1" b="1"/>
             <Radius value="1.6"/>
+        </PointLightComponent>
+    </Entity>
+	    <Entity className="Entity">
+		<Position x="-1.73" y="1.5" z="3.10"/>
+        <Rotation x="-0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <PointLightComponent>
+            <AmbientColor r="1" g="1" b="1"/>
+            <Color r="1" g="1" b="1"/>
+            <SpecularColor r="1" g="1" b="1"/>
+            <Radius value="1.4"/>
         </PointLightComponent>
     </Entity>
     <Entity className="Entity">

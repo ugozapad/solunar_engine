@@ -223,7 +223,7 @@ void ShockAIComponent::UpdateZombie_FSM(float dt)
 		PlayAIAnimation(m_zombieData.m_walkAnimation, true);
 		break;
 	case ShockAIAnimationState_Attack:
-		PlayAIAnimation(m_zombieData.m_attackAnimation, true);
+		PlayAIAnimation(m_zombieData.m_attackAnimation, false);
 		break;
 	case ShockAIAnimationState_Die:
 		PlayAIAnimation(m_zombieData.m_dieAnimation, false);
@@ -251,6 +251,11 @@ void ShockAIComponent::SaveXML(tinyxml2::XMLElement& element)
 	aitype->SetAttribute("value", aitypeString.c_str());
 }
 
+void ShockAIComponent::Attack(Entity* to, float amount)
+{
+	to->GetComponent<ShockPlayerController>()->doHit(amount);
+}
+
 void ShockAIComponent::Damage(Entity* from, float amount)
 {
 	m_health -= amount;
@@ -271,6 +276,11 @@ void ShockAIComponent::Damage(Entity* from, float amount)
 void ShockAIComponent::SetAnimationState(ShockAIAnimationState state)
 {
 	m_nextState = state;
+}
+
+bool ShockAIComponent::GetAniEndOfCurrentState()
+{
+	return m_animatedComponent->LockAnimatedModel()->IsStoped();
 }
 
 void ShockAIComponent::PlayAIAnimation(int animation, bool looped)

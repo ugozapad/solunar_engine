@@ -5,6 +5,7 @@
 #include "engine/physics/rigidbodycomponent.h"
 #include "graphics/mesh.h"
 #include "game/gamelogic/player/playercontrollercomponent.h"
+#include "game/gamelogic/weapons/weaponcomponent.h"
 
 namespace solunar
 {
@@ -51,6 +52,8 @@ private:
 	void UpdateLogic(float dt);
 	void DebugUpdate(float dt);
 
+	void SwitchWeapon(WeaponsType type);
+
 private:
 	ShockPlayerStats m_playerStats;
 
@@ -59,12 +62,13 @@ private:
 	Entity* m_cameraEntity;
 	CameraFirstPersonComponent* m_camera;
 
-	Entity* m_weaponEntity;
-	AnimatedMeshComponent* m_weaponMesh;
+	Entity* m_weaponEntity[2];
 
 	Entity* m_activeWeaponEntity;
 
 	glm::vec3 m_weaponSwayAngles;
+
+	bool m_dead;
 
 public:
 	bool m_flyCam;

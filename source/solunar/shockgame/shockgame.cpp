@@ -219,6 +219,14 @@ void Command_DebugTrace()
 	Core::Msg("Game: Trace debugging is %s", g_debugTrace ? "true" : "false");
 }
 
+void Command_MakeMeRich()
+{
+	if (!g_Player)
+		return;
+
+	g_Player->GetComponent<ShockPlayerController>()->AddMoney(9999999999);
+}
+
 // More beautiful way to register classes
 void registerGameClasses()
 {
@@ -269,8 +277,8 @@ void registerShockClasses()
 void registerGameCommands()
 {
 	ConsoleCommandManager* cmdmgr = ConsoleCommandManager::GetInstance();
-
 	cmdmgr->RegisterCommand("debugtrace", &Command_DebugTrace);
+	cmdmgr->RegisterCommand("imrich", &Command_MakeMeRich);
 }
 
 #define DEMO_GAME

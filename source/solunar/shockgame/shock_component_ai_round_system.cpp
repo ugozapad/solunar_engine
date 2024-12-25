@@ -60,7 +60,7 @@ namespace solunar
 
 		const float kZombieSpawnDelay = 12.0f;
 
-		if (m_timer > kZombieSpawnDelay)
+		if (m_timer > kZombieSpawnDelay && m_numZombieSpawnedInCurrentRound <= m_zombies_to_kill)
 		{
 			SpawnZombie();
 			m_timer = 0.0f;
@@ -78,12 +78,17 @@ namespace solunar
 	{
 		return false;
 	}
+	
 	void ShockAIRoundSystem::NextRound()
 	{
+		m_numZombieSpawnedInCurrentRound = 0;
+		m_current_round++;
 	}
+
 	void ShockAIRoundSystem::FinishRound()
 	{
 	}
+
 	void ShockAIRoundSystem::CompleteGame()
 	{
 	}
