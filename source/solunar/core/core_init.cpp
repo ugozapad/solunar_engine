@@ -34,7 +34,13 @@ namespace solunar
 		test.push_back(1);
 
 		// since static_vector we can't reallocate at all thus we will get access violating
-	//	test.push_back(1);
+		try {
+			test.push_back(1);
+		}
+		catch (const std::bad_alloc& e)
+		{
+			const char* p_reason = e.what();
+		}
 
 		// preallocated acts like a array so it is already allocated memory and ready in use (don't need to specify reserve manually + preallocated memory is stack not heap so very fast initialization and usage!)
 		sr::vector<int, 4> test2;
@@ -44,9 +50,14 @@ namespace solunar
 		test2.push_back(1);
 		test2.push_back(1);
 
+		// will be true
+		bool is_equal = test == test2;
+
 		// exceeding current memory, do reallocation but it is heap based as default vector
 		// no troubles and no throw exceptions
 		test2.push_back(1);
+
+		bool not_equal = test2 == test;
 #endif
 	}
 

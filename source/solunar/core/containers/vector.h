@@ -174,90 +174,174 @@ namespace sr
 
 	template<typename Type, std::size_t ElementCount>
 	using vector = hybrid_vector<Type, ElementCount, true>;
+}
 
-	template< class T, std::size_t E>
-	bool operator==(const sr::vector<T, E>& lhs,
-		const sr::vector<T, E>& rhs)
-	{
-		return std::operator==(lhs.container(), rhs.container());
-	}
+template< class T, std::size_t E>
+bool operator==(const sr::vector<T, E>& lhs,
+	const sr::vector<T, E>& rhs)
+{
+	return std::operator==(lhs.container(), rhs.container());
+}
 
-	template< class T, std::size_t E >
-	bool operator!=(const sr::vector<T, E>& lhs,
-		const sr::vector<T, E>& rhs)
-	{
-		return std::operator!=(lhs.container(), rhs.container());
-	}
+template< class T, std::size_t E>
+bool operator==(const sr::vector<T, E>& lhs,
+	const sr::static_vector<T, E>& rhs)
+{
+	return std::operator==(lhs.container(), rhs.container());
+}
 
-	template< class T, std::size_t E >
-	bool operator< (const sr::vector<T, E>& lhs,
-		const sr::vector<T, E>& rhs)
-	{
-		return std::operator<(lhs.container(), rhs.container());
-	}
+template< class T, std::size_t E>
+bool operator==(const sr::static_vector<T, E>& lhs,
+	const sr::vector<T, E>& rhs)
+{
+	return std::operator==(lhs.container(), rhs.container());
+}
 
-	template< class T, std::size_t E >
-	bool operator<=(const sr::vector<T, E>& lhs,
-		const sr::vector<T, E>& rhs)
-	{
-		return operator<=(lhs.container(), rhs.container());
-	}
+template< class T, std::size_t E >
+bool operator!=(const sr::vector<T, E>& lhs,
+	const sr::vector<T, E>& rhs)
+{
+	return std::operator!=(lhs.container(), rhs.container());
+}
 
-	template< class T, std::size_t E >
-	bool operator> (const sr::vector<T, E>& lhs,
-		const sr::vector<T, E>& rhs)
-	{
-		return operator>(lhs.container(), rhs.container());
-	}
+template< class T, std::size_t E >
+bool operator!=(const sr::static_vector<T, E>& lhs,
+	const sr::vector<T, E>& rhs)
+{
+	return std::operator!=(lhs.container(), rhs.container());
+}
 
-	template< class T, std::size_t E >
-	bool operator>=(const sr::vector<T, E>& lhs,
-		const sr::vector<T, E>& rhs)
-	{
-		return operator>=(lhs.container(), rhs.container());
-	}
+template< class T, std::size_t E >
+bool operator!=(const sr::vector<T, E>& lhs,
+	const sr::static_vector<T, E>& rhs)
+{
+	return std::operator!=(lhs.container(), rhs.container());
+}
 
-	template< class T, std::size_t E>
-	bool operator==(const sr::static_vector<T, E>& lhs,
-		const sr::static_vector<T, E>& rhs)
-	{
-		return std::operator==(lhs.container(), rhs.container());
-	}
+template< class T, std::size_t E >
+bool operator< (const sr::vector<T, E>& lhs,
+	const sr::vector<T, E>& rhs)
+{
+	return std::operator<(lhs.container(), rhs.container());
+}
 
-	template< class T, std::size_t E >
-	bool operator!=(const sr::static_vector<T, E>& lhs,
-		const sr::static_vector<T, E>& rhs)
-	{
-		return std::operator!=(lhs.container(), rhs.container());
-	}
+template< class T, std::size_t E >
+bool operator< (const sr::static_vector<T, E>& lhs,
+	const sr::vector<T, E>& rhs)
+{
+	return std::operator<(lhs.container(), rhs.container());
+}
 
-	template< class T, std::size_t E >
-	bool operator< (const sr::static_vector<T, E>& lhs,
-		const sr::static_vector<T, E>& rhs)
-	{
-		return std::operator<(lhs.container(), rhs.container());
-	}
+template< class T, std::size_t E >
+bool operator< (const sr::vector<T, E>& lhs,
+	const sr::static_vector<T, E>& rhs)
+{
+	return std::operator<(lhs.container(), rhs.container());
+}
 
-	template< class T, std::size_t E >
-	bool operator<=(const sr::static_vector<T, E>& lhs,
-		const sr::static_vector<T, E>& rhs)
-	{
-		return operator<=(lhs.container(), rhs.container());
-	}
+template< class T, std::size_t E >
+bool operator<=(const sr::vector<T, E>& lhs,
+	const sr::vector<T, E>& rhs)
+{
+	return operator<=(lhs.container(), rhs.container());
+}
 
-	template< class T, std::size_t E >
-	bool operator> (const sr::static_vector<T, E>& lhs,
-		const sr::static_vector<T, E>& rhs)
-	{
-		return operator>(lhs.container(), rhs.container());
-	}
+template< class T, std::size_t E >
+bool operator<=(const sr::static_vector<T, E>& lhs,
+	const sr::vector<T, E>& rhs)
+{
+	return operator<=(lhs.container(), rhs.container());
+}
 
-	template< class T, std::size_t E >
-	bool operator>=(const sr::static_vector<T, E>& lhs,
-		const sr::static_vector<T, E>& rhs)
-	{
-		return operator>=(lhs.container(), rhs.container());
-	}
+template< class T, std::size_t E >
+bool operator<=(const sr::vector<T, E>& lhs,
+	const sr::static_vector<T, E>& rhs)
+{
+	return operator<=(lhs.container(), rhs.container());
+}
+
+template< class T, std::size_t E >
+bool operator> (const sr::vector<T, E>& lhs,
+	const sr::vector<T, E>& rhs)
+{
+	return operator>(lhs.container(), rhs.container());
+}
+
+template< class T, std::size_t E >
+bool operator> (const sr::static_vector<T, E>& lhs,
+	const sr::vector<T, E>& rhs)
+{
+	return operator>(lhs.container(), rhs.container());
+}
+
+template< class T, std::size_t E >
+bool operator> (const sr::vector<T, E>& lhs,
+	const sr::static_vector<T, E>& rhs)
+{
+	return operator>(lhs.container(), rhs.container());
+}
+
+template< class T, std::size_t E >
+bool operator>=(const sr::vector<T, E>& lhs,
+	const sr::vector<T, E>& rhs)
+{
+	return operator>=(lhs.container(), rhs.container());
+}
+
+template< class T, std::size_t E >
+bool operator>=(const sr::static_vector<T, E>& lhs,
+	const sr::vector<T, E>& rhs)
+{
+	return operator>=(lhs.container(), rhs.container());
+}
+
+template< class T, std::size_t E >
+bool operator>=(const sr::vector<T, E>& lhs,
+	const sr::static_vector<T, E>& rhs)
+{
+	return operator>=(lhs.container(), rhs.container());
+}
+
+template< class T, std::size_t E>
+bool operator==(const sr::static_vector<T, E>& lhs,
+	const sr::static_vector<T, E>& rhs)
+{
+	return std::operator==(lhs.container(), rhs.container());
+}
+
+template< class T, std::size_t E >
+bool operator!=(const sr::static_vector<T, E>& lhs,
+	const sr::static_vector<T, E>& rhs)
+{
+	return std::operator!=(lhs.container(), rhs.container());
+}
+
+template< class T, std::size_t E >
+bool operator< (const sr::static_vector<T, E>& lhs,
+	const sr::static_vector<T, E>& rhs)
+{
+	return std::operator<(lhs.container(), rhs.container());
+}
+
+template< class T, std::size_t E >
+bool operator<=(const sr::static_vector<T, E>& lhs,
+	const sr::static_vector<T, E>& rhs)
+{
+	return operator<=(lhs.container(), rhs.container());
+}
+
+template< class T, std::size_t E >
+bool operator> (const sr::static_vector<T, E>& lhs,
+	const sr::static_vector<T, E>& rhs)
+{
+	return operator>(lhs.container(), rhs.container());
+}
+
+template< class T, std::size_t E >
+bool operator>=(const sr::static_vector<T, E>& lhs,
+	const sr::static_vector<T, E>& rhs)
+{
+	return operator>=(lhs.container(), rhs.container());
 }
 
 #endif
