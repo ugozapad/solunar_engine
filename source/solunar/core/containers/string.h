@@ -37,6 +37,56 @@ namespace sr
 		using const_reverse_iterator = typename container_type::const_reverse_iterator;
 		using allocator_type = typename container_type::allocator_type;
 
+		template< class InputIt >
+		hybrid_string(InputIt first, InputIt last) : m_pool{ m_memory, _kBufferSize, IsRealocatable ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, str{ first,last, &m_pool }
+		{
+
+		}
+
+
+		hybrid_string(const Type* s, size_type count) : m_pool{ m_memory, _kBufferSize, IsRealocatable ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, str{ s, count, &m_pool }
+		{
+
+		}
+
+		hybrid_string(const Type* s) : m_pool{ m_memory, _kBufferSize, IsRealocatable ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, str{ s, &m_pool }
+		{
+
+		}
+
+
+		template< class StringViewLike >
+		explicit hybrid_string(const StringViewLike& t) : m_pool{ m_memory, _kBufferSize, IsRealocatable ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, str{ t, &m_pool }
+		{
+
+		}
+
+		template< class StringViewLike >
+		hybrid_string(const StringViewLike& t,
+			size_type pos, size_type count) : m_pool{ m_memory, _kBufferSize, IsRealocatable ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, str{ t,pos,count,&m_pool }
+		{
+		}
+
+		//hybrid_string(const hybrid_string& other);
+		//hybrid_string(hybrid_string&& other) noexcept;
+
+	//	hybrid_string(const hybrid_string& other, const allocator_type& alloc);
+
+	//	hybrid_string(hybrid_string&& other, const allocator_type& alloc);
+
+	//	hybrid_string(const hybrid_string& other, size_type pos,
+	//	const allocator_type& alloc = allocator_type());
+
+		//	hybrid_string(const hybrid_string& other,
+		//		size_type pos, size_type count,
+		//		const allocator_type& alloc = allocator_type());
+
+		hybrid_string(std::initializer_list<Type> ilist) : m_pool{ m_memory, _kBufferSize, IsRealocatable ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, str{ ilist, &m_pool }
+		{
+
+		}
+
+
 		hybrid_string() : m_pool{ m_memory, _kBufferSize, IsRealocatable ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, str{ &m_pool }
 		{
 			str.reserve(ElementCount);
@@ -61,7 +111,7 @@ namespace sr
 		inline const value_type* c_str(void) const { return str.c_str(); }
 		inline size_type max_size(void) const { return str.max_size(); }
 		inline bool empty(void) const { return str.empty(); }
-		inline reference at(size_type index) const
+		inline reference at(size_type index)
 		{
 			return str.at(index);
 		}
@@ -442,6 +492,13 @@ namespace sr
 		hybrid_string& operator=(container_type&& istr) noexcept
 		{
 			str.operator=(std::move(istr));
+			return *this;
+		}
+
+		template<size_type Size>
+		hybrid_string& operator=(const Type(&test)[Size])
+		{
+			this->operator=(static_cast<const Type*>(test));
 			return *this;
 		}
 

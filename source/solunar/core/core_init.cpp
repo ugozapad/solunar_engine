@@ -59,6 +59,8 @@ namespace solunar
 		test2.push_back(1);
 
 		bool not_equal = test2 == test;
+
+		sr::string<10> kek = "kek";
 #endif
 	}
 
