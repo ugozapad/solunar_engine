@@ -52,7 +52,8 @@ namespace solunar
 
 		// will be true
 		bool is_equal = test == test2;
-
+		is_equal = test2 == test2;
+		is_equal = test == test;
 		// exceeding current memory, do reallocation but it is heap based as default vector
 		// no troubles and no throw exceptions
 		test2.push_back(1);
