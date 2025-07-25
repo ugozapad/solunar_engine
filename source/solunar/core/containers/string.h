@@ -486,7 +486,9 @@ namespace sr
 		inline reference operator[](size_type pos) noexcept { return str.operator[](pos); }
 		inline const_reference operator[](size_type pos) const noexcept { return str.operator[](pos); }
 
-
+		constexpr std::size_t preallocated_memory_size() const noexcept { return _kBufferSize; }
+		constexpr std::size_t preallocated_size() const noexcept { return ElementCount; }
+		constexpr bool is_reallocation_supported() const noexcept { return IsRealocatable; }
 	private:
 		unsigned char m_memory[_kBufferSize];
 		std::pmr::monotonic_buffer_resource m_pool;
