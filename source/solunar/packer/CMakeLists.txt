@@ -1,3 +1,6 @@
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 add_executable(packer "packer.cpp" "packer.h")
 set_target_name(packer)
 set_target_out_dir(packer "${CMAKE_SOURCE_DIR}/bin")
