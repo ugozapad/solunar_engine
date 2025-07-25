@@ -170,9 +170,15 @@ namespace sr
 		container_type vec;
 	};
 
+	/// @brief If we exceeded memory we will get exception bad_alloc
+	/// @tparam Type your type like int, double, struct, class (what std::pmr::vector supports)
+	/// @tparam ElementCount count that defines elements of your container like 10,50 it is not bytes as raw memory!
 	template<typename Type, std::size_t ElementCount>
 	using static_vector = hybrid_vector<Type, ElementCount, false>;
 
+	/// @brief If we exceeded memory we will allocate additional memory from heap (see std::pmr::get_default_resource)
+	/// @tparam Type your type like int, double, struct, class (what std::pmr::vector supports) 
+	/// @tparam ElementCount count that defines elements of your container like 10,50 it is not bytes as raw memory!
 	template<typename Type, std::size_t ElementCount>
 	using vector = hybrid_vector<Type, ElementCount, true>;
 }
