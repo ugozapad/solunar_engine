@@ -407,6 +407,13 @@ void DemoGameMainMenuComponent::Update(float dt)
 		}
 	}
 
+#ifdef _DEBUG
+	if (ImGui::Button("Load world", kButtonSize))
+	{
+		
+	}
+#endif
+
 	if (ImGui::Button("Settings", kButtonSize))
 	{
 		s_showSettingsMenu = true;
