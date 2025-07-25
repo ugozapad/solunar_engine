@@ -162,6 +162,7 @@ namespace sr
 		// returns size of buffer that used for memory allocations before reallocation
 		constexpr std::size_t preallocated_memory_size() const noexcept { return _kBufferSize; }
 		constexpr std::size_t preallocated_size() const noexcept { return ElementCount; }
+		constexpr bool is_reallocation_supported() const noexcept { return IsRealocatable; }
 
 	private:
 		unsigned char memory[_kBufferSize];
