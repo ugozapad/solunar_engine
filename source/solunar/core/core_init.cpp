@@ -22,9 +22,11 @@ namespace solunar
 		TypeManager::GetInstance()->RegisterObject<SerializableObject>();
 	}
 
+#define ENABLE_UNIT_TESTS
+
 	void RunUnitTests()
 	{
-#ifdef _DEBUG
+#ifdef ENABLE_UNIT_TESTS
 
 		sr::static_vector<int, 4> test;
 		int a = sizeof(test);
@@ -61,6 +63,18 @@ namespace solunar
 		bool not_equal = test2 == test;
 
 		sr::string<10> kek = "kek";
+		int b = kek.size();
+		b = kek.max_size();
+
+		try {
+			sr::static_string<5> aa = "kekius_maximus";
+		}
+		// catching this because we can't reallocate due to static nature of memory_resource
+		catch (const std::bad_alloc& e)
+		{
+			int a = 0;
+		}
+
 #endif
 	}
 
