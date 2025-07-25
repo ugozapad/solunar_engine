@@ -15,58 +15,90 @@
 
 namespace solunar
 {
-	
-void RegisterCoreTypes()
-{
-	TypeManager::GetInstance()->RegisterObject<Object>();
-	TypeManager::GetInstance()->RegisterObject<SerializableObject>();
-}
 
-void Core::Init()
-{
-	// Initialize random
-	srand(time(NULL));
-
-	Logger::Init();
-	Logger::LogPrint("Core builted at %s %s", __TIME__, __DATE__);
-
-	MemoryManager::Initialize();
-
-	Timer::GetInstance()->Init();
-
-	// Allocate native filesystem
-	g_fileSystem = mem_new<FileSystem_Win32>();
-
-	g_fileSystemPack.initialize();
-
-	g_contentManager = mem_new<ContentManager>();
-	g_contentManager->Init();
-
-	// register core types
-	RegisterCoreTypes();
-}
-
-void Core::Shutdown()
-{
-	if (g_contentManager)
+	void RegisterCoreTypes()
 	{
-		mem_delete(g_contentManager);
-		g_contentManager = nullptr;
+		TypeManager::GetInstance()->RegisterObject<Object>();
+		TypeManager::GetInstance()->RegisterObject<SerializableObject>();
 	}
 
-	g_fileSystemPack.shutdown();
-
-	if (g_fileSystem)
+	void RunUnitTests()
 	{
-		mem_delete(g_fileSystem);
-		g_fileSystem = nullptr;
+#ifdef _DEBUG
+
+		sr::static_vector<int, 4> test;
+		int a = sizeof(test);
+		test.push_back(1);
+		test.push_back(1);
+		test.push_back(1);
+		test.push_back(1);
+
+		// since static_vector we can't reallocate at all thus we will get access violating
+	//	test.push_back(1);
+
+		// preallocated acts like a array so it is already allocated memory and ready in use (don't need to specify reserve manually + preallocated memory is stack not heap so very fast initialization and usage!)
+		sr::vector<int, 4> test2;
+
+		test2.push_back(1);
+		test2.push_back(1);
+		test2.push_back(1);
+		test2.push_back(1);
+
+		// exceeding current memory, do reallocation but it is heap based as default vector
+		// no troubles and no throw exceptions
+		test2.push_back(1);
+#endif
 	}
 
-	PropertyManager::GetInstance()->Shutdown();
+	void Core::Init()
+	{
+		// Initialize random
+		srand(time(NULL));
 
-	MemoryManager::Shutdown();
+		Logger::Init();
+		Logger::LogPrint("Core builted at %s %s", __TIME__, __DATE__);
 
-	Logger::Shutdown();
-}
+		MemoryManager::Initialize();
+
+		Timer::GetInstance()->Init();
+
+		// Allocate native filesystem
+		g_fileSystem = mem_new<FileSystem_Win32>();
+
+		g_fileSystemPack.initialize();
+
+		g_contentManager = mem_new<ContentManager>();
+		g_contentManager->Init();
+
+		// register core types
+		RegisterCoreTypes();
+
+#ifdef _DEBUG
+		RunUnitTests();
+#endif
+	}
+
+	void Core::Shutdown()
+	{
+		if (g_contentManager)
+		{
+			mem_delete(g_contentManager);
+			g_contentManager = nullptr;
+		}
+
+		g_fileSystemPack.shutdown();
+
+		if (g_fileSystem)
+		{
+			mem_delete(g_fileSystem);
+			g_fileSystem = nullptr;
+		}
+
+		PropertyManager::GetInstance()->Shutdown();
+
+		MemoryManager::Shutdown();
+
+		Logger::Shutdown();
+	}
 
 }
