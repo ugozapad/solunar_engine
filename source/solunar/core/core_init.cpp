@@ -33,7 +33,7 @@ namespace solunar
 		test.push_back(1);
 		test.push_back(1);
 
-		// since static_vector we can't reallocate at all thus we will get access violating
+		// since static_vector we can't reallocate at all thus we will get std::bad_alloc
 		try {
 			test.push_back(1);
 		}
