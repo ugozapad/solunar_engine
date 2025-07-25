@@ -293,6 +293,8 @@ namespace sr
 			return str.size();
 		}
 
+		size_type length() const { return str.length(); }
+
 		hybrid_string& append(size_type count, Type ch)
 		{
 			str.append(count, ch);
