@@ -21,6 +21,8 @@ namespace sr
 	class hybrid_string
 	{
 		using container_type = std::pmr::basic_string<Type>;
+		using container_view_type = std::basic_string_view<Type>;
+
 	public:
 		using value_type = typename container_type::value_type;
 		using size_type = typename container_type::size_type;
@@ -464,6 +466,11 @@ namespace sr
 		{
 			str.operator=<StringViewLike>(t);
 			return *this;
+		}
+
+		operator container_view_type() const noexcept
+		{
+			return container_view_type(str);
 		}
 
 		allocator_type get_allocator() const noexcept { return str.get_allocator(); }
