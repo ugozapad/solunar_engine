@@ -89,10 +89,89 @@ namespace solunar
 		using insert_return_type = typename container_type::insert_return_type;
 
 	public:
-		hybrid_unordered_set() : m_pool{ m_memory, _kBufferSize, IsRealloc ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, set{ &m_pool } 
+		hybrid_unordered_set() : m_pool{ m_memory, _kBufferSize, IsRealloc ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, set{ &m_pool }
 		{
 			set.reserve(ElementCount);
 		}
+
+		hybrid_unordered_set(size_type bucket_count)
+			: m_pool{ m_memory, _kBufferSize, IsRealloc ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, set(bucket_count, H(), P(), &m_pool)
+		{
+			set.reserve(ElementCount);
+		}
+
+		hybrid_unordered_set(size_type bucket_count,
+			const H& hash)
+			: m_pool{ m_memory, _kBufferSize, IsRealloc ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, set(bucket_count, hash, P(), &m_pool)
+		{
+			set.reserve(ElementCount);
+		}
+
+		//explicit unordered_set(const allocator_type& alloc);
+
+		template< class InputIt >
+		hybrid_unordered_set(InputIt first, InputIt last,
+			size_type bucket_count,
+			const H& hash = H(),
+			const key_equal& equal = key_equal()) : m_pool{ m_memory, _kBufferSize, IsRealloc ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, set(first, last, bucket_count, hash, equal, &m_pool)
+		{
+			set.reserve(ElementCount);
+		}
+
+		template< class InputIt >
+		hybrid_unordered_set(InputIt first, InputIt last,
+			size_type bucket_count)
+			: m_pool{ m_memory, _kBufferSize, IsRealloc ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, set(first, last,
+				bucket_count, H(), key_equal(), &m_pool)
+		{
+			set.reserve(ElementCount);
+		}
+
+		template< class InputIt >
+		hybrid_unordered_set(InputIt first, InputIt last,
+			size_type bucket_count,
+			const H& hash)
+			: m_pool{ m_memory, _kBufferSize, IsRealloc ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, set(first, last,
+				bucket_count, hash, key_equal(), &m_pool)
+		{
+			set.reserve(ElementCount);
+		}
+
+		hybrid_unordered_set(const hybrid_unordered_set& other) : m_pool{ m_memory, _kBufferSize, IsRealloc ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, set{ other.set, &m_pool }
+		{
+			set.reserve(ElementCount);
+		}
+
+		hybrid_unordered_set(hybrid_unordered_set&& other) : m_pool{ m_memory, _kBufferSize, IsRealloc ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, set{ std::move(other.set), &m_pool }
+		{
+			set.reserve(ElementCount);
+		}
+
+		hybrid_unordered_set(std::initializer_list<value_type> init,
+			size_type bucket_count,
+			const H& hash = H(),
+			const key_equal& equal = key_equal()) : m_pool{ m_memory, _kBufferSize, IsRealloc ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, set{ init, bucket_count, hash, equal, &m_pool }
+		{
+			set.reserve(ElementCount);
+		}
+
+		hybrid_unordered_set(std::initializer_list<value_type> init,
+			size_type bucket_count)
+			: m_pool{ m_memory, _kBufferSize, IsRealloc ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, set(init, bucket_count,
+				H(), key_equal(), &m_pool)
+		{
+			set.reserve(ElementCount);
+		}
+
+		hybrid_unordered_set(std::initializer_list<value_type> init,
+			size_type bucket_count,
+			const H& hash)
+			: m_pool{ m_memory, _kBufferSize, IsRealloc ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, set(init, bucket_count,
+				hash, key_equal(), &m_pool) {
+			set.reserve(ElementCount);
+		}
+
+
 		~hybrid_unordered_set() {}
 
 	public:
