@@ -54,18 +54,18 @@ namespace solunar
 		template< class InputIt >
 		hybrid_string(InputIt first, InputIt last) : m_pool{ m_memory, _kBufferSize, IsRealocatable ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, str{ first,last, &m_pool }
 		{
-
+			str.reserve(ElementCount);
 		}
 
 
 		hybrid_string(const Type* s, size_type count) : m_pool{ m_memory, _kBufferSize, IsRealocatable ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, str{ s, count, &m_pool }
 		{
-
+			str.reserve(ElementCount);
 		}
 
 		hybrid_string(const Type* s) : m_pool{ m_memory, _kBufferSize, IsRealocatable ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, str{ s, &m_pool }
 		{
-
+			str.reserve(ElementCount);
 		}
 
 
@@ -76,7 +76,7 @@ namespace solunar
 		> >
 		hybrid_string(const StringViewLike& t) : m_pool{ m_memory, _kBufferSize, IsRealocatable ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, str{ t, &m_pool }
 		{
-
+			str.reserve(ElementCount);
 		}
 
 		template< class StringViewLike,
@@ -87,6 +87,7 @@ namespace solunar
 		hybrid_string(const StringViewLike& t,
 			size_type pos, size_type count) : m_pool{ m_memory, _kBufferSize, IsRealocatable ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, str{ t,pos,count,&m_pool }
 		{
+			str.reserve(ElementCount);
 		}
 
 		//hybrid_string(const hybrid_string& other);
@@ -104,16 +105,14 @@ namespace solunar
 			m_pool{ m_memory, _kBufferSize, IsRealocatable ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() },
 			str{ other.container(), &m_pool }
 		{
-
-
+			str.reserve(ElementCount);
 		}
 
 		hybrid_string(const hybrid_string& other) :
 			m_pool{ m_memory, _kBufferSize, IsRealocatable ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() },
 			str{ other.str, &m_pool }
 		{
-
-
+			str.reserve(ElementCount);
 		}
 
 		//	hybrid_string(hybrid_string&& other, const allocator_type& alloc);
@@ -127,7 +126,7 @@ namespace solunar
 
 		hybrid_string(std::initializer_list<Type> ilist) : m_pool{ m_memory, _kBufferSize, IsRealocatable ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, str{ ilist, &m_pool }
 		{
-
+			str.reserve(ElementCount);
 		}
 
 
