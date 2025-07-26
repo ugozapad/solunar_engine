@@ -81,8 +81,6 @@ namespace solunar
 		using const_pointer = typename container_type::const_pointer;
 		using iterator = typename container_type::iterator;
 		using const_iterator = typename container_type::const_iterator;
-		using reverse_iterator = typename container_type::reverse_iterator;
-		using const_reverse_iterator = typename container_type::const_reverse_iterator;
 		using allocator_type = typename container_type::allocator_type;
 
 		using node_type = typename container_type::node_type;
@@ -137,6 +135,19 @@ namespace solunar
 			set.reserve(ElementCount);
 		}
 
+		/*
+		template<typename Type2, typename H2, typename P2, std::size_t Count, bool Realloc, typename = std::enable_if_t<(ElementCount < Count) && (Realloc == false)>>
+		hybrid_unordered_set(const hybrid_unordered_set<Type2, H2, P2, Count, Realloc>&) = delete;
+
+		template<typename Type2, typename H2, typename P2, std::size_t Count, bool Realloc, typename = std::enable_if_t<(ElementCount < Count) && (Realloc == false)>>
+		hybrid_unordered_set(hybrid_unordered_set<Type2, H2, P2, Count, Realloc>&&) = delete;*/
+
+		template<typename Type2, typename H2, typename P2, std::size_t Count, bool Realloc, typename = std::enable_if_t<(ElementCount >= Count || IsRealloc == true) && std::is_same_v<Type, Type2>>>
+		hybrid_unordered_set(const hybrid_unordered_set<Type2, H2, P2, Count, Realloc>& other) : m_pool{ m_memory, _kBufferSize, IsRealloc ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, set{ other.container(), &m_pool }
+		{
+			set.reserve(ElementCount);
+		}
+
 		hybrid_unordered_set(const hybrid_unordered_set& other) : m_pool{ m_memory, _kBufferSize, IsRealloc ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, set{ other.set, &m_pool }
 		{
 			set.reserve(ElementCount);
@@ -145,6 +156,12 @@ namespace solunar
 		hybrid_unordered_set(hybrid_unordered_set&& other) : m_pool{ m_memory, _kBufferSize, IsRealloc ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, set{ std::move(other.set), &m_pool }
 		{
 			set.reserve(ElementCount);
+		}
+
+		template<typename Type2, typename H2, typename P2, std::size_t Count, bool Realloc, typename = std::enable_if_t<(ElementCount >= Count || IsRealloc == true) && std::is_same_v<Type, Type2>>>
+		hybrid_unordered_set(hybrid_unordered_set<Type2, H2, P2, Count, Realloc>&& other) : m_pool{ m_memory, _kBufferSize, IsRealloc ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, set{ std::move(other.container()), &m_pool }
+		{
+
 		}
 
 		hybrid_unordered_set(std::initializer_list<value_type> init,
@@ -296,10 +313,12 @@ namespace solunar
 			return set.emplace_hint(hint, std::forward<Args>(args)...);
 		}
 
+		/*
 		iterator erase(iterator pos)
 		{
 			return set.erase(pos);
 		}
+		*/
 
 		iterator erase(const_iterator pos)
 		{
@@ -488,7 +507,7 @@ namespace solunar
 		constexpr bool is_reallocation_supported() const noexcept { return IsRealloc; }
 
 		const container_type& container(void) const noexcept { return set; }
-		container_type& container(void) const noexcept { return set; }
+		container_type& container(void) noexcept { return set; }
 
 	private:
 		unsigned char m_memory[_kBufferSize];

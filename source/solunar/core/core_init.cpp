@@ -100,6 +100,13 @@ namespace solunar
 
 		is_equal = kekais == kekais2;
 		assert(is_equal);
+
+		unordered_set<int, 5> us1;
+		static_unordered_set<int, 5> u2(us1);
+
+		// won't compile because we prevent where instance is smaller then passed and it doesn't support reallocation
+	//	unordered_set<int, 5> us3;
+	//	static_unordered_set<int, 3> us4(us3);
 #endif
 	}
 

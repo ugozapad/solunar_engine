@@ -93,12 +93,13 @@ namespace solunar
 		//hybrid_string(const hybrid_string& other);
 		//hybrid_string(hybrid_string&& other) noexcept;
 
-		template<typename TypeOther, std::size_t Size, bool Realloc,
-			typename = std::enable_if_t<(ElementCount < Size) && std::is_same_v<Type, TypeOther> && (IsRealocatable == false)>>
-			hybrid_string(hybrid_string<char, Size, Realloc>&&) = delete;
-
 		template<typename TypeOther, std::size_t Size, bool Realloc, typename = std::enable_if_t<(ElementCount >= Size || IsRealocatable == true) && std::is_same_v<Type, TypeOther>>>
-		hybrid_string(hybrid_string<TypeOther, Size, Realloc>&& other) noexcept : m_pool{ m_memory, _kBufferSize, IsRealocatable ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, str{ std::move(other.str), &m_pool }
+		hybrid_string(hybrid_string<TypeOther, Size, Realloc>&& other) noexcept : m_pool{ m_memory, _kBufferSize, IsRealocatable ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, str{ std::move(other.container()), &m_pool }
+		{
+			str.reserve(ElementCount);
+		}
+
+		hybrid_string(hybrid_string&& other) noexcept : m_pool{ m_memory, _kBufferSize, IsRealocatable ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, str{ std::move(other.str), &m_pool }
 		{
 			str.reserve(ElementCount);
 		}
@@ -106,9 +107,6 @@ namespace solunar
 		//	hybrid_string(const hybrid_string& other, const allocator_type& alloc);
 
 			// Deleted constructor for invalid sizes
-		template<typename TypeOther, std::size_t Size, bool Realloc,
-			typename = std::enable_if_t<(ElementCount < Size) && std::is_same_v<Type, TypeOther> && (IsRealocatable == false)>>
-			hybrid_string(const hybrid_string<char, Size, Realloc>&) = delete;
 
 		template<typename TypeOther, std::size_t Size, bool Realloc, typename = std::enable_if_t<(ElementCount >= Size || IsRealocatable == true) && std::is_same_v<Type, TypeOther>>>
 		hybrid_string(const hybrid_string<TypeOther, Size, Realloc>& other) :
