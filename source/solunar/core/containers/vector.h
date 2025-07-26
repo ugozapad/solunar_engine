@@ -40,51 +40,78 @@ namespace solunar
 
 		hybrid_vector() : pool{ (ElementCount == 0) ? nullptr : memory,(ElementCount == 0) ? 0 : _kBufferSize, IsRealloc ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, vec{ &pool }
 		{
-			vec.reserve(ElementCount);
+			if constexpr (ElementCount > 0)
+			{
+				vec.reserve(ElementCount);
+			}
 		}
 
 		explicit hybrid_vector(size_type count) : pool{ (ElementCount == 0) ? nullptr : memory,(ElementCount == 0) ? 0 : _kBufferSize, IsRealloc ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, vec{ count, &pool }
 		{
-			vec.reserve(ElementCount);
+			if constexpr (ElementCount > 0)
+			{
+				vec.reserve(ElementCount);
+			}
 		}
 
 		hybrid_vector(size_type count, const Type& value) : pool{ (ElementCount == 0) ? nullptr : memory,(ElementCount == 0) ? 0 : _kBufferSize, IsRealloc ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, vec{ count, value, &pool }
 		{
-			vec.reserve(ElementCount);
+			if constexpr (ElementCount > 0)
+			{
+				vec.reserve(ElementCount);
+			}
 		}
 
 		template< class InputIt >
 		hybrid_vector(InputIt first, InputIt last) : pool{ (ElementCount == 0) ? nullptr : memory,(ElementCount == 0) ? 0 : _kBufferSize, IsRealloc ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, vec{ first,last, &pool }
 		{
-			vec.reserve(ElementCount);
+			if constexpr (ElementCount > 0)
+			{
+				vec.reserve(ElementCount);
+			}
 		}
 
 		template<typename Type2, std::size_t Count, bool Realloc, typename = std::enable_if_t<(ElementCount >= Count || IsRealloc == true) && std::is_same_v<Type, Type2>>>
 		hybrid_vector(const hybrid_vector<Type2, Count, Realloc>& other) : pool{ (ElementCount == 0) ? nullptr : memory,(ElementCount == 0) ? 0 : _kBufferSize, IsRealloc ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, vec{ other.container(), &pool }
 		{
-			vec.reserve(ElementCount);
+			if constexpr (ElementCount > 0)
+			{
+				vec.reserve(ElementCount);
+			}
 		}
 
 		hybrid_vector(const hybrid_vector& other) : pool{ (ElementCount == 0) ? nullptr : memory,(ElementCount == 0) ? 0 : _kBufferSize, IsRealloc ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, vec{ other.vec, &pool }
 		{
-			vec.reserve(ElementCount);
+			if constexpr (ElementCount > 0)
+			{
+				vec.reserve(ElementCount);
+			}
 		}
 
 		template<typename Type2, std::size_t Count, bool Realloc, typename = std::enable_if_t<(ElementCount >= Count || IsRealocatable == true) && std::is_same_v<Type, Type2>>>
 		hybrid_vector(hybrid_vector<Type2, Count, Realloc>&& other) : pool{ memory, _kBufferSize, IsRealloc ? std::pmr::get_default_resource()
 		 : std::pmr::null_memory_resource() }, vec{ std::move(other.container_move_out()), &pool }
 		{
-			vec.reserve(ElementCount);
+			if constexpr (ElementCount > 0)
+			{
+				vec.reserve(ElementCount);
+			}
 		}
 
 		hybrid_vector(hybrid_vector&& other) noexcept : pool{ (ElementCount == 0) ? nullptr : memory,(ElementCount == 0) ? 0 : _kBufferSize, IsRealloc ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, vec{ std::move(other.vec), &pool }
 		{
-			vec.reserve(ElementCount);
+			if constexpr (ElementCount > 0)
+			{
+				vec.reserve(ElementCount);
+			}
 		}
 
 		hybrid_vector(std::initializer_list<Type> init) : pool{ (ElementCount == 0) ? nullptr : memory,(ElementCount == 0) ? 0 : _kBufferSize, IsRealloc ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, vec{ init, &pool }
 		{
-			vec.reserve(ElementCount);
+			if constexpr (ElementCount > 0)
+			{
+				vec.reserve(ElementCount);
+			}
 		}
 
 		~hybrid_vector()

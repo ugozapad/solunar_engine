@@ -57,18 +57,27 @@ namespace solunar
 		template< class InputIt >
 		hybrid_string(InputIt first, InputIt last) : m_pool{ (ElementCount == 0) ? nullptr : m_memory, (ElementCount == 0) ? 0 : _kBufferSize, IsRealocatable ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, str{ first,last, &m_pool }
 		{
-			str.reserve(ElementCount);
+			if constexpr (ElementCount > 0)
+			{
+				str.reserve(ElementCount);
+			}
 		}
 
 
 		hybrid_string(const Type* s, size_type count) : m_pool{ (ElementCount == 0) ? nullptr : m_memory, (ElementCount == 0) ? 0 : _kBufferSize, IsRealocatable ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, str{ s, count, &m_pool }
 		{
-			str.reserve(ElementCount);
+			if constexpr (ElementCount > 0)
+			{
+				str.reserve(ElementCount);
+			}
 		}
 
 		hybrid_string(const Type* s) : m_pool{ (ElementCount == 0) ? nullptr : m_memory, (ElementCount == 0) ? 0 : _kBufferSize, IsRealocatable ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, str{ s, &m_pool }
 		{
-			str.reserve(ElementCount);
+			if constexpr (ElementCount > 0)
+			{
+				str.reserve(ElementCount);
+			}
 		}
 
 
@@ -79,7 +88,10 @@ namespace solunar
 		> >
 		hybrid_string(const StringViewLike& t) : m_pool{ (ElementCount == 0) ? nullptr : m_memory, (ElementCount == 0) ? 0 : _kBufferSize, IsRealocatable ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, str{ t, &m_pool }
 		{
-			str.reserve(ElementCount);
+			if constexpr (ElementCount > 0)
+			{
+				str.reserve(ElementCount);
+			}
 		}
 
 		template< class StringViewLike,
@@ -90,7 +102,10 @@ namespace solunar
 		hybrid_string(const StringViewLike& t,
 			size_type pos, size_type count) : m_pool{ (ElementCount == 0) ? nullptr : m_memory, (ElementCount == 0) ? 0 : _kBufferSize, IsRealocatable ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, str{ t,pos,count,&m_pool }
 		{
-			str.reserve(ElementCount);
+			if constexpr (ElementCount > 0)
+			{
+				str.reserve(ElementCount);
+			}
 		}
 
 		//hybrid_string(const hybrid_string& other);
@@ -99,12 +114,18 @@ namespace solunar
 		template<typename TypeOther, std::size_t Size, bool Realloc, typename = std::enable_if_t<(ElementCount >= Size || IsRealocatable == true) && std::is_same_v<Type, TypeOther>>>
 		hybrid_string(hybrid_string<TypeOther, Size, Realloc>&& other) noexcept : m_pool{ (ElementCount == 0) ? nullptr : m_memory, (ElementCount == 0) ? 0 : _kBufferSize, IsRealocatable ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, str{ std::move(other.container_move_out()), &m_pool }
 		{
-			str.reserve(ElementCount);
+			if constexpr (ElementCount > 0)
+			{
+				str.reserve(ElementCount);
+			}
 		}
 
 		hybrid_string(hybrid_string&& other) noexcept : m_pool{ (ElementCount == 0) ? nullptr : m_memory, (ElementCount == 0) ? 0 : _kBufferSize, IsRealocatable ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, str{ std::move(other.str), &m_pool }
 		{
-			str.reserve(ElementCount);
+			if constexpr (ElementCount > 0)
+			{
+				str.reserve(ElementCount);
+			}
 		}
 
 		//	hybrid_string(const hybrid_string& other, const allocator_type& alloc);
@@ -116,14 +137,20 @@ namespace solunar
 			m_pool{ (ElementCount == 0) ? nullptr : m_memory, (ElementCount == 0) ? 0 : _kBufferSize, IsRealocatable ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() },
 			str{ other.container(), &m_pool }
 		{
-			str.reserve(ElementCount);
+			if constexpr (ElementCount > 0)
+			{
+				str.reserve(ElementCount);
+			}
 		}
 
 		hybrid_string(const hybrid_string& other) :
 			m_pool{ (ElementCount == 0) ? nullptr : m_memory, (ElementCount == 0) ? 0 : _kBufferSize, IsRealocatable ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() },
 			str{ other.str, &m_pool }
 		{
-			str.reserve(ElementCount);
+			if constexpr (ElementCount > 0)
+			{
+				str.reserve(ElementCount);
+			}
 		}
 
 		//	hybrid_string(hybrid_string&& other, const allocator_type& alloc);
@@ -137,13 +164,19 @@ namespace solunar
 
 		hybrid_string(std::initializer_list<Type> ilist) : m_pool{ (ElementCount == 0) ? nullptr : m_memory, (ElementCount == 0) ? 0 : _kBufferSize, IsRealocatable ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, str{ ilist, &m_pool }
 		{
-			str.reserve(ElementCount);
+			if constexpr (ElementCount > 0)
+			{
+				str.reserve(ElementCount);
+			}
 		}
 
 
 		hybrid_string() : m_pool{ (ElementCount == 0) ? nullptr : m_memory, (ElementCount == 0) ? 0 : _kBufferSize, IsRealocatable ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, str{ &m_pool }
 		{
-			str.reserve(ElementCount);
+			if constexpr (ElementCount > 0)
+			{
+				str.reserve(ElementCount);
+			}
 		}
 		~hybrid_string() {}
 
