@@ -13,7 +13,6 @@ namespace solunar
 	template<typename T, std::size_t E, bool R, std::size_t B>
 	class hybrid_string;
 
-
 	// Type trait to detect hybrid_string
 	template<typename T>
 	struct is_hybrid_string : std::false_type {};
