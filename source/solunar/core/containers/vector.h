@@ -6,7 +6,7 @@
 #include <vector>
 #include <memory_resource>
 
-namespace sr
+namespace solunar
 {
 	template<typename Type, std::size_t ElementCount, bool IsRealocatable,
 		std::size_t _kBufferSize
@@ -184,169 +184,169 @@ namespace sr
 }
 
 template< class T, std::size_t E>
-bool operator==(const sr::vector<T, E>& lhs,
-	const sr::vector<T, E>& rhs)
+bool operator==(const solunar::vector<T, E>& lhs,
+	const solunar::vector<T, E>& rhs)
 {
 	return std::operator==(lhs.container(), rhs.container());
 }
 
 template< class T, std::size_t E>
-bool operator==(const sr::vector<T, E>& lhs,
-	const sr::static_vector<T, E>& rhs)
+bool operator==(const solunar::vector<T, E>& lhs,
+	const solunar::static_vector<T, E>& rhs)
 {
 	return std::operator==(lhs.container(), rhs.container());
 }
 
 template< class T, std::size_t E>
-bool operator==(const sr::static_vector<T, E>& lhs,
-	const sr::vector<T, E>& rhs)
+bool operator==(const solunar::static_vector<T, E>& lhs,
+	const solunar::vector<T, E>& rhs)
 {
 	return std::operator==(lhs.container(), rhs.container());
 }
 
 template< class T, std::size_t E >
-bool operator!=(const sr::vector<T, E>& lhs,
-	const sr::vector<T, E>& rhs)
+bool operator!=(const solunar::vector<T, E>& lhs,
+	const solunar::vector<T, E>& rhs)
 {
 	return std::operator!=(lhs.container(), rhs.container());
 }
 
 template< class T, std::size_t E >
-bool operator!=(const sr::static_vector<T, E>& lhs,
-	const sr::vector<T, E>& rhs)
+bool operator!=(const solunar::static_vector<T, E>& lhs,
+	const solunar::vector<T, E>& rhs)
 {
 	return std::operator!=(lhs.container(), rhs.container());
 }
 
 template< class T, std::size_t E >
-bool operator!=(const sr::vector<T, E>& lhs,
-	const sr::static_vector<T, E>& rhs)
+bool operator!=(const solunar::vector<T, E>& lhs,
+	const solunar::static_vector<T, E>& rhs)
 {
 	return std::operator!=(lhs.container(), rhs.container());
 }
 
 template< class T, std::size_t E >
-bool operator< (const sr::vector<T, E>& lhs,
-	const sr::vector<T, E>& rhs)
+bool operator< (const solunar::vector<T, E>& lhs,
+	const solunar::vector<T, E>& rhs)
 {
 	return std::operator<(lhs.container(), rhs.container());
 }
 
 template< class T, std::size_t E >
-bool operator< (const sr::static_vector<T, E>& lhs,
-	const sr::vector<T, E>& rhs)
+bool operator< (const solunar::static_vector<T, E>& lhs,
+	const solunar::vector<T, E>& rhs)
 {
 	return std::operator<(lhs.container(), rhs.container());
 }
 
 template< class T, std::size_t E >
-bool operator< (const sr::vector<T, E>& lhs,
-	const sr::static_vector<T, E>& rhs)
+bool operator< (const solunar::vector<T, E>& lhs,
+	const solunar::static_vector<T, E>& rhs)
 {
 	return std::operator<(lhs.container(), rhs.container());
 }
 
 template< class T, std::size_t E >
-bool operator<=(const sr::vector<T, E>& lhs,
-	const sr::vector<T, E>& rhs)
+bool operator<=(const solunar::vector<T, E>& lhs,
+	const solunar::vector<T, E>& rhs)
 {
 	return operator<=(lhs.container(), rhs.container());
 }
 
 template< class T, std::size_t E >
-bool operator<=(const sr::static_vector<T, E>& lhs,
-	const sr::vector<T, E>& rhs)
+bool operator<=(const solunar::static_vector<T, E>& lhs,
+	const solunar::vector<T, E>& rhs)
 {
 	return operator<=(lhs.container(), rhs.container());
 }
 
 template< class T, std::size_t E >
-bool operator<=(const sr::vector<T, E>& lhs,
-	const sr::static_vector<T, E>& rhs)
+bool operator<=(const solunar::vector<T, E>& lhs,
+	const solunar::static_vector<T, E>& rhs)
 {
 	return operator<=(lhs.container(), rhs.container());
 }
 
 template< class T, std::size_t E >
-bool operator> (const sr::vector<T, E>& lhs,
-	const sr::vector<T, E>& rhs)
+bool operator> (const solunar::vector<T, E>& lhs,
+	const solunar::vector<T, E>& rhs)
 {
 	return operator>(lhs.container(), rhs.container());
 }
 
 template< class T, std::size_t E >
-bool operator> (const sr::static_vector<T, E>& lhs,
-	const sr::vector<T, E>& rhs)
+bool operator> (const solunar::static_vector<T, E>& lhs,
+	const solunar::vector<T, E>& rhs)
 {
 	return operator>(lhs.container(), rhs.container());
 }
 
 template< class T, std::size_t E >
-bool operator> (const sr::vector<T, E>& lhs,
-	const sr::static_vector<T, E>& rhs)
+bool operator> (const solunar::vector<T, E>& lhs,
+	const solunar::static_vector<T, E>& rhs)
 {
 	return operator>(lhs.container(), rhs.container());
 }
 
 template< class T, std::size_t E >
-bool operator>=(const sr::vector<T, E>& lhs,
-	const sr::vector<T, E>& rhs)
+bool operator>=(const solunar::vector<T, E>& lhs,
+	const solunar::vector<T, E>& rhs)
 {
 	return operator>=(lhs.container(), rhs.container());
 }
 
 template< class T, std::size_t E >
-bool operator>=(const sr::static_vector<T, E>& lhs,
-	const sr::vector<T, E>& rhs)
+bool operator>=(const solunar::static_vector<T, E>& lhs,
+	const solunar::vector<T, E>& rhs)
 {
 	return operator>=(lhs.container(), rhs.container());
 }
 
 template< class T, std::size_t E >
-bool operator>=(const sr::vector<T, E>& lhs,
-	const sr::static_vector<T, E>& rhs)
+bool operator>=(const solunar::vector<T, E>& lhs,
+	const solunar::static_vector<T, E>& rhs)
 {
 	return operator>=(lhs.container(), rhs.container());
 }
 
 template< class T, std::size_t E>
-bool operator==(const sr::static_vector<T, E>& lhs,
-	const sr::static_vector<T, E>& rhs)
+bool operator==(const solunar::static_vector<T, E>& lhs,
+	const solunar::static_vector<T, E>& rhs)
 {
 	return std::operator==(lhs.container(), rhs.container());
 }
 
 template< class T, std::size_t E >
-bool operator!=(const sr::static_vector<T, E>& lhs,
-	const sr::static_vector<T, E>& rhs)
+bool operator!=(const solunar::static_vector<T, E>& lhs,
+	const solunar::static_vector<T, E>& rhs)
 {
 	return std::operator!=(lhs.container(), rhs.container());
 }
 
 template< class T, std::size_t E >
-bool operator< (const sr::static_vector<T, E>& lhs,
-	const sr::static_vector<T, E>& rhs)
+bool operator< (const solunar::static_vector<T, E>& lhs,
+	const solunar::static_vector<T, E>& rhs)
 {
 	return std::operator<(lhs.container(), rhs.container());
 }
 
 template< class T, std::size_t E >
-bool operator<=(const sr::static_vector<T, E>& lhs,
-	const sr::static_vector<T, E>& rhs)
+bool operator<=(const solunar::static_vector<T, E>& lhs,
+	const solunar::static_vector<T, E>& rhs)
 {
 	return operator<=(lhs.container(), rhs.container());
 }
 
 template< class T, std::size_t E >
-bool operator> (const sr::static_vector<T, E>& lhs,
-	const sr::static_vector<T, E>& rhs)
+bool operator> (const solunar::static_vector<T, E>& lhs,
+	const solunar::static_vector<T, E>& rhs)
 {
 	return operator>(lhs.container(), rhs.container());
 }
 
 template< class T, std::size_t E >
-bool operator>=(const sr::static_vector<T, E>& lhs,
-	const sr::static_vector<T, E>& rhs)
+bool operator>=(const solunar::static_vector<T, E>& lhs,
+	const solunar::static_vector<T, E>& rhs)
 {
 	return operator>=(lhs.container(), rhs.container());
 }

@@ -8,7 +8,7 @@
 #include <memory_resource>
 #include <utility>
 
-namespace sr
+namespace solunar
 {
 	template<typename Type, std::size_t ElementCount, bool IsRealocatable, std::size_t _kBufferSize
 #ifdef _DEBUG

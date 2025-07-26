@@ -28,7 +28,7 @@ namespace solunar
 	{
 #ifdef ENABLE_UNIT_TESTS
 
-		sr::static_vector<int, 4> test;
+		static_vector<int, 4> test;
 		int a = sizeof(test);
 		test.push_back(1);
 		test.push_back(1);
@@ -45,7 +45,7 @@ namespace solunar
 		}
 
 		// preallocated acts like a array so it is already allocated memory and ready in use (don't need to specify reserve manually + preallocated memory is stack not heap so very fast initialization and usage!)
-		sr::vector<int, 4> test2;
+		vector<int, 4> test2;
 
 		test2.push_back(1);
 		test2.push_back(1);
@@ -62,12 +62,12 @@ namespace solunar
 
 		bool not_equal = test2 == test;
 
-		sr::string<10> kek = "kek";
+		string<10> kek = "kek";
 		int b = kek.size();
 		b = kek.max_size();
 
 		try {
-			sr::static_string<5> aa = "kekius_maximus";
+			static_string<5> aa = "kekius_maximus";
 		}
 		// catching this because we can't reallocate due to static nature of memory_resource
 		catch (const std::bad_alloc& e)
