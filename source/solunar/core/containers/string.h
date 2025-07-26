@@ -94,7 +94,7 @@ namespace solunar
 		//hybrid_string(hybrid_string&& other) noexcept;
 
 		template<typename TypeOther, std::size_t Size, bool Realloc, typename = std::enable_if_t<(ElementCount >= Size || IsRealocatable == true) && std::is_same_v<Type, TypeOther>>>
-		hybrid_string(hybrid_string<TypeOther, Size, Realloc>&& other) noexcept : m_pool{ m_memory, _kBufferSize, IsRealocatable ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, str{ std::move(other.container()), &m_pool }
+		hybrid_string(hybrid_string<TypeOther, Size, Realloc>&& other) noexcept : m_pool{ m_memory, _kBufferSize, IsRealocatable ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, str{ std::move(other.container_move_out()), &m_pool }
 		{
 			str.reserve(ElementCount);
 		}
@@ -595,6 +595,7 @@ namespace solunar
 		inline const_reference operator[](size_type pos) const noexcept { return str.operator[](pos); }
 
 		container_type& container() noexcept { return str; }
+		container_type&& container_move_out() noexcept { return std::move(str); }
 		const container_type& container() const noexcept { return str; }
 
 		constexpr std::size_t preallocated_memory_size() const noexcept { return _kBufferSize; }

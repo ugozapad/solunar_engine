@@ -159,7 +159,7 @@ namespace solunar
 		}
 
 		template<typename Type2, typename H2, typename P2, std::size_t Count, bool Realloc, typename = std::enable_if_t<(ElementCount >= Count || IsRealloc == true) && std::is_same_v<Type, Type2>>>
-		hybrid_unordered_set(hybrid_unordered_set<Type2, H2, P2, Count, Realloc>&& other) : m_pool{ m_memory, _kBufferSize, IsRealloc ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, set{ std::move(other.container()), &m_pool }
+		hybrid_unordered_set(hybrid_unordered_set<Type2, H2, P2, Count, Realloc>&& other) : m_pool{ m_memory, _kBufferSize, IsRealloc ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, set{ std::move(other.container_move_out()), &m_pool }
 		{
 
 		}
@@ -506,8 +506,9 @@ namespace solunar
 		constexpr std::size_t preallocated_size() const noexcept { return ElementCount; }
 		constexpr bool is_reallocation_supported() const noexcept { return IsRealloc; }
 
-		const container_type& container(void) const noexcept { return set; }
-		container_type& container(void) noexcept { return set; }
+		const container_type& container() const noexcept { return set; }
+		container_type& container() noexcept { return set; }
+		container_type&& container_move_out() noexcept { return std::move(str); }
 
 	private:
 		unsigned char m_memory[_kBufferSize];

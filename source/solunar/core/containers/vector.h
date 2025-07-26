@@ -8,7 +8,7 @@
 
 namespace solunar
 {
-	template<typename Type, std::size_t ElementCount, bool IsRealocatable,
+	template<typename Type, std::size_t ElementCount, bool IsRealloc,
 		std::size_t _kBufferSize
 #ifdef _DEBUG
 		= sizeof(Type)* ElementCount * 2
@@ -36,7 +36,9 @@ namespace solunar
 		using allocator_type = typename container_type::allocator_type;
 
 
-		hybrid_vector() : pool{ memory, _kBufferSize, IsRealocatable ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, vec{ &pool }
+
+
+		hybrid_vector() : pool{ memory, _kBufferSize, IsRealloc ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, vec{ &pool }
 		{
 			vec.reserve(ElementCount);
 		}
