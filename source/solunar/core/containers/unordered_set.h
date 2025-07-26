@@ -9,12 +9,55 @@
 
 namespace solunar
 {
+	// Helper function to compute next power of two
+	inline constexpr size_t __next_power_of_two(size_t n) noexcept {
+		if (n == 0) return 1;
+		n--;
+		n |= n >> 1;
+		n |= n >> 2;
+		n |= n >> 4;
+		n |= n >> 8;
+		n |= n >> 16;
+		if constexpr (sizeof(size_t) > 4) {
+			n |= n >> 32;
+		}
+		return n + 1;
+	}
+
+	// Main buffer size calculation
+	inline constexpr size_t __calculate_unordered_set_size(size_t element_count) noexcept {
+		// Minimum buffer size for empty container
+		if (element_count == 0) return 64;
+
+		// Worst-case node size (MSVC: 24 bytes)
+		constexpr size_t node_size = 24;
+
+		// Worst-case bucket array calculation
+		size_t bucket_array_size{};
+		if (element_count < 8) {
+			// Small collection case (matches MSVC minimum)
+			bucket_array_size = 128;
+		}
+		else {
+			// MSVC-style bucket array (power-of-two * sizeof(void*))
+			const size_t min_buckets = element_count * 2;
+			const size_t bucket_count = __next_power_of_two(min_buckets);
+			bucket_array_size = bucket_count * sizeof(void*);
+		}
+
+		// Base memory requirements
+		const size_t total_base = bucket_array_size + (element_count * node_size);
+
+		// Safety margin: 30% extra + 64 bytes padding
+		return total_base + (total_base * 3 + 9) / 10 + 64;  // Ceiling division
+	}
+
 	template<typename Type, typename H, typename P, std::size_t ElementCount, bool IsRealloc, std::size_t _kBufferSize
 
 #ifdef _DEBUG
-		= sizeof(Type)* ElementCount * 2
+		= sizeof(std::pmr::unordered_set<Type>::node_type)* ElementCount * 2
 #else
-		= sizeof(Type) * ElementCount
+		= sizeof(std::pmr::unordered_set<Type>::node_type) * ElementCount
 #endif
 	>
 	class hybrid_unordered_set
@@ -365,6 +408,9 @@ namespace solunar
 		constexpr std::size_t preallocated_size() const noexcept { return ElementCount; }
 		constexpr bool is_reallocation_supported() const noexcept { return IsRealloc; }
 
+		const container_type& container(void) const noexcept { return set; }
+		container_type& container(void) const noexcept { return set; }
+
 	private:
 		unsigned char m_memory[_kBufferSize];
 		std::pmr::monotonic_buffer_resource m_pool;
@@ -377,5 +423,21 @@ namespace solunar
 	template<typename Key, std::size_t ElementCount>
 	using static_unordered_set = hybrid_unordered_set<Key, std::hash<Key>, std::equal_to<Key>, ElementCount, false>;
 }
+
+template< class Key, class Hash, class KeyEqual, std::size_t ElementCount, bool Realloc >
+bool operator==(const solunar::hybrid_unordered_set<Key, Hash, KeyEqual, ElementCount, Realloc>& lhs,
+	const solunar::hybrid_unordered_set<Key, Hash, KeyEqual, ElementCount, Realloc>& rhs)
+{
+	return lhs.container() == rhs.container();
+}
+
+template< class Key, class Hash, class KeyEqual, std::size_t ElementCount, bool Realloc >
+bool operator!=(const solunar::hybrid_unordered_set<Key, Hash, KeyEqual, ElementCount, Realloc>& lhs,
+	const solunar::hybrid_unordered_set<Key, Hash, KeyEqual, ElementCount, Realloc>& rhs)
+{
+	return lhs.container() != rhs.container();
+}
+
+
 
 #endif
