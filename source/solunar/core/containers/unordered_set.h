@@ -512,7 +512,7 @@ namespace solunar
 		container_type set;
 	};
 
-	template<typename Key, std::size_t ElementCount>
+	template<typename Key, std::size_t ElementCount = 0>
 	using unordered_set = hybrid_unordered_set<Key, std::hash<Key>, std::equal_to<Key>, ElementCount, true>;
 
 	template<typename Key, std::size_t ElementCount>

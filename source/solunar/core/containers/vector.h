@@ -225,7 +225,7 @@ namespace solunar
 	/// @brief If we exceeded memory we will allocate additional memory from heap (see std::pmr::get_default_resource)
 	/// @tparam Type your type like int, double, struct, class (what std::pmr::vector supports) 
 	/// @tparam ElementCount count that defines elements of your container like 10,50 it is not bytes as raw memory!
-	template<typename Type, std::size_t ElementCount>
+	template<typename Type, std::size_t ElementCount = 0>
 	using vector = hybrid_vector<Type, ElementCount, true>;
 }
 

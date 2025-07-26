@@ -67,7 +67,7 @@ namespace solunar
 
 		bool not_equal = test2 == test;
 
-		string<10> kek = "kek";
+		string_sized<10> kek = "kek";
 		int b = kek.size();
 		b = kek.max_size();
 
@@ -80,19 +80,19 @@ namespace solunar
 			int a = 0;
 		}
 
-		string<10> kekais = "kekais";
-		string<10> kekais2(kekais);
+		string_sized<10> kekais = "kekais";
+		string_sized<10> kekais2(kekais);
 
-		string<5> smol("smol");
-		string<15> bigger(smol);
+		string_sized<5> smol("smol");
+		string_sized<15> bigger(smol);
 
-		string<9> good("good");
-		string<10> sl(good);
+		string_sized<9> good("good");
+		string_sized<10> sl(good);
 
 		static_string<10> sl2(good);
 
 		// won't compile because we prevent construction from bigger strings if current string is not support reallocation
-	//	string<11> fail("fail");
+	//	string_sized<11> fail("fail");
 	//	static_string<10> sl3(fail);
 
 	//	static_string<11> fail("fail");
@@ -114,6 +114,12 @@ namespace solunar
 		// won't compile because we prevent where instance is smaller then passed and it doesn't support reallocation
 	//	vector<int, 5> v3;
 	//	static_vector<int, 3> v4(v3);
+
+		// just act as fully regular standard containers just as-is
+
+		string std_str;
+		vector<int> std_vec;
+		unordered_set<int> std_us;
 #endif
 	}
 

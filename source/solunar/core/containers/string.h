@@ -611,21 +611,23 @@ namespace solunar
 	};
 
 	template<std::size_t Length>
-	using string = hybrid_string<char, Length, true>;
+	using string_sized = hybrid_string<char, Length, true>;
+	
+	using string = string_sized<0>;
 
 	template<std::size_t Length>
 	using static_string = hybrid_string<char, Length, false>;
 }
 
 template<std::size_t E>
-bool operator==(const solunar::string<E>& lhs,
-	const solunar::string<E>& rhs)
+bool operator==(const solunar::string_sized<E>& lhs,
+	const solunar::string_sized<E>& rhs)
 {
 	return std::operator==(lhs.container(), rhs.container());
 }
 
 template<std::size_t E>
-bool operator==(const solunar::string<E>& lhs,
+bool operator==(const solunar::string_sized<E>& lhs,
 	const solunar::static_string<E>& rhs)
 {
 	return std::operator==(lhs.container(), rhs.container());
@@ -633,111 +635,111 @@ bool operator==(const solunar::string<E>& lhs,
 
 template<std::size_t E>
 bool operator==(const solunar::static_string<E>& lhs,
-	const solunar::string<E>& rhs)
+	const solunar::string_sized<E>& rhs)
 {
 	return std::operator==(lhs.container(), rhs.container());
 }
 
 template<std::size_t E>
-bool operator!=(const solunar::string<E>& lhs,
-	const solunar::string<E>& rhs)
+bool operator!=(const solunar::string_sized<E>& lhs,
+	const solunar::string_sized<E>& rhs)
 {
 	return std::operator!=(lhs.container(), rhs.container());
 }
 
 template<std::size_t E>
 bool operator!=(const solunar::static_string<E>& lhs,
-	const solunar::string<E>& rhs)
+	const solunar::string_sized<E>& rhs)
 {
 	return std::operator!=(lhs.container(), rhs.container());
 }
 
 template<std::size_t E>
-bool operator!=(const solunar::string<E>& lhs,
+bool operator!=(const solunar::string_sized<E>& lhs,
 	const solunar::static_string<E>& rhs)
 {
 	return std::operator!=(lhs.container(), rhs.container());
 }
 
 template<std::size_t E>
-bool operator< (const solunar::string<E>& lhs,
-	const solunar::string<E>& rhs)
+bool operator< (const solunar::string_sized<E>& lhs,
+	const solunar::string_sized<E>& rhs)
 {
 	return std::operator<(lhs.container(), rhs.container());
 }
 
 template<std::size_t E>
 bool operator< (const solunar::static_string<E>& lhs,
-	const solunar::string<E>& rhs)
+	const solunar::string_sized<E>& rhs)
 {
 	return std::operator<(lhs.container(), rhs.container());
 }
 
 template<std::size_t E>
-bool operator< (const solunar::string<E>& lhs,
+bool operator< (const solunar::string_sized<E>& lhs,
 	const solunar::static_string<E>& rhs)
 {
 	return std::operator<(lhs.container(), rhs.container());
 }
 
 template<std::size_t E>
-bool operator<=(const solunar::string<E>& lhs,
-	const solunar::string<E>& rhs)
+bool operator<=(const solunar::string_sized<E>& lhs,
+	const solunar::string_sized<E>& rhs)
 {
 	return operator<=(lhs.container(), rhs.container());
 }
 
 template<std::size_t E>
 bool operator<=(const solunar::static_string<E>& lhs,
-	const solunar::string<E>& rhs)
+	const solunar::string_sized<E>& rhs)
 {
 	return operator<=(lhs.container(), rhs.container());
 }
 
 template<std::size_t E>
-bool operator<=(const solunar::string<E>& lhs,
+bool operator<=(const solunar::string_sized<E>& lhs,
 	const solunar::static_string<E>& rhs)
 {
 	return operator<=(lhs.container(), rhs.container());
 }
 
 template<std::size_t E>
-bool operator> (const solunar::string<E>& lhs,
-	const solunar::string<E>& rhs)
+bool operator> (const solunar::string_sized<E>& lhs,
+	const solunar::string_sized<E>& rhs)
 {
 	return operator>(lhs.container(), rhs.container());
 }
 
 template<std::size_t E>
 bool operator> (const solunar::static_string<E>& lhs,
-	const solunar::string<E>& rhs)
+	const solunar::string_sized<E>& rhs)
 {
 	return operator>(lhs.container(), rhs.container());
 }
 
 template<std::size_t E>
-bool operator> (const solunar::string<E>& lhs,
+bool operator> (const solunar::string_sized<E>& lhs,
 	const solunar::static_string<E>& rhs)
 {
 	return operator>(lhs.container(), rhs.container());
 }
 
 template<std::size_t E>
-bool operator>=(const solunar::string<E>& lhs,
-	const solunar::string<E>& rhs)
+bool operator>=(const solunar::string_sized<E>& lhs,
+	const solunar::string_sized<E>& rhs)
 {
 	return operator>=(lhs.container(), rhs.container());
 }
 
 template<std::size_t E>
 bool operator>=(const solunar::static_string<E>& lhs,
-	const solunar::string<E>& rhs)
+	const solunar::string_sized<E>& rhs)
 {
 	return operator>=(lhs.container(), rhs.container());
 }
 
 template<std::size_t E>
-bool operator>=(const solunar::string<E>& lhs,
+bool operator>=(const solunar::string_sized<E>& lhs,
 	const solunar::static_string<E>& rhs)
 {
 	return operator>=(lhs.container(), rhs.container());
