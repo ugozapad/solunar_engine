@@ -46,7 +46,10 @@ namespace solunar
 		using insert_return_type = typename container_type::insert_return_type;
 
 	public:
-		hybrid_unordered_set() : m_pool{ m_memory, _kBufferSize, IsRealloc ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, set{ &m_pool } {}
+		hybrid_unordered_set() : m_pool{ m_memory, _kBufferSize, IsRealloc ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, set{ &m_pool } 
+		{
+			set.reserve(ElementCount);
+		}
 		~hybrid_unordered_set() {}
 
 	public:
