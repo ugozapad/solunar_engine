@@ -367,6 +367,12 @@ namespace solunar
 		std::pmr::monotonic_buffer_resource m_pool;
 		container_type set;
 	};
+
+	template<typename Key, std::size_t ElementCount>
+	using unordered_set = hybrid_unordered_set<Key, std::hash<Key>, std::equal_to<Key>, ElementCount, true>;
+
+	template<typename Key, std::size_t ElementCount>
+	using static_unordered_set = hybrid_unordered_set<Key, std::hash<Key>, std::equal_to<Key>, ElementCount, false>;
 }
 
 #endif
