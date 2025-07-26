@@ -107,6 +107,13 @@ namespace solunar
 		// won't compile because we prevent where instance is smaller then passed and it doesn't support reallocation
 	//	unordered_set<int, 5> us3;
 	//	static_unordered_set<int, 3> us4(us3);
+
+		vector<int, 5> v1;
+		static_vector<int, 5> v2(v1);
+
+		// won't compile because we prevent where instance is smaller then passed and it doesn't support reallocation
+	//	vector<int, 5> v3;
+	//	static_vector<int, 3> v4(v3);
 #endif
 	}
 
