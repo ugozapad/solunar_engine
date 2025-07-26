@@ -75,6 +75,10 @@ namespace solunar
 			int a = 0;
 		}
 
+		string<10> kekais = "kekais";
+		string<10> kekais2 = "kekais";
+
+		is_equal = kekais == kekais2;
 #endif
 	}
 
