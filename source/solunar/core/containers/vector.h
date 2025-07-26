@@ -41,7 +41,7 @@ namespace solunar
 			vec.reserve(ElementCount);
 		}
 
-		virtual ~hybrid_vector()
+		~hybrid_vector()
 		{
 		}
 
