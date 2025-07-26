@@ -20,6 +20,9 @@ namespace solunar
 	{
 		using container_type = std::pmr::vector<Type>;
 
+		static_assert(ElementCount == 0 ? IsRealloc : true, "if you specified ElementCount as 0 it means that it doesn't use stack memory at all and it means that container is forced to support reallocation!");
+
+
 	public:
 
 		using value_type = typename container_type::value_type;
@@ -35,34 +38,34 @@ namespace solunar
 		using const_reverse_iterator = typename container_type::const_reverse_iterator;
 		using allocator_type = typename container_type::allocator_type;
 
-		hybrid_vector() : pool{ memory, _kBufferSize, IsRealloc ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, vec{ &pool }
+		hybrid_vector() : pool{ (ElementCount == 0) ? nullptr : memory,(ElementCount == 0) ? 0 : _kBufferSize, IsRealloc ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, vec{ &pool }
 		{
 			vec.reserve(ElementCount);
 		}
 
-		explicit hybrid_vector(size_type count) : pool{ memory, _kBufferSize, IsRealloc ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, vec{ count, &pool }
+		explicit hybrid_vector(size_type count) : pool{ (ElementCount == 0) ? nullptr : memory,(ElementCount == 0) ? 0 : _kBufferSize, IsRealloc ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, vec{ count, &pool }
 		{
 			vec.reserve(ElementCount);
 		}
 
-		hybrid_vector(size_type count, const Type& value) : pool{ memory, _kBufferSize, IsRealloc ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, vec{ count, value, &pool }
+		hybrid_vector(size_type count, const Type& value) : pool{ (ElementCount == 0) ? nullptr : memory,(ElementCount == 0) ? 0 : _kBufferSize, IsRealloc ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, vec{ count, value, &pool }
 		{
 			vec.reserve(ElementCount);
 		}
 
 		template< class InputIt >
-		hybrid_vector(InputIt first, InputIt last) : pool{ memory, _kBufferSize, IsRealloc ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, vec{ first,last, &pool }
+		hybrid_vector(InputIt first, InputIt last) : pool{ (ElementCount == 0) ? nullptr : memory,(ElementCount == 0) ? 0 : _kBufferSize, IsRealloc ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, vec{ first,last, &pool }
 		{
 			vec.reserve(ElementCount);
 		}
 
 		template<typename Type2, std::size_t Count, bool Realloc, typename = std::enable_if_t<(ElementCount >= Count || IsRealloc == true) && std::is_same_v<Type, Type2>>>
-		hybrid_vector(const hybrid_vector<Type2, Count, Realloc>& other) : pool{ memory, _kBufferSize, IsRealloc ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, vec{ other.container(), &pool }
+		hybrid_vector(const hybrid_vector<Type2, Count, Realloc>& other) : pool{ (ElementCount == 0) ? nullptr : memory,(ElementCount == 0) ? 0 : _kBufferSize, IsRealloc ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, vec{ other.container(), &pool }
 		{
 			vec.reserve(ElementCount);
 		}
 
-		hybrid_vector(const hybrid_vector& other) : pool{ memory, _kBufferSize, IsRealloc ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, vec{ other.vec, &pool }
+		hybrid_vector(const hybrid_vector& other) : pool{ (ElementCount == 0) ? nullptr : memory,(ElementCount == 0) ? 0 : _kBufferSize, IsRealloc ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, vec{ other.vec, &pool }
 		{
 			vec.reserve(ElementCount);
 		}
@@ -74,12 +77,12 @@ namespace solunar
 			vec.reserve(ElementCount);
 		}
 
-		hybrid_vector(hybrid_vector&& other) noexcept : pool{ memory, _kBufferSize, IsRealloc ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, vec{ std::move(other.vec), &pool }
+		hybrid_vector(hybrid_vector&& other) noexcept : pool{ (ElementCount == 0) ? nullptr : memory,(ElementCount == 0) ? 0 : _kBufferSize, IsRealloc ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, vec{ std::move(other.vec), &pool }
 		{
 			vec.reserve(ElementCount);
 		}
 
-		hybrid_vector(std::initializer_list<Type> init) : pool{ memory, _kBufferSize, IsRealloc ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, vec{ init, &pool }
+		hybrid_vector(std::initializer_list<Type> init) : pool{ (ElementCount == 0) ? nullptr : memory,(ElementCount == 0) ? 0 : _kBufferSize, IsRealloc ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, vec{ init, &pool }
 		{
 			vec.reserve(ElementCount);
 		}
@@ -208,7 +211,7 @@ namespace solunar
 		constexpr bool is_reallocation_supported() const noexcept { return IsRealocatable; }
 
 	private:
-		unsigned char memory[_kBufferSize];
+		unsigned char memory[(ElementCount == 0) ? 1 : _kBufferSize];
 		std::pmr::monotonic_buffer_resource pool;
 		container_type vec;
 	};
