@@ -24,6 +24,8 @@ namespace solunar
 
 #define ENABLE_UNIT_TESTS
 
+	// if any of asserts fail means we unit tests is failed and IT MEANS IT IS IMPORTANT!
+	// all tests must be pass OK without assertions
 	void RunUnitTests()
 	{
 #ifdef ENABLE_UNIT_TESTS
@@ -54,8 +56,11 @@ namespace solunar
 
 		// will be true
 		bool is_equal = test == test2;
+		assert(is_equal);
 		is_equal = test2 == test2;
+		assert(is_equal);
 		is_equal = test == test;
+		assert(is_equal);
 		// exceeding current memory, do reallocation but it is heap based as default vector
 		// no troubles and no throw exceptions
 		test2.push_back(1);
@@ -76,9 +81,25 @@ namespace solunar
 		}
 
 		string<10> kekais = "kekais";
-		string<10> kekais2 = "kekais";
+		string<10> kekais2(kekais);
+
+		string<5> smol("smol");
+		string<15> bigger(smol);
+
+		string<9> good("good");
+		string<10> sl(good);
+
+		static_string<10> sl2(good);
+
+		// won't compile because we prevent construction from bigger strings if current string is not support reallocation
+	//	string<11> fail("fail");
+	//	static_string<10> sl3(fail);
+
+	//	static_string<11> fail("fail");
+	//	static_string<10> sl4(fail);
 
 		is_equal = kekais == kekais2;
+		assert(is_equal);
 #endif
 	}
 

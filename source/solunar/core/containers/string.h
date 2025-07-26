@@ -10,6 +10,21 @@
 
 namespace solunar
 {
+	template<typename T, std::size_t E, bool R, std::size_t B>
+	class hybrid_string;
+
+
+	// Type trait to detect hybrid_string
+	template<typename T>
+	struct is_hybrid_string : std::false_type {};
+
+	template<typename Type, std::size_t EC, bool R, std::size_t BS>
+	struct is_hybrid_string<hybrid_string<Type, EC, R, BS>> : std::true_type {};
+
+	template<typename T>
+	inline constexpr bool is_hybrid_string_v = is_hybrid_string<T>::value;
+
+
 	template<typename Type, std::size_t ElementCount, bool IsRealocatable, std::size_t _kBufferSize
 #ifdef _DEBUG
 		= sizeof(Type)* ElementCount * 2
@@ -55,13 +70,21 @@ namespace solunar
 		}
 
 
-		template< class StringViewLike >
-		explicit hybrid_string(const StringViewLike& t) : m_pool{ m_memory, _kBufferSize, IsRealocatable ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, str{ t, &m_pool }
+		template< class StringViewLike,
+			typename = std::enable_if_t<
+			!is_hybrid_string_v<std::decay_t<StringViewLike>>&&
+			std::is_convertible_v<const StringViewLike&, container_view_type>
+		> >
+		hybrid_string(const StringViewLike& t) : m_pool{ m_memory, _kBufferSize, IsRealocatable ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, str{ t, &m_pool }
 		{
 
 		}
 
-		template< class StringViewLike >
+		template< class StringViewLike,
+			typename = std::enable_if_t<
+			!is_hybrid_string_v<std::decay_t<StringViewLike>>&&
+			std::is_convertible_v<const StringViewLike&, container_view_type>
+		> >
 		hybrid_string(const StringViewLike& t,
 			size_type pos, size_type count) : m_pool{ m_memory, _kBufferSize, IsRealocatable ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, str{ t,pos,count,&m_pool }
 		{
@@ -72,14 +95,36 @@ namespace solunar
 
 	//	hybrid_string(const hybrid_string& other, const allocator_type& alloc);
 
-	//	hybrid_string(hybrid_string&& other, const allocator_type& alloc);
+		// Deleted constructor for invalid sizes
+		template<typename TypeOther, std::size_t Size, bool Realloc,
+			typename = std::enable_if_t<(ElementCount < Size) && std::is_same_v<Type, TypeOther> && (IsRealocatable == false)>>
+			hybrid_string(const hybrid_string<char, Size, Realloc>&) = delete;
 
-	//	hybrid_string(const hybrid_string& other, size_type pos,
-	//	const allocator_type& alloc = allocator_type());
+		template<typename TypeOther, std::size_t Size, bool Realloc, typename = std::enable_if_t<(ElementCount >= Size || IsRealocatable == true) && std::is_same_v<Type, TypeOther>>>
+		hybrid_string(const hybrid_string<TypeOther, Size, Realloc>& other) :
+			m_pool{ m_memory, _kBufferSize, IsRealocatable ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() },
+			str{ other.container(), &m_pool }
+		{
 
-		//	hybrid_string(const hybrid_string& other,
-		//		size_type pos, size_type count,
-		//		const allocator_type& alloc = allocator_type());
+
+		}
+
+		hybrid_string(const hybrid_string& other) :
+			m_pool{ m_memory, _kBufferSize, IsRealocatable ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() },
+			str{ other.str, &m_pool }
+		{
+
+
+		}
+
+		//	hybrid_string(hybrid_string&& other, const allocator_type& alloc);
+
+		//	hybrid_string(const hybrid_string& other, size_type pos,
+		//	const allocator_type& alloc = allocator_type());
+
+			//	hybrid_string(const hybrid_string& other,
+			//		size_type pos, size_type count,
+			//		const allocator_type& alloc = allocator_type());
 
 		hybrid_string(std::initializer_list<Type> ilist) : m_pool{ m_memory, _kBufferSize, IsRealocatable ? std::pmr::get_default_resource() : std::pmr::null_memory_resource() }, str{ ilist, &m_pool }
 		{
@@ -527,7 +572,7 @@ namespace solunar
 			return *this;
 		}
 
-		operator container_view_type() const noexcept
+		explicit operator container_view_type() const noexcept
 		{
 			return container_view_type(str);
 		}
