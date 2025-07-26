@@ -52,13 +52,7 @@ namespace solunar
 		return total_base + (total_base * 3 + 9) / 10 + 64;  // Ceiling division
 	}
 
-	template<typename Type, typename H, typename P, std::size_t ElementCount, bool IsRealloc, std::size_t _kBufferSize
-
-#ifdef _DEBUG
-		= sizeof(std::pmr::unordered_set<Type>::node_type)* ElementCount * 2
-#else
-		= sizeof(std::pmr::unordered_set<Type>::node_type) * ElementCount
-#endif
+	template<typename Type, typename H, typename P, std::size_t ElementCount, bool IsRealloc, std::size_t _kBufferSize = __calculate_unordered_set_size(ElementCount)
 	>
 	class hybrid_unordered_set
 	{
