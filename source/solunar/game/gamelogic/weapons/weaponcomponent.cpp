@@ -51,7 +51,7 @@ namespace solunar
 		g_typeManager->RegisterObject<WeaponComponent>();
 	}
 
-	glm::vec3 GetLookingEntityPos(const glm::vec3& rayStart, const glm::vec3& rayEnd)
+	static glm::vec3 GetLookingEntityPos(const glm::vec3& rayStart, const glm::vec3& rayEnd)
 	{
 		RayCastResult rq = {};
 		if (Engine::ms_world->RayCast(rq, rayStart, rayEnd))

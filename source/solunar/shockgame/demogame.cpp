@@ -95,12 +95,13 @@ void UsableAreaComponent::Update(float delta)
 		m_isInited = true;
 	}
 
-#if 0
-	static char buf[256];
-	snprintf(buf, sizeof(buf), "UsableAreaComponent: Script: %s", m_scriptName.c_str());
+	if (g_engineData.m_editor)
+	{
+		static char buf[256];
+		snprintf(buf, sizeof(buf), "UsableAreaComponent: Script: %s", m_scriptName.c_str());
 
-	Debug_Draw3DText(buf, GetEntity()->GetWorldPosition(), glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-#endif
+		Debug_Draw3DText(buf, GetEntity()->GetWorldPosition(), glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+	}
 }
 
 void Debug_Draw3DText(const char* text, const glm::vec3& position, const glm::vec4& color, float y /*= 0.0f*/)
