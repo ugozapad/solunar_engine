@@ -49,12 +49,6 @@ namespace solunar
 	inline eBehaviourTreeStatus BehaviourTreeNodeSequence<MaxChildrenCount>::Update(World* pWorld, Entity* pOwner, void* pUserStateData, float dt)
 	{
 		eBehaviourTreeStatus status = eBehaviourTreeStatus::kSuccess;
-
-		if (m_success_iter == MaxChildrenCount)
-		{
-			m_success_iter = 0;
-			return status;
-		}
 		
 		BehaviourTreeNode* pChild = m_pChildren[m_success_iter];
 
@@ -66,9 +60,19 @@ namespace solunar
 		}
 
 		if (status != eBehaviourTreeStatus::kSuccess)
+		{
+			if (m_success_iter == MaxChildrenCount - 1)
+				m_success_iter = 0;
+
 			return status;
+		}
+
 
 		++m_success_iter;
+
+		if (m_success_iter == MaxChildrenCount)
+			m_success_iter = 0;
+
 		return status;
 	}
 
