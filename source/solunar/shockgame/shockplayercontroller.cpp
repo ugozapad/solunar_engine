@@ -1,4 +1,4 @@
-#include "shockgamepch.h"
+﻿#include "shockgamepch.h"
 #include "shockgame/shockplayercontroller.h"
 
 #include "core/file/contentmanager.h"
@@ -609,29 +609,46 @@ void ShockPlayerController::UpdateCamera(float dt)
 	{
 		g_currentWeaponPos = m_activeWeaponEntity->GetWorldPosition();
 
-		//g_weaponVelocity = (g_currentWeaponPos - g_prevWeaponPos) / dt;
-		//g_weaponVelocity = glm::normalize(g_weaponVelocity);
-
 		g_weaponVelocity = btVectorToGlm(m_rigidBody->GetCharacterController()->getLinearVelocity());
+		
+		glm::vec3 weaponVelocity = btVectorToGlm(m_rigidBody->GetCharacterController()->getLinearVelocity());
+		glm::vec3 horizVel = glm::vec3(weaponVelocity.x, 0.0f, weaponVelocity.z);
+		float horizSpeed = glm::length(horizVel);
+		float verticalSpeed = weaponVelocity.y;
 
-		//static char buf[128];
-		//sprintf(buf, "Vel %f %f %f", g_weaponVelocity.x, g_weaponVelocity.y, g_weaponVelocity.z);
-		//ImGui::GetForegroundDrawList()->AddText(ImVec2(200.f, 200.f), 0xff0000ff, buf);
-
-		float bob = V_CalcBob();
-
-		//sprintf(buf, "bob %f", bob);
-		//ImGui::GetForegroundDrawList()->AddText(ImVec2(200.f, 225.f), 0xff0000ff, buf);
-
-		// local space
+		// Base offset
 		glm::vec3 weaponPosition = g_weaponOffset;
-		weaponPosition.x += bob;
-		weaponPosition.z += bob;
-		//sprintf(buf, "pos %f %f %f", weaponPosition.x, weaponPosition.y, weaponPosition.z);
-		//ImGui::GetForegroundDrawList()->AddText(ImVec2(200.f, 250.f), 0xff0000ff, buf);
-		m_activeWeaponEntity->SetPosition(weaponPosition);
 
-		//m_weaponEntity->setRotation(glm::slerp(rot, m_weaponEntity->getRotation(), 55.0f * dt));
+		// Bobbing parameters
+		const float baseFreq = 8.0f;
+		const float maxAmpY = 0.03f;
+		const float maxAmpX = 0.015f;
+		const float returnSpeed = 5.0f;
+
+		// Time accumulator
+		static float bobTime = 0.0f;
+		bobTime += Timer::GetInstance()->GetDelta() * glm::clamp(horizSpeed * 60.0f, 0.0f, 1.0f); // time scales with speed
+
+		// Smooth amplitude based on movement
+		static float currentAmp = 0.0f;
+		float targetAmp = (horizSpeed > 0.001f) ? 1.0f : 0.0f;
+		currentAmp = glm::mix(currentAmp, targetAmp, Timer::GetInstance()->GetDelta() * returnSpeed);
+
+		// Calculate smoothed bob
+		float offsetY = sin(bobTime * baseFreq) * maxAmpY * currentAmp;
+		float offsetX = sin(bobTime * baseFreq * 0.5f + glm::half_pi<float>()) * maxAmpX * currentAmp; // phase offset for side sway
+
+		// Apply offsets
+		weaponPosition.y += offsetY;
+		weaponPosition.x += offsetX;
+
+		// Jump/fall compensation (optional subtle dip)
+		if (fabs(verticalSpeed) > 0.1f)
+		{
+			weaponPosition.y -= glm::clamp(verticalSpeed * 0.002f, -0.05f, 0.05f);
+		}
+
+		m_activeWeaponEntity->SetPosition(weaponPosition);
 		m_activeWeaponEntity->SetRotation(rot);
 
 		g_prevWeaponPos = g_currentWeaponPos;
