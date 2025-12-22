@@ -129,6 +129,7 @@ public:
 
 	/** Animation accessing */
 	int GetAnimationByName(const std::string& name);
+	Animation* GetAnimationByIndex(int index);
 	void PlayAnimation(int index, bool looped = false);
 	void PauseAnimation();
 	int GetCurrentAnimationId();
@@ -175,7 +176,8 @@ private:
 
 	BoundingBox m_boundingBox;
 
-	bool m_iAmClone = false;
+	AnimatedModel* m_baseModel;
+	bool m_instance = false;
 
 public:
 	glm::mat4 m_bonesMatrices[MAX_JOINTS];

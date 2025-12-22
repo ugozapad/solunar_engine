@@ -120,7 +120,8 @@ void AnimatedModel::RegisterObject()
 }
 
 AnimatedModel::AnimatedModel() :
-	m_animationId(-1)
+	m_animationId(-1),
+	m_baseModel(nullptr)
 {
 	m_boundingBox.SetIdentity();
 
@@ -758,7 +759,11 @@ void AnimatedModel::Save(const std::shared_ptr<DataStream>& dataStream)
 }
 
 void AnimatedModel::CreateHw()
-{
+{	
+	// do not create hardware data when animated model is clone
+	if (m_instance)
+		return;
+	
 	for (int i = 0; i < m_subMeshes.size(); i++)
 	{
 		m_subMeshes[i]->Create();
@@ -770,7 +775,7 @@ void AnimatedModel::CreateHw()
 void AnimatedModel::ReleaseHw()
 {
 	// do not delete hardware data when animated model is clone
-	if (m_iAmClone)
+	if (m_instance)
 		return;
 
 	for (int i = 0; i < m_subMeshes.size(); i++)
@@ -789,11 +794,19 @@ void AnimatedModel::ReleaseHw()
 
 int AnimatedModel::GetAnimationByName(const std::string& name)
 {
+	if (m_instance)
+		return m_baseModel->GetAnimationByName(name);
+
 	for (int i = 0; i < m_animations.size(); i++)
 		if (m_animations[i].m_name == name)
 			return i;
 
 	return -1;
+}
+
+Animation* AnimatedModel::GetAnimationByIndex(int index)
+{
+	return &m_animations[index];
 }
 
 int AnimatedModel::GetCurrentAnimationId()
@@ -805,8 +818,8 @@ void AnimatedModel::PlayAnimation(int index, bool looped)
 {
 	Assert(index != -1);
 
+	m_currentAnimation = m_instance ? m_baseModel->GetAnimationByIndex(index) : GetAnimationByIndex(index); //&m_animations[m_animationId];
 	m_animationId = index;
-	m_currentAnimation = &m_animations[m_animationId];
 	m_playLooped = looped;
 	m_currentTime = 0.0f;
 	m_play = true;
@@ -1016,11 +1029,12 @@ std::shared_ptr<AnimatedModel> AnimatedModel::Clone()
 	std::shared_ptr<AnimatedModel> object = std::shared_ptr<AnimatedModel>(pObjectInstance, ObjectDeleter);
 
 	// set flag
-	object->m_iAmClone = true;
-	
+	object->m_instance = true;
+	object->m_baseModel = this;
+
 	// clone everything
 	object->m_subMeshes = m_subMeshes;
-	object->m_animations = m_animations;
+	//object->m_animations = m_animations;
 	object->m_skins = m_skins;
 	object->m_nodes = m_nodes;
 	
